@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cocktail Flashcards</title>
+    <title>BarStock</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥃</text></svg>">
     <style>
         * {
             margin: 0;
@@ -12,15 +13,29 @@
         }
 
         :root {
-            --primary: #2c3e50;
-            --secondary: #e74c3c;
-            --accent: #3498db;
-            --background: #ecf0f1;
+            --primary: #2d3748;
+            --secondary: #4a5568;
+            --accent: #718096;
+            --background: #f7fafc;
             --card-bg: #ffffff;
-            --text: #2c3e50;
-            --text-light: #7f8c8d;
-            --border: #bdc3c7;
-            --success: #27ae60;
+            --text: #1a202c;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --success: #48bb78;
+            --hover: #edf2f7;
+        }
+
+        [data-theme="dark"] {
+            --primary: #1a202c;
+            --secondary: #2d3748;
+            --accent: #a0aec0;
+            --background: #0f1419;
+            --card-bg: #1a202c;
+            --text: #f7fafc;
+            --text-light: #a0aec0;
+            --border: #2d3748;
+            --success: #68d391;
+            --hover: #2d3748;
         }
 
         body {
@@ -28,6 +43,7 @@
             background: var(--background);
             color: var(--text);
             line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .container {
@@ -40,7 +56,7 @@
         header {
             background: var(--primary);
             color: white;
-            padding: 20px 0;
+            padding: 15px 0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
@@ -48,15 +64,44 @@
         }
 
         header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+            font-size: 1.5rem;
+            margin: 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 12px;
+            position: relative;
+        }
+
+        .theme-toggle {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.2);
         }
 
         /* Navigation Tabs */
         .nav-tabs {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
             flex-wrap: wrap;
         }
 
@@ -76,7 +121,7 @@
         }
 
         .nav-tab.active {
-            background: var(--secondary);
+            background: var(--accent);
         }
 
         /* Filter Section */
@@ -86,6 +131,70 @@
             border-radius: 10px;
             margin: 20px 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .filter-toggle-btn {
+            width: 100%;
+            padding: 12px 20px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.3s;
+        }
+
+        .filter-toggle-btn:hover {
+            background: var(--primary);
+        }
+
+        .filter-toggle-btn .arrow {
+            transition: transform 0.3s;
+        }
+
+        .filter-toggle-btn.collapsed .arrow {
+            transform: rotate(-90deg);
+        }
+
+        .filter-content {
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .filter-content.collapsed {
+            max-height: 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .btn-add-cocktail {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-add-cocktail:hover {
+            background: #38a169;
+            transform: translateY(-2px);
         }
 
         .filter-group {
@@ -108,7 +217,8 @@
         .filter-btn {
             padding: 8px 16px;
             border: 2px solid var(--border);
-            background: white;
+            background: var(--background);
+            color: var(--text);
             border-radius: 20px;
             cursor: pointer;
             font-size: 0.9rem;
@@ -116,13 +226,14 @@
         }
 
         .filter-btn:hover {
-            border-color: var(--accent);
+            border-color: var(--secondary);
+            background: var(--hover);
         }
 
         .filter-btn.active {
-            background: var(--accent);
+            background: var(--secondary);
             color: white;
-            border-color: var(--accent);
+            border-color: var(--secondary);
         }
 
         .search-box {
@@ -131,11 +242,13 @@
             border: 2px solid var(--border);
             border-radius: 8px;
             font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--text);
         }
 
         .search-box:focus {
             outline: none;
-            border-color: var(--accent);
+            border-color: var(--secondary);
         }
 
         .filter-toggle {
@@ -216,12 +329,12 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-size: 3rem;
+            transition: opacity 0.3s;
         }
 
         .cocktail-image img {
@@ -245,6 +358,29 @@
             font-size: 1.3rem;
             font-weight: 700;
             color: var(--primary);
+            flex: 1;
+        }
+
+        .cocktail-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-edit {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-edit:hover {
+            background: var(--secondary);
         }
 
         .can-make-badge {
@@ -264,7 +400,7 @@
         }
 
         .tag {
-            background: var(--background);
+            background: var(--hover);
             padding: 4px 10px;
             border-radius: 15px;
             font-size: 0.8rem;
@@ -272,8 +408,8 @@
         }
 
         .tag.category {
-            background: #e8f4f8;
-            color: var(--accent);
+            background: var(--secondary);
+            color: white;
         }
 
         .cocktail-preview {
@@ -303,7 +439,7 @@
         }
 
         .modal-content {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             max-width: 700px;
             width: 100%;
@@ -337,7 +473,6 @@
             width: 100%;
             height: 300px;
             object-fit: cover;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -368,7 +503,7 @@
         .ingredient-item {
             padding: 10px;
             margin-bottom: 8px;
-            background: var(--background);
+            background: var(--hover);
             border-radius: 8px;
             display: flex;
             justify-content: space-between;
@@ -376,13 +511,13 @@
         }
 
         .ingredient-item.available {
-            background: #d4edda;
+            background: rgba(72, 187, 120, 0.15);
             border-left: 4px solid var(--success);
         }
 
         .ingredient-item.unavailable {
-            background: #f8d7da;
-            border-left: 4px solid var(--secondary);
+            background: rgba(245, 101, 101, 0.15);
+            border-left: 4px solid #f56565;
         }
 
         .steps-list {
@@ -398,21 +533,21 @@
         .step-item {
             padding: 12px;
             margin-bottom: 10px;
-            background: var(--background);
+            background: var(--hover);
             border-radius: 8px;
-            border-left: 4px solid var(--accent);
+            border-left: 4px solid var(--secondary);
         }
 
         .step-number {
             font-weight: 700;
-            color: var(--accent);
+            color: var(--secondary);
             margin-right: 8px;
         }
 
         .source-info {
             margin-top: 20px;
             padding: 15px;
-            background: #f8f9fa;
+            background: var(--hover);
             border-radius: 8px;
             font-size: 0.9rem;
             color: var(--text-light);
@@ -428,11 +563,16 @@
         }
 
         .add-item-form {
-            background: white;
+            background: var(--card-bg);
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .add-item-form h2,
+        .add-item-form h3 {
+            color: var(--text);
         }
 
         .form-row {
@@ -449,6 +589,13 @@
             border: 2px solid var(--border);
             border-radius: 8px;
             font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--text);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--secondary);
         }
 
         .form-select {
@@ -458,6 +605,13 @@
             border: 2px solid var(--border);
             border-radius: 8px;
             font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--text);
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--secondary);
         }
 
         .btn {
@@ -471,21 +625,21 @@
         }
 
         .btn-primary {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #2980b9;
-        }
-
-        .btn-secondary {
             background: var(--secondary);
             color: white;
         }
 
+        .btn-primary:hover {
+            background: var(--primary);
+        }
+
+        .btn-secondary {
+            background: var(--accent);
+            color: white;
+        }
+
         .btn-secondary:hover {
-            background: #c0392b;
+            background: var(--secondary);
         }
 
         .btn-success {
@@ -496,7 +650,7 @@
         .barcode-scanner {
             margin-top: 15px;
             padding: 20px;
-            background: var(--background);
+            background: var(--hover);
             border-radius: 8px;
             text-align: center;
         }
@@ -509,7 +663,7 @@
         }
 
         .inventory-list {
-            background: white;
+            background: var(--card-bg);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -517,7 +671,7 @@
 
         .inventory-list h2 {
             margin-bottom: 15px;
-            color: var(--primary);
+            color: var(--text);
         }
 
         .inventory-grid {
@@ -528,7 +682,7 @@
 
         .inventory-item {
             padding: 15px;
-            background: var(--background);
+            background: var(--hover);
             border-radius: 8px;
             display: flex;
             justify-content: space-between;
@@ -551,7 +705,7 @@
         }
 
         .btn-remove {
-            background: var(--secondary);
+            background: #718096;
             color: white;
             border: none;
             padding: 8px 12px;
@@ -561,7 +715,7 @@
         }
 
         .btn-remove:hover {
-            background: #c0392b;
+            background: #4a5568;
         }
 
         /* Empty State */
@@ -583,7 +737,17 @@
             }
 
             header h1 {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
+            }
+
+            .theme-toggle {
+                position: static;
+                transform: none;
+                margin-top: 10px;
+            }
+
+            .header-controls {
+                flex-direction: column;
             }
 
             .cocktail-grid {
@@ -621,10 +785,13 @@
 <body>
     <header>
         <div class="container">
-            <h1>🍸 Cocktail Flashcards</h1>
-            <div class="nav-tabs">
-                <button class="nav-tab active" onclick="switchTab('cocktails')">Cocktails</button>
-                <button class="nav-tab" onclick="switchTab('inventory')">My Bar</button>
+            <h1>BarStock</h1>
+            <div class="header-controls">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" onclick="switchTab('cocktails')">Cocktails</button>
+                    <button class="nav-tab" onclick="switchTab('inventory')">My Bar</button>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
             </div>
         </div>
     </header>
@@ -632,32 +799,121 @@
     <div class="container">
         <!-- Cocktails Section -->
         <div id="cocktails-section">
+            <div style="margin: 20px 0; display: flex; gap: 10px; align-items: center;">
+                <input type="text" class="search-box" id="searchBox" placeholder="Search cocktails..." style="flex: 1;">
+                <button class="btn-add-cocktail" onclick="showAddCocktailForm()" style="padding: 12px 20px; white-space: nowrap;">
+                    <img src="https://cdn-icons-png.flaticon.com/128/1828/1828817.png" style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="Add">
+                </button>
+            </div>
+
             <div class="filters">
-                <div class="filter-group">
-                    <label>Search</label>
-                    <input type="text" class="search-box" id="searchBox" placeholder="Search cocktails...">
-                </div>
+                <button class="filter-toggle-btn" onclick="toggleFilters()">
+                    <span>Filter Cocktails</span>
+                    <span class="arrow">▼</span>
+                </button>
+                
+                <div class="filter-content" id="filterContent">
+                    <div class="filter-group" style="margin-top: 15px;">
+                        <label>Category</label>
+                        <div class="filter-buttons" id="categoryFilters"></div>
+                    </div>
 
-                <div class="filter-group">
-                    <label>Category</label>
-                    <div class="filter-buttons" id="categoryFilters"></div>
-                </div>
+                    <div class="filter-group">
+                        <label>Base Spirit</label>
+                        <div class="filter-buttons" id="spiritFilters"></div>
+                    </div>
 
-                <div class="filter-group">
-                    <label>Base Spirit</label>
-                    <div class="filter-buttons" id="spiritFilters"></div>
-                </div>
-
-                <div class="filter-toggle">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="canMakeToggle">
-                        <span class="slider"></span>
-                    </label>
-                    <label for="canMakeToggle">Show only cocktails I can make</label>
+                    <div class="filter-toggle">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="canMakeToggle">
+                            <span class="slider"></span>
+                        </label>
+                        <label for="canMakeToggle">Show only cocktails I can make</label>
+                    </div>
                 </div>
             </div>
 
             <div class="cocktail-grid" id="cocktailGrid"></div>
+        </div>
+
+        <!-- Add Cocktail Section -->
+        <div id="add-cocktail-section" class="inventory-section">
+            <div class="add-item-form">
+                <h2>Create New Cocktail</h2>
+                
+                <div class="filter-group" style="margin-bottom: 20px;">
+                    <label>Import Recipe from URL</label>
+                    <div class="form-row">
+                        <input type="text" class="form-input" id="importUrl" placeholder="Paste recipe URL to auto-fill (optional)" style="flex: 1;">
+                        <button class="btn btn-secondary" onclick="importRecipe()">Import</button>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 5px;">
+                        Note: Import functionality requires backend integration
+                    </p>
+                </div>
+
+                <div class="form-row">
+                    <input type="text" class="form-input" id="cocktailName" placeholder="Cocktail name" style="flex: 2;">
+                    <input type="text" class="form-input" id="cocktailImage" placeholder="Image URL (optional)">
+                </div>
+                <div class="form-row">
+                    <select class="form-select" id="cocktailCategory">
+                        <option value="">Select category...</option>
+                        <option value="Classic">Classic</option>
+                        <option value="Modern">Modern</option>
+                        <option value="Refreshing">Refreshing</option>
+                        <option value="Bitter">Bitter</option>
+                        <option value="Sweet">Sweet</option>
+                        <option value="Sour">Sour</option>
+                        <option value="Tropical">Tropical</option>
+                    </select>
+                    <select class="form-select" id="cocktailSpirit">
+                        <option value="">Select base spirit...</option>
+                        <option value="Vodka">Vodka</option>
+                        <option value="Gin">Gin</option>
+                        <option value="Rum">Rum</option>
+                        <option value="Tequila">Tequila</option>
+                        <option value="Whiskey">Whiskey</option>
+                        <option value="Bourbon">Bourbon</option>
+                        <option value="Brandy">Brandy</option>
+                        <option value="Mezcal">Mezcal</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="text" class="form-input" id="cocktailSource" placeholder="Source (optional)">
+                </div>
+                <div class="form-row">
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <label style="font-weight: 600; color: var(--text); white-space: nowrap;">Card Color:</label>
+                        <input type="color" id="cocktailColor" style="width: 60px; height: 40px; border: 2px solid var(--border); border-radius: 8px; cursor: pointer;">
+                        <button class="btn btn-secondary" onclick="useSpiritColor()" style="padding: 8px 16px; white-space: nowrap;">Use Spirit Color</button>
+                        <button class="btn btn-secondary" onclick="randomizeColor()" style="padding: 8px 16px;">Random</button>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 20px; margin-bottom: 10px;">Ingredients</h3>
+                <div id="ingredientsContainer">
+                    <div class="form-row ingredient-row">
+                        <input type="text" class="form-input" placeholder="Ingredient name" data-ingredient-name>
+                        <input type="text" class="form-input" placeholder="Amount (e.g., 2 oz)" data-ingredient-amount style="max-width: 150px;">
+                        <button class="btn btn-remove" onclick="removeIngredientRow(this)">✕</button>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="addIngredientRow()" style="margin-top: 10px;">+ Add Ingredient</button>
+
+                <h3 style="margin-top: 20px; margin-bottom: 10px;">Instructions</h3>
+                <div id="stepsContainer">
+                    <div class="form-row step-row">
+                        <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;">
+                        <button class="btn btn-remove" onclick="removeStepRow(this)">✕</button>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="addStepRow()" style="margin-top: 10px;">+ Add Step</button>
+
+                <div class="form-row" style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="saveCocktail()" style="flex: 1;">Save Cocktail</button>
+                    <button class="btn btn-secondary" onclick="clearCocktailForm()">Clear Form</button>
+                </div>
+            </div>
         </div>
 
         <!-- Inventory Section -->
@@ -665,11 +921,17 @@
             <div class="add-item-form">
                 <h2>Add to Your Bar</h2>
                 <div class="form-row">
-                    <input type="text" class="form-input" id="itemName" placeholder="Item name (e.g., Vodka, Lime Juice)">
+                    <input type="text" class="form-input" id="itemName" placeholder="Item name (e.g., Vodka, Lime Juice)" style="flex: 2;">
                     <select class="form-select" id="itemCategory">
                         <option value="">Select category...</option>
                         <option value="Spirit">Spirit</option>
                         <option value="Liqueur">Liqueur</option>
+                        <option value="Wine - Red">Wine - Red</option>
+                        <option value="Wine - White">Wine - White</option>
+                        <option value="Wine - Rosé">Wine - Rosé</option>
+                        <option value="Wine - Orange">Wine - Orange</option>
+                        <option value="Wine - Sparkling">Wine - Sparkling</option>
+                        <option value="Wine - Dessert">Wine - Dessert</option>
                         <option value="Mixer">Mixer</option>
                         <option value="Juice">Juice</option>
                         <option value="Syrup">Syrup</option>
@@ -677,11 +939,28 @@
                         <option value="Garnish">Garnish</option>
                         <option value="Other">Other</option>
                     </select>
-                    <button class="btn btn-primary" onclick="addInventoryItem()">Add Item</button>
+                </div>
+                <div class="form-row">
+                    <input type="text" class="form-input" id="itemBrand" placeholder="Brand (optional)">
+                    <input type="text" class="form-input" id="itemModel" placeholder="Model/Variant (optional)">
+                    <input type="number" class="form-input" id="itemYear" placeholder="Year" min="1900" max="2030" style="max-width: 120px;">
+                </div>
+                <div class="form-row">
+                    <input type="number" class="form-input" id="itemVolume" placeholder="Volume (ml)" min="0" step="0.1" style="max-width: 150px;">
+                    <input type="number" class="form-input" id="itemABV" placeholder="ABV %" min="0" max="100" step="0.1" style="max-width: 150px;">
+                    <input type="number" class="form-input" id="itemSugar" placeholder="Sugar (g/L)" min="0" step="0.1" style="max-width: 150px;">
+                </div>
+                <div class="form-row">
+                    <button class="btn btn-primary" onclick="addInventoryItem()" style="width: 100%;">Add Item</button>
                 </div>
 
                 <div class="barcode-scanner">
-                    <button class="btn btn-secondary" onclick="toggleBarcodeScanner()">📷 Scan Barcode</button>
+                    <button class="btn btn-secondary" onclick="toggleBarcodeScanner()">
+                        <svg style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 6px;" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M4 6h2v12H4zm4 0h1v12H8zm2 0h2v12h-2zm3 0h2v12h-2zm3 0h2v12h-2zm3 0h1v12h-1z"/>
+                        </svg>
+                        Scan Barcode
+                    </button>
                     <div id="scannerContainer" style="display: none; margin-top: 15px;">
                         <video id="video" autoplay playsinline></video>
                         <canvas id="canvas" style="display: none;"></canvas>
@@ -694,6 +973,64 @@
 
             <div class="inventory-list">
                 <h2>Your Bar Inventory (<span id="inventoryCount">0</span> items)</h2>
+                
+                <!-- Inventory Filters -->
+                <div class="filters" style="margin-top: 15px;">
+                    <button class="filter-toggle-btn" onclick="toggleInventoryFilters()">
+                        <span>Filter Inventory</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    
+                    <div class="filter-content collapsed" id="inventoryFilterContent">
+                        <div class="filter-group" style="margin-top: 15px;">
+                            <label>Search</label>
+                            <input type="text" class="search-box" id="inventorySearchBox" placeholder="Search items...">
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Category</label>
+                            <div class="filter-buttons" id="inventoryCategoryFilters"></div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Volume Range (ml)</label>
+                            <div class="form-row">
+                                <input type="number" class="form-input" id="volumeMin" placeholder="Min" min="0" step="1">
+                                <input type="number" class="form-input" id="volumeMax" placeholder="Max" min="0" step="1">
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>ABV Range (%)</label>
+                            <div class="form-row">
+                                <input type="number" class="form-input" id="abvMin" placeholder="Min" min="0" max="100" step="0.1">
+                                <input type="number" class="form-input" id="abvMax" placeholder="Max" min="0" max="100" step="0.1">
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Sugar Content Range (g/L)</label>
+                            <div class="form-row">
+                                <input type="number" class="form-input" id="sugarMin" placeholder="Min" min="0" step="0.1">
+                                <input type="number" class="form-input" id="sugarMax" placeholder="Max" min="0" step="0.1">
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Year Range</label>
+                            <div class="form-row">
+                                <input type="number" class="form-input" id="yearMin" placeholder="Min" min="1900" max="2030">
+                                <input type="number" class="form-input" id="yearMax" placeholder="Max" min="1900" max="2030">
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Brand</label>
+                            <div class="filter-buttons" id="inventoryBrandFilters"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="inventory-grid" id="inventoryGrid"></div>
             </div>
         </div>
@@ -708,14 +1045,34 @@
     </div>
 
     <script>
+        // Cocktail colors for card backgrounds
+        const cocktailColors = [
+            '#4a5568', '#2d3748', '#718096', '#1a202c', '#2c5282', 
+            '#2f855a', '#c05621', '#744210', '#5f370e', '#9c4221'
+        ];
+
+        // Spirit-based color palette
+        const spiritColors = {
+            'Vodka': '#e2e8f0',      // Light grey/clear - represents vodka's clarity
+            'Gin': '#86efac',         // Light green - represents botanicals/juniper
+            'Rum': '#d97706',         // Amber/golden - represents aged rum
+            'Tequila': '#fbbf24',     // Golden yellow - represents agave/reposado
+            'Whiskey': '#92400e',     // Deep brown - represents barrel aging
+            'Bourbon': '#b45309',     // Rich amber - represents American oak
+            'Brandy': '#7c2d12',      // Dark reddish brown - represents grape spirits
+            'Mezcal': '#6b7280',      // Smoky grey - represents smoke/agave
+            'Other': '#475569'        // Neutral grey - default
+        };
+
         // Sample cocktail data - in production, this would come from a database
-        const cocktails = [
+        let cocktails = JSON.parse(localStorage.getItem('cocktails')) || [
             {
                 id: 1,
                 name: "Margarita",
                 category: "Classic",
                 baseSpirit: "Tequila",
                 image: null,
+                color: spiritColors['Tequila'],
                 ingredients: [
                     { name: "Tequila", amount: "2 oz" },
                     { name: "Lime Juice", amount: "1 oz" },
@@ -737,6 +1094,7 @@
                 category: "Classic",
                 baseSpirit: "Whiskey",
                 image: null,
+                color: spiritColors['Whiskey'],
                 ingredients: [
                     { name: "Bourbon", amount: "2 oz" },
                     { name: "Sugar Cube", amount: "1" },
@@ -758,6 +1116,7 @@
                 category: "Refreshing",
                 baseSpirit: "Rum",
                 image: null,
+                color: spiritColors['Rum'],
                 ingredients: [
                     { name: "White Rum", amount: "2 oz" },
                     { name: "Lime Juice", amount: "1 oz" },
@@ -780,6 +1139,7 @@
                 category: "Bitter",
                 baseSpirit: "Gin",
                 image: null,
+                color: spiritColors['Gin'],
                 ingredients: [
                     { name: "Gin", amount: "1 oz" },
                     { name: "Campari", amount: "1 oz" },
@@ -800,6 +1160,7 @@
                 category: "Modern",
                 baseSpirit: "Vodka",
                 image: null,
+                color: spiritColors['Vodka'],
                 ingredients: [
                     { name: "Vodka", amount: "2 oz" },
                     { name: "Coffee Liqueur", amount: "0.5 oz" },
@@ -820,6 +1181,7 @@
                 category: "Refreshing",
                 baseSpirit: "Vodka",
                 image: null,
+                color: spiritColors['Vodka'],
                 ingredients: [
                     { name: "Vodka", amount: "2 oz" },
                     { name: "Lime Juice", amount: "0.5 oz" },
@@ -840,6 +1202,21 @@
         // Bar inventory
         let barInventory = JSON.parse(localStorage.getItem('barInventory')) || [];
 
+        // Inventory filters
+        let inventoryFilters = {
+            category: null,
+            brand: null,
+            search: '',
+            volumeMin: null,
+            volumeMax: null,
+            abvMin: null,
+            abvMax: null,
+            sugarMin: null,
+            sugarMax: null,
+            yearMin: null,
+            yearMax: null
+        };
+
         // Get unique categories and spirits
         const categories = [...new Set(cocktails.map(c => c.category))];
         const spirits = [...new Set(cocktails.map(c => c.baseSpirit))];
@@ -853,8 +1230,15 @@
 
         // Initialize the app
         function init() {
+            // Set default year to current year
+            document.getElementById('itemYear').value = new Date().getFullYear();
+            
+            // Set default cocktail color to Vodka (neutral starting point)
+            document.getElementById('cocktailColor').value = spiritColors['Vodka'];
+            
             renderFilters();
             renderCocktails();
+            renderInventoryFilters();
             renderInventory();
 
             // Event listeners
@@ -866,6 +1250,20 @@
             document.getElementById('canMakeToggle').addEventListener('change', (e) => {
                 activeFilters.canMake = e.target.checked;
                 renderCocktails();
+            });
+
+            // Inventory filter event listeners
+            document.getElementById('inventorySearchBox').addEventListener('input', (e) => {
+                inventoryFilters.search = e.target.value.toLowerCase();
+                renderInventory();
+            });
+
+            ['volumeMin', 'volumeMax', 'abvMin', 'abvMax', 'sugarMin', 'sugarMax', 'yearMin', 'yearMax'].forEach(id => {
+                document.getElementById(id).addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    inventoryFilters[id] = value ? parseFloat(value) : null;
+                    renderInventory();
+                });
             });
         }
 
@@ -960,18 +1358,20 @@
 
             grid.innerHTML = filtered.map(cocktail => {
                 const canMake = canMakeCocktail(cocktail);
+                const bgColor = cocktail.color || cocktailColors[cocktail.id % cocktailColors.length];
+                const hasImage = cocktail.image && cocktail.image.trim() !== '';
+                
                 return `
-                    <div class="cocktail-card" onclick="openModal(${cocktail.id})">
-                        <div class="cocktail-image">
-                            ${cocktail.image ? 
-                                `<img src="${cocktail.image}" alt="${cocktail.name}">` : 
-                                '🍸'
-                            }
+                    <div class="cocktail-card">
+                        <div class="cocktail-image" style="background: ${hasImage ? `url('${cocktail.image}') center/cover` : bgColor};" onclick="openModal(${cocktail.id})">
+                            ${!hasImage ? '🍸' : ''}
                         </div>
-                        <div class="cocktail-content">
+                        <div class="cocktail-content" onclick="openModal(${cocktail.id})">
                             <div class="cocktail-header">
                                 <h3 class="cocktail-name">${cocktail.name}</h3>
-                                ${canMake ? '<span class="can-make-badge">Can Make!</span>' : ''}
+                                <div class="cocktail-actions">
+                                    ${canMake ? '<span class="can-make-badge">Can Make!</span>' : ''}
+                                </div>
                             </div>
                             <div class="cocktail-tags">
                                 <span class="tag category">${cocktail.category}</span>
@@ -981,6 +1381,12 @@
                                 ${cocktail.ingredients.slice(0, 3).map(ing => ing.name).join(', ')}
                                 ${cocktail.ingredients.length > 3 ? '...' : ''}
                             </div>
+                        </div>
+                        <div style="padding: 0 20px 15px;">
+                            <button class="btn-edit" onclick="event.stopPropagation(); editCocktail(${cocktail.id})">
+                                <img src="https://cdn-icons-png.flaticon.com/128/3917/3917376.png" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0) invert(1);" alt="Edit">
+                                Edit
+                            </button>
                         </div>
                     </div>
                 `;
@@ -994,10 +1400,18 @@
 
             const modal = document.getElementById('cocktailModal');
             const content = document.getElementById('modalContent');
+            const bgColor = cocktail.color || cocktailColors[cocktail.id % cocktailColors.length];
+            const hasImage = cocktail.image && cocktail.image.trim() !== '';
+            
+            // Check if source is a URL
+            const isUrl = cocktail.source && (cocktail.source.startsWith('http://') || cocktail.source.startsWith('https://'));
+            const sourceHtml = isUrl 
+                ? `<a href="${cocktail.source}" target="_blank" rel="noopener noreferrer" style="color: var(--secondary); text-decoration: underline;">${cocktail.source}</a>`
+                : cocktail.source;
 
             content.innerHTML = `
-                <div class="modal-image">
-                    ${cocktail.image ? `<img src="${cocktail.image}" alt="${cocktail.name}">` : '🍸'}
+                <div class="modal-image" style="background: ${hasImage ? `url('${cocktail.image}') center/cover` : bgColor};">
+                    ${!hasImage ? '🍸' : ''}
                 </div>
                 <div class="modal-body">
                     <h2 class="modal-title">${cocktail.name}</h2>
@@ -1033,7 +1447,7 @@
                     </div>
 
                     <div class="source-info">
-                        <strong>Source:</strong> ${cocktail.source}
+                        <strong>Source:</strong> ${sourceHtml}
                     </div>
                 </div>
             `;
@@ -1051,11 +1465,17 @@
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
 
+            // Hide all sections
+            document.getElementById('cocktails-section').style.display = 'none';
+            document.getElementById('add-cocktail-section').classList.remove('active');
+            document.getElementById('inventory-section').classList.remove('active');
+
+            // Show selected section
             if (tab === 'cocktails') {
                 document.getElementById('cocktails-section').style.display = 'block';
-                document.getElementById('inventory-section').classList.remove('active');
-            } else {
-                document.getElementById('cocktails-section').style.display = 'none';
+            } else if (tab === 'add-cocktail') {
+                document.getElementById('add-cocktail-section').classList.add('active');
+            } else if (tab === 'inventory') {
                 document.getElementById('inventory-section').classList.add('active');
             }
         }
@@ -1064,18 +1484,40 @@
         function addInventoryItem() {
             const name = document.getElementById('itemName').value.trim();
             const category = document.getElementById('itemCategory').value;
+            const brand = document.getElementById('itemBrand').value.trim();
+            const model = document.getElementById('itemModel').value.trim();
+            const year = document.getElementById('itemYear').value;
+            const volume = document.getElementById('itemVolume').value;
+            const abv = document.getElementById('itemABV').value;
+            const sugar = document.getElementById('itemSugar').value;
 
             if (!name || !category) {
                 alert('Please enter both item name and category');
                 return;
             }
 
-            barInventory.push({ name, category });
+            barInventory.push({ 
+                name, 
+                category,
+                brand: brand || null,
+                model: model || null,
+                year: year ? parseInt(year) : null,
+                volume: volume ? parseFloat(volume) : null,
+                abv: abv ? parseFloat(abv) : null,
+                sugar: sugar ? parseFloat(sugar) : null
+            });
             localStorage.setItem('barInventory', JSON.stringify(barInventory));
 
             document.getElementById('itemName').value = '';
             document.getElementById('itemCategory').value = '';
+            document.getElementById('itemBrand').value = '';
+            document.getElementById('itemModel').value = '';
+            document.getElementById('itemYear').value = new Date().getFullYear();
+            document.getElementById('itemVolume').value = '';
+            document.getElementById('itemABV').value = '';
+            document.getElementById('itemSugar').value = '';
 
+            renderInventoryFilters();
             renderInventory();
             renderCocktails(); // Update can-make badges
         }
@@ -1088,33 +1530,105 @@
             renderCocktails();
         }
 
+        // Filter inventory
+        function filterInventory() {
+            return barInventory.filter(item => {
+                // Search filter
+                if (inventoryFilters.search) {
+                    const searchTerm = inventoryFilters.search.toLowerCase();
+                    const matchesSearch = item.name.toLowerCase().includes(searchTerm) ||
+                                        (item.brand && item.brand.toLowerCase().includes(searchTerm)) ||
+                                        (item.model && item.model.toLowerCase().includes(searchTerm));
+                    if (!matchesSearch) return false;
+                }
+
+                // Category filter
+                if (inventoryFilters.category && item.category !== inventoryFilters.category) {
+                    return false;
+                }
+
+                // Brand filter
+                if (inventoryFilters.brand && item.brand !== inventoryFilters.brand) {
+                    return false;
+                }
+
+                // Volume range
+                if (inventoryFilters.volumeMin !== null && (item.volume === null || item.volume < inventoryFilters.volumeMin)) {
+                    return false;
+                }
+                if (inventoryFilters.volumeMax !== null && (item.volume === null || item.volume > inventoryFilters.volumeMax)) {
+                    return false;
+                }
+
+                // ABV range
+                if (inventoryFilters.abvMin !== null && (item.abv === null || item.abv < inventoryFilters.abvMin)) {
+                    return false;
+                }
+                if (inventoryFilters.abvMax !== null && (item.abv === null || item.abv > inventoryFilters.abvMax)) {
+                    return false;
+                }
+
+                // Sugar range
+                if (inventoryFilters.sugarMin !== null && (item.sugar === null || item.sugar < inventoryFilters.sugarMin)) {
+                    return false;
+                }
+                if (inventoryFilters.sugarMax !== null && (item.sugar === null || item.sugar > inventoryFilters.sugarMax)) {
+                    return false;
+                }
+
+                // Year range
+                if (inventoryFilters.yearMin !== null && (item.year === null || item.year < inventoryFilters.yearMin)) {
+                    return false;
+                }
+                if (inventoryFilters.yearMax !== null && (item.year === null || item.year > inventoryFilters.yearMax)) {
+                    return false;
+                }
+
+                return true;
+            });
+        }
+
         // Render inventory
         function renderInventory() {
             const grid = document.getElementById('inventoryGrid');
             const count = document.getElementById('inventoryCount');
+            const filtered = filterInventory();
 
-            count.textContent = barInventory.length;
+            count.textContent = filtered.length;
 
-            if (barInventory.length === 0) {
+            if (filtered.length === 0) {
                 grid.innerHTML = `
                     <div class="empty-state" style="grid-column: 1/-1;">
                         <div class="empty-state-icon">🍾</div>
-                        <h3>Your bar is empty</h3>
-                        <p>Add items to see which cocktails you can make</p>
+                        <h3>No items found</h3>
+                        <p>${barInventory.length === 0 ? 'Add items to see which cocktails you can make' : 'Try adjusting your filters'}</p>
                     </div>
                 `;
                 return;
             }
 
-            grid.innerHTML = barInventory.map((item, index) => `
-                <div class="inventory-item">
-                    <div class="inventory-info">
-                        <div class="inventory-name">${item.name}</div>
-                        <div class="inventory-category">${item.category}</div>
+            grid.innerHTML = filtered.map((item, index) => {
+                const details = [];
+                if (item.brand) details.push(item.brand);
+                if (item.model) details.push(item.model);
+                if (item.volume) details.push(`${item.volume}ml`);
+                if (item.abv) details.push(`${item.abv}% ABV`);
+                if (item.sugar) details.push(`${item.sugar}g/L sugar`);
+                if (item.year) details.push(`Year: ${item.year}`);
+                
+                return `
+                    <div class="inventory-item">
+                        <div class="inventory-info">
+                            <div class="inventory-name">${item.name}</div>
+                            <div class="inventory-category">${item.category}</div>
+                            ${details.length > 0 ? `<div class="inventory-category" style="margin-top: 4px;">${details.join(' • ')}</div>` : ''}
+                        </div>
+                        <button class="btn-remove" onclick="removeInventoryItem(${barInventory.indexOf(item)})">
+                            <img src="https://cdn-icons-png.flaticon.com/128/3917/3917242.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="Delete">
+                        </button>
                     </div>
-                    <button class="btn-remove" onclick="removeInventoryItem(${index})">Remove</button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         // Barcode scanner functionality
@@ -1151,6 +1665,449 @@
             }
         }
 
+        // Import recipe from URL
+        async function importRecipe() {
+            const url = document.getElementById('importUrl').value.trim();
+            if (!url) {
+                alert('Please enter a recipe URL');
+                return;
+            }
+
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                alert('Please enter a valid URL starting with http:// or https://');
+                return;
+            }
+
+            const importBtn = event.target;
+            importBtn.disabled = true;
+            importBtn.textContent = 'Importing...';
+
+            try {
+                // Fetch the webpage content
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'anthropic-version': '2023-06-01'
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 1000,
+                        messages: [{
+                            role: 'user',
+                            content: `Please fetch and analyze this cocktail recipe URL: ${url}
+
+Extract the following information and return it as a JSON object:
+- name: cocktail name
+- category: one of (Classic, Modern, Refreshing, Bitter, Sweet, Sour, Tropical)
+- baseSpirit: primary alcohol (Vodka, Gin, Rum, Tequila, Whiskey, Bourbon, Brandy, Mezcal, Other)
+- ingredients: array of objects with {name, amount}
+- steps: array of instruction strings
+- source: the URL
+- image: image URL if found, otherwise null
+
+Return ONLY the JSON object, no other text.`
+                        }],
+                        tools: [{
+                            type: 'web_search_20250305',
+                            name: 'web_search'
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Extract text from response
+                let recipeText = '';
+                if (data.content) {
+                    for (const item of data.content) {
+                        if (item.type === 'text') {
+                            recipeText += item.text;
+                        }
+                    }
+                }
+
+                // Try to parse JSON from the response
+                const jsonMatch = recipeText.match(/\{[\s\S]*\}/);
+                if (!jsonMatch) {
+                    throw new Error('Could not extract recipe data');
+                }
+
+                const recipe = JSON.parse(jsonMatch[0]);
+
+                // Fill in the form
+                if (recipe.name) document.getElementById('cocktailName').value = recipe.name;
+                if (recipe.category) document.getElementById('cocktailCategory').value = recipe.category;
+                if (recipe.baseSpirit) document.getElementById('cocktailSpirit').value = recipe.baseSpirit;
+                if (recipe.source) document.getElementById('cocktailSource').value = recipe.source;
+                if (recipe.image) document.getElementById('cocktailImage').value = recipe.image;
+
+                // Fill ingredients
+                if (recipe.ingredients && recipe.ingredients.length > 0) {
+                    const ingredientsContainer = document.getElementById('ingredientsContainer');
+                    ingredientsContainer.innerHTML = '';
+                    recipe.ingredients.forEach(ing => {
+                        const row = document.createElement('div');
+                        row.className = 'form-row ingredient-row';
+                        row.innerHTML = `
+                            <input type="text" class="form-input" placeholder="Ingredient name" data-ingredient-name value="${ing.name || ''}">
+                            <input type="text" class="form-input" placeholder="Amount (e.g., 2 oz)" data-ingredient-amount style="max-width: 150px;" value="${ing.amount || ''}">
+                            <button class="btn btn-remove" onclick="removeIngredientRow(this)">✕</button>
+                        `;
+                        ingredientsContainer.appendChild(row);
+                    });
+                }
+
+                // Fill steps
+                if (recipe.steps && recipe.steps.length > 0) {
+                    const stepsContainer = document.getElementById('stepsContainer');
+                    stepsContainer.innerHTML = '';
+                    recipe.steps.forEach(step => {
+                        const row = document.createElement('div');
+                        row.className = 'form-row step-row';
+                        row.innerHTML = `
+                            <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;" value="${step}">
+                            <button class="btn btn-remove" onclick="removeStepRow(this)">✕</button>
+                        `;
+                        stepsContainer.appendChild(row);
+                    });
+                }
+
+                alert('Recipe imported successfully! Please review and adjust as needed.');
+
+            } catch (error) {
+                console.error('Import error:', error);
+                alert('Failed to import recipe. The URL may not be accessible or may not contain a valid cocktail recipe. Error: ' + error.message);
+            } finally {
+                importBtn.disabled = false;
+                importBtn.textContent = 'Import';
+            }
+        }
+
+        // Randomize cocktail color
+        function randomizeColor() {
+            const randomColor = cocktailColors[Math.floor(Math.random() * cocktailColors.length)];
+            document.getElementById('cocktailColor').value = randomColor;
+        }
+
+        // Use spirit color based on selected base spirit
+        function useSpiritColor() {
+            const baseSpirit = document.getElementById('cocktailSpirit').value;
+            if (!baseSpirit) {
+                alert('Please select a base spirit first');
+                return;
+            }
+            const color = spiritColors[baseSpirit] || spiritColors['Other'];
+            document.getElementById('cocktailColor').value = color;
+        }
+
+        // Toggle filters
+        function toggleFilters() {
+            const content = document.getElementById('filterContent');
+            const btn = event.target.closest('.filter-toggle-btn');
+            content.classList.toggle('collapsed');
+            btn.classList.toggle('collapsed');
+        }
+
+        // Toggle inventory filters
+        function toggleInventoryFilters() {
+            const content = document.getElementById('inventoryFilterContent');
+            const btn = event.target.closest('.filter-toggle-btn');
+            content.classList.toggle('collapsed');
+            btn.classList.toggle('collapsed');
+        }
+
+        // Show add cocktail form
+        let editingCocktailId = null;
+
+        function showAddCocktailForm() {
+            editingCocktailId = null;
+            clearCocktailForm();
+            switchTab('add-cocktail');
+            // Manually update active tab
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('cocktails-section').style.display = 'none';
+            document.getElementById('add-cocktail-section').classList.add('active');
+            document.getElementById('inventory-section').classList.remove('active');
+            
+            // Update form title
+            document.querySelector('#add-cocktail-section h2').textContent = 'Create New Cocktail';
+        }
+
+        // Edit cocktail
+        function editCocktail(cocktailId) {
+            const cocktail = cocktails.find(c => c.id === cocktailId);
+            if (!cocktail) return;
+
+            editingCocktailId = cocktailId;
+
+            // Switch to add-cocktail section
+            document.getElementById('cocktails-section').style.display = 'none';
+            document.getElementById('add-cocktail-section').classList.add('active');
+            document.getElementById('inventory-section').classList.remove('active');
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+            // Update form title
+            document.querySelector('#add-cocktail-section h2').textContent = 'Edit Cocktail';
+
+            // Populate form
+            document.getElementById('cocktailName').value = cocktail.name;
+            document.getElementById('cocktailImage').value = cocktail.image || '';
+            document.getElementById('cocktailCategory').value = cocktail.category;
+            document.getElementById('cocktailSpirit').value = cocktail.baseSpirit;
+            document.getElementById('cocktailSource').value = cocktail.source;
+            document.getElementById('cocktailColor').value = cocktail.color || spiritColors[cocktail.baseSpirit] || spiritColors['Other'];
+
+            // Populate ingredients
+            const ingredientsContainer = document.getElementById('ingredientsContainer');
+            ingredientsContainer.innerHTML = '';
+            cocktail.ingredients.forEach(ing => {
+                const row = document.createElement('div');
+                row.className = 'form-row ingredient-row';
+                row.innerHTML = `
+                    <input type="text" class="form-input" placeholder="Ingredient name" data-ingredient-name value="${ing.name}">
+                    <input type="text" class="form-input" placeholder="Amount (e.g., 2 oz)" data-ingredient-amount style="max-width: 150px;" value="${ing.amount}">
+                    <button class="btn btn-remove" onclick="removeIngredientRow(this)">✕</button>
+                `;
+                ingredientsContainer.appendChild(row);
+            });
+
+            // Populate steps
+            const stepsContainer = document.getElementById('stepsContainer');
+            stepsContainer.innerHTML = '';
+            cocktail.steps.forEach(step => {
+                const row = document.createElement('div');
+                row.className = 'form-row step-row';
+                row.innerHTML = `
+                    <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;" value="${step}">
+                    <button class="btn btn-remove" onclick="removeStepRow(this)">✕</button>
+                `;
+                stepsContainer.appendChild(row);
+            });
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Render inventory filters
+        function renderInventoryFilters() {
+            // Category filters
+            const categories = [...new Set(barInventory.map(i => i.category).filter(c => c))];
+            const categoryContainer = document.getElementById('inventoryCategoryFilters');
+            categoryContainer.innerHTML = `
+                <button class="filter-btn ${!inventoryFilters.category ? 'active' : ''}" onclick="setInventoryFilter('category', null)">All</button>
+                ${categories.map(cat => 
+                    `<button class="filter-btn ${inventoryFilters.category === cat ? 'active' : ''}" onclick="setInventoryFilter('category', '${cat}')">${cat}</button>`
+                ).join('')}
+            `;
+
+            // Brand filters
+            const brands = [...new Set(barInventory.map(i => i.brand).filter(b => b))];
+            const brandContainer = document.getElementById('inventoryBrandFilters');
+            if (brands.length > 0) {
+                brandContainer.innerHTML = `
+                    <button class="filter-btn ${!inventoryFilters.brand ? 'active' : ''}" onclick="setInventoryFilter('brand', null)">All</button>
+                    ${brands.map(brand => 
+                        `<button class="filter-btn ${inventoryFilters.brand === brand ? 'active' : ''}" onclick="setInventoryFilter('brand', '${brand}')">${brand}</button>`
+                    ).join('')}
+                `;
+            } else {
+                brandContainer.innerHTML = '<p style="color: var(--text-light); font-size: 0.9rem;">No brands added yet</p>';
+            }
+        }
+
+        // Set inventory filter
+        function setInventoryFilter(type, value) {
+            inventoryFilters[type] = value;
+            renderInventoryFilters();
+            renderInventory();
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        // Add ingredient row
+        function addIngredientRow() {
+            const container = document.getElementById('ingredientsContainer');
+            const row = document.createElement('div');
+            row.className = 'form-row ingredient-row';
+            row.innerHTML = `
+                <input type="text" class="form-input" placeholder="Ingredient name" data-ingredient-name>
+                <input type="text" class="form-input" placeholder="Amount (e.g., 2 oz)" data-ingredient-amount style="max-width: 150px;">
+                <button class="btn btn-remove" onclick="removeIngredientRow(this)">✕</button>
+            `;
+            container.appendChild(row);
+        }
+
+        // Remove ingredient row
+        function removeIngredientRow(button) {
+            const container = document.getElementById('ingredientsContainer');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+
+        // Add step row
+        function addStepRow() {
+            const container = document.getElementById('stepsContainer');
+            const row = document.createElement('div');
+            row.className = 'form-row step-row';
+            row.innerHTML = `
+                <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;">
+                <button class="btn btn-remove" onclick="removeStepRow(this)">✕</button>
+            `;
+            container.appendChild(row);
+        }
+
+        // Remove step row
+        function removeStepRow(button) {
+            const container = document.getElementById('stepsContainer');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+
+        // Clear cocktail form
+        function clearCocktailForm() {
+            document.getElementById('importUrl').value = '';
+            document.getElementById('cocktailName').value = '';
+            document.getElementById('cocktailImage').value = '';
+            document.getElementById('cocktailCategory').value = '';
+            document.getElementById('cocktailSpirit').value = '';
+            document.getElementById('cocktailSource').value = '';
+            document.getElementById('cocktailColor').value = spiritColors['Vodka'];
+            
+            // Reset to one ingredient row
+            const ingredientsContainer = document.getElementById('ingredientsContainer');
+            ingredientsContainer.innerHTML = `
+                <div class="form-row ingredient-row">
+                    <input type="text" class="form-input" placeholder="Ingredient name" data-ingredient-name>
+                    <input type="text" class="form-input" placeholder="Amount (e.g., 2 oz)" data-ingredient-amount style="max-width: 150px;">
+                    <button class="btn btn-remove" onclick="removeIngredientRow(this)">✕</button>
+                </div>
+            `;
+            
+            // Reset to one step row
+            const stepsContainer = document.getElementById('stepsContainer');
+            stepsContainer.innerHTML = `
+                <div class="form-row step-row">
+                    <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;">
+                    <button class="btn btn-remove" onclick="removeStepRow(this)">✕</button>
+                </div>
+            `;
+        }
+
+        // Save cocktail
+        function saveCocktail() {
+            const name = document.getElementById('cocktailName').value.trim();
+            const image = document.getElementById('cocktailImage').value.trim();
+            const category = document.getElementById('cocktailCategory').value;
+            const baseSpirit = document.getElementById('cocktailSpirit').value;
+            const source = document.getElementById('cocktailSource').value.trim() || 'User Created';
+            const color = document.getElementById('cocktailColor').value;
+
+            if (!name || !category || !baseSpirit) {
+                alert('Please fill in cocktail name, category, and base spirit');
+                return;
+            }
+
+            // Get ingredients
+            const ingredientRows = document.querySelectorAll('.ingredient-row');
+            const ingredients = [];
+            ingredientRows.forEach(row => {
+                const nameInput = row.querySelector('[data-ingredient-name]');
+                const amountInput = row.querySelector('[data-ingredient-amount]');
+                if (nameInput.value.trim() && amountInput.value.trim()) {
+                    ingredients.push({
+                        name: nameInput.value.trim(),
+                        amount: amountInput.value.trim()
+                    });
+                }
+            });
+
+            if (ingredients.length === 0) {
+                alert('Please add at least one ingredient');
+                return;
+            }
+
+            // Get steps
+            const stepRows = document.querySelectorAll('.step-row');
+            const steps = [];
+            stepRows.forEach(row => {
+                const stepInput = row.querySelector('[data-step]');
+                if (stepInput.value.trim()) {
+                    steps.push(stepInput.value.trim());
+                }
+            });
+
+            if (steps.length === 0) {
+                alert('Please add at least one instruction step');
+                return;
+            }
+
+            if (editingCocktailId !== null) {
+                // Edit existing cocktail
+                const index = cocktails.findIndex(c => c.id === editingCocktailId);
+                if (index !== -1) {
+                    cocktails[index] = {
+                        ...cocktails[index],
+                        name,
+                        category,
+                        baseSpirit,
+                        image: image || null,
+                        color: color,
+                        ingredients,
+                        steps,
+                        source
+                    };
+                    localStorage.setItem('cocktails', JSON.stringify(cocktails));
+                    alert(`Cocktail "${name}" updated successfully!`);
+                }
+            } else {
+                // Create new cocktail
+                const newCocktail = {
+                    id: Math.max(...cocktails.map(c => c.id), 0) + 1,
+                    name,
+                    category,
+                    baseSpirit,
+                    image: image || null,
+                    color: color || spiritColors[baseSpirit] || spiritColors['Other'],
+                    ingredients,
+                    steps,
+                    source
+                };
+
+                cocktails.push(newCocktail);
+                localStorage.setItem('cocktails', JSON.stringify(cocktails));
+                alert(`Cocktail "${name}" created successfully!`);
+            }
+
+            // Clear form and switch to cocktails view
+            clearCocktailForm();
+            editingCocktailId = null;
+            
+            // Update filters and render
+            renderFilters();
+            renderCocktails();
+            
+            // Switch to cocktails tab
+            switchTab('cocktails');
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-tab')[0].classList.add('active');
+        }
+
         // Close modal on outside click
         document.getElementById('cocktailModal').addEventListener('click', (e) => {
             if (e.target.id === 'cocktailModal') {
@@ -1159,6 +2116,7 @@
         });
 
         // Initialize app
+        loadTheme();
         init();
     </script>
 </body>
