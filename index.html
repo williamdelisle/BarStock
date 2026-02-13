@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocktail Flashcards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --background: #ecf0f1;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --border: #bdc3c7;
+            --success: #27ae60;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.3s;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .nav-tab.active {
+            background: var(--secondary);
+        }
+
+        /* Filter Section */
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .filter-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent);
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .filter-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Cocktail Grid */
+        .cocktail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Cocktail Card */
+        .cocktail-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .cocktail-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+
+        .cocktail-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .cocktail-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cocktail-content {
+            padding: 20px;
+        }
+
+        .cocktail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .cocktail-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .can-make-badge {
+            background: var(--success);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .cocktail-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .tag {
+            background: var(--background);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .tag.category {
+            background: #e8f4f8;
+            color: var(--accent);
+        }
+
+        .cocktail-preview {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.1);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .modal-close:hover {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 5rem;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .ingredients-list {
+            margin: 20px 0;
+        }
+
+        .ingredients-list h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        .ingredient-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: var(--background);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ingredient-item.available {
+            background: #d4edda;
+            border-left: 4px solid var(--success);
+        }
+
+        .ingredient-item.unavailable {
+            background: #f8d7da;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .steps-list {
+            margin: 20px 0;
+        }
+
+        .steps-list h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        .step-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: var(--background);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .step-number {
+            font-weight: 700;
+            color: var(--accent);
+            margin-right: 8px;
+        }
+
+        .source-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Bar Inventory Section */
+        .inventory-section {
+            display: none;
+        }
+
+        .inventory-section.active {
+            display: block;
+        }
+
+        .add-item-form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .form-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-select {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #c0392b;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .barcode-scanner {
+            margin-top: 15px;
+            padding: 20px;
+            background: var(--background);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        #video {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .inventory-list {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .inventory-list h2 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .inventory-item {
+            padding: 15px;
+            background: var(--background);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .inventory-info {
+            flex: 1;
+        }
+
+        .inventory-name {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .inventory-category {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .btn-remove {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-remove:hover {
+            background: #c0392b;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 1.4rem;
+            }
+
+            .cocktail-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .modal-content {
+                margin: 10px;
+            }
+
+            .modal-body {
+                padding: 20px;
+            }
+
+            .modal-title {
+                font-size: 1.5rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .form-input,
+            .form-select {
+                width: 100%;
+            }
+
+            .inventory-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🍸 Cocktail Flashcards</h1>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('cocktails')">Cocktails</button>
+                <button class="nav-tab" onclick="switchTab('inventory')">My Bar</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Cocktails Section -->
+        <div id="cocktails-section">
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Search</label>
+                    <input type="text" class="search-box" id="searchBox" placeholder="Search cocktails...">
+                </div>
+
+                <div class="filter-group">
+                    <label>Category</label>
+                    <div class="filter-buttons" id="categoryFilters"></div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Base Spirit</label>
+                    <div class="filter-buttons" id="spiritFilters"></div>
+                </div>
+
+                <div class="filter-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="canMakeToggle">
+                        <span class="slider"></span>
+                    </label>
+                    <label for="canMakeToggle">Show only cocktails I can make</label>
+                </div>
+            </div>
+
+            <div class="cocktail-grid" id="cocktailGrid"></div>
+        </div>
+
+        <!-- Inventory Section -->
+        <div id="inventory-section" class="inventory-section">
+            <div class="add-item-form">
+                <h2>Add to Your Bar</h2>
+                <div class="form-row">
+                    <input type="text" class="form-input" id="itemName" placeholder="Item name (e.g., Vodka, Lime Juice)">
+                    <select class="form-select" id="itemCategory">
+                        <option value="">Select category...</option>
+                        <option value="Spirit">Spirit</option>
+                        <option value="Liqueur">Liqueur</option>
+                        <option value="Mixer">Mixer</option>
+                        <option value="Juice">Juice</option>
+                        <option value="Syrup">Syrup</option>
+                        <option value="Bitters">Bitters</option>
+                        <option value="Garnish">Garnish</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="addInventoryItem()">Add Item</button>
+                </div>
+
+                <div class="barcode-scanner">
+                    <button class="btn btn-secondary" onclick="toggleBarcodeScanner()">📷 Scan Barcode</button>
+                    <div id="scannerContainer" style="display: none; margin-top: 15px;">
+                        <video id="video" autoplay playsinline></video>
+                        <canvas id="canvas" style="display: none;"></canvas>
+                        <p style="margin-top: 10px; font-size: 0.9rem; color: var(--text-light);">
+                            Position the barcode in the camera view
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inventory-list">
+                <h2>Your Bar Inventory (<span id="inventoryCount">0</span> items)</h2>
+                <div class="inventory-grid" id="inventoryGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="cocktailModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample cocktail data - in production, this would come from a database
+        const cocktails = [
+            {
+                id: 1,
+                name: "Margarita",
+                category: "Classic",
+                baseSpirit: "Tequila",
+                image: null,
+                ingredients: [
+                    { name: "Tequila", amount: "2 oz" },
+                    { name: "Lime Juice", amount: "1 oz" },
+                    { name: "Triple Sec", amount: "1 oz" },
+                    { name: "Salt", amount: "for rim" }
+                ],
+                steps: [
+                    "Rim glass with salt",
+                    "Add tequila, lime juice, and triple sec to shaker with ice",
+                    "Shake well for 15 seconds",
+                    "Strain into salt-rimmed glass over ice",
+                    "Garnish with lime wheel"
+                ],
+                source: "IBA Official Cocktails"
+            },
+            {
+                id: 2,
+                name: "Old Fashioned",
+                category: "Classic",
+                baseSpirit: "Whiskey",
+                image: null,
+                ingredients: [
+                    { name: "Bourbon", amount: "2 oz" },
+                    { name: "Sugar Cube", amount: "1" },
+                    { name: "Angostura Bitters", amount: "2-3 dashes" },
+                    { name: "Orange Peel", amount: "1" }
+                ],
+                steps: [
+                    "Place sugar cube in glass",
+                    "Add bitters and muddle",
+                    "Add bourbon and stir",
+                    "Add large ice cube",
+                    "Express orange peel over drink and garnish"
+                ],
+                source: "Classic Cocktail Guide"
+            },
+            {
+                id: 3,
+                name: "Mojito",
+                category: "Refreshing",
+                baseSpirit: "Rum",
+                image: null,
+                ingredients: [
+                    { name: "White Rum", amount: "2 oz" },
+                    { name: "Lime Juice", amount: "1 oz" },
+                    { name: "Mint Leaves", amount: "8-10" },
+                    { name: "Simple Syrup", amount: "0.5 oz" },
+                    { name: "Soda Water", amount: "Top" }
+                ],
+                steps: [
+                    "Muddle mint leaves with simple syrup in glass",
+                    "Add lime juice and rum",
+                    "Fill glass with ice",
+                    "Top with soda water",
+                    "Stir gently and garnish with mint sprig"
+                ],
+                source: "Cuban Classics"
+            },
+            {
+                id: 4,
+                name: "Negroni",
+                category: "Bitter",
+                baseSpirit: "Gin",
+                image: null,
+                ingredients: [
+                    { name: "Gin", amount: "1 oz" },
+                    { name: "Campari", amount: "1 oz" },
+                    { name: "Sweet Vermouth", amount: "1 oz" },
+                    { name: "Orange Peel", amount: "1" }
+                ],
+                steps: [
+                    "Add gin, Campari, and vermouth to mixing glass with ice",
+                    "Stir for 30 seconds",
+                    "Strain into rocks glass over ice",
+                    "Express orange peel and garnish"
+                ],
+                source: "Italian Aperitifs"
+            },
+            {
+                id: 5,
+                name: "Espresso Martini",
+                category: "Modern",
+                baseSpirit: "Vodka",
+                image: null,
+                ingredients: [
+                    { name: "Vodka", amount: "2 oz" },
+                    { name: "Coffee Liqueur", amount: "0.5 oz" },
+                    { name: "Fresh Espresso", amount: "1 oz" },
+                    { name: "Simple Syrup", amount: "0.25 oz" }
+                ],
+                steps: [
+                    "Add all ingredients to shaker with ice",
+                    "Shake vigorously for 15-20 seconds",
+                    "Strain into chilled martini glass",
+                    "Garnish with coffee beans"
+                ],
+                source: "Contemporary Cocktails"
+            },
+            {
+                id: 6,
+                name: "Moscow Mule",
+                category: "Refreshing",
+                baseSpirit: "Vodka",
+                image: null,
+                ingredients: [
+                    { name: "Vodka", amount: "2 oz" },
+                    { name: "Lime Juice", amount: "0.5 oz" },
+                    { name: "Ginger Beer", amount: "4 oz" },
+                    { name: "Lime Wedge", amount: "1" }
+                ],
+                steps: [
+                    "Fill copper mug with ice",
+                    "Add vodka and lime juice",
+                    "Top with ginger beer",
+                    "Stir gently",
+                    "Garnish with lime wedge"
+                ],
+                source: "Modern Classics"
+            }
+        ];
+
+        // Bar inventory
+        let barInventory = JSON.parse(localStorage.getItem('barInventory')) || [];
+
+        // Get unique categories and spirits
+        const categories = [...new Set(cocktails.map(c => c.category))];
+        const spirits = [...new Set(cocktails.map(c => c.baseSpirit))];
+
+        let activeFilters = {
+            category: null,
+            spirit: null,
+            canMake: false,
+            search: ''
+        };
+
+        // Initialize the app
+        function init() {
+            renderFilters();
+            renderCocktails();
+            renderInventory();
+
+            // Event listeners
+            document.getElementById('searchBox').addEventListener('input', (e) => {
+                activeFilters.search = e.target.value.toLowerCase();
+                renderCocktails();
+            });
+
+            document.getElementById('canMakeToggle').addEventListener('change', (e) => {
+                activeFilters.canMake = e.target.checked;
+                renderCocktails();
+            });
+        }
+
+        // Render filter buttons
+        function renderFilters() {
+            const categoryContainer = document.getElementById('categoryFilters');
+            const spiritContainer = document.getElementById('spiritFilters');
+
+            categoryContainer.innerHTML = `
+                <button class="filter-btn active" onclick="setFilter('category', null)">All</button>
+                ${categories.map(cat => 
+                    `<button class="filter-btn" onclick="setFilter('category', '${cat}')">${cat}</button>`
+                ).join('')}
+            `;
+
+            spiritContainer.innerHTML = `
+                <button class="filter-btn active" onclick="setFilter('spirit', null)">All</button>
+                ${spirits.map(spirit => 
+                    `<button class="filter-btn" onclick="setFilter('spirit', '${spirit}')">${spirit}</button>`
+                ).join('')}
+            `;
+        }
+
+        // Set filter
+        function setFilter(type, value) {
+            activeFilters[type] = value;
+            
+            // Update button states
+            const container = type === 'category' ? 'categoryFilters' : 'spiritFilters';
+            document.querySelectorAll(`#${container} .filter-btn`).forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderCocktails();
+        }
+
+        // Check if cocktail can be made
+        function canMakeCocktail(cocktail) {
+            return cocktail.ingredients.every(ing => 
+                barInventory.some(item => 
+                    item.name.toLowerCase().includes(ing.name.toLowerCase()) ||
+                    ing.name.toLowerCase().includes(item.name.toLowerCase())
+                )
+            );
+        }
+
+        // Filter cocktails
+        function filterCocktails() {
+            return cocktails.filter(cocktail => {
+                // Category filter
+                if (activeFilters.category && cocktail.category !== activeFilters.category) {
+                    return false;
+                }
+
+                // Spirit filter
+                if (activeFilters.spirit && cocktail.baseSpirit !== activeFilters.spirit) {
+                    return false;
+                }
+
+                // Can make filter
+                if (activeFilters.canMake && !canMakeCocktail(cocktail)) {
+                    return false;
+                }
+
+                // Search filter
+                if (activeFilters.search) {
+                    const searchTerm = activeFilters.search;
+                    return cocktail.name.toLowerCase().includes(searchTerm) ||
+                           cocktail.ingredients.some(ing => ing.name.toLowerCase().includes(searchTerm));
+                }
+
+                return true;
+            });
+        }
+
+        // Render cocktails
+        function renderCocktails() {
+            const grid = document.getElementById('cocktailGrid');
+            const filtered = filterCocktails();
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="empty-state-icon">🍹</div>
+                        <h3>No cocktails found</h3>
+                        <p>Try adjusting your filters</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(cocktail => {
+                const canMake = canMakeCocktail(cocktail);
+                return `
+                    <div class="cocktail-card" onclick="openModal(${cocktail.id})">
+                        <div class="cocktail-image">
+                            ${cocktail.image ? 
+                                `<img src="${cocktail.image}" alt="${cocktail.name}">` : 
+                                '🍸'
+                            }
+                        </div>
+                        <div class="cocktail-content">
+                            <div class="cocktail-header">
+                                <h3 class="cocktail-name">${cocktail.name}</h3>
+                                ${canMake ? '<span class="can-make-badge">Can Make!</span>' : ''}
+                            </div>
+                            <div class="cocktail-tags">
+                                <span class="tag category">${cocktail.category}</span>
+                                <span class="tag">${cocktail.baseSpirit}</span>
+                            </div>
+                            <div class="cocktail-preview">
+                                ${cocktail.ingredients.slice(0, 3).map(ing => ing.name).join(', ')}
+                                ${cocktail.ingredients.length > 3 ? '...' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Open modal
+        function openModal(cocktailId) {
+            const cocktail = cocktails.find(c => c.id === cocktailId);
+            if (!cocktail) return;
+
+            const modal = document.getElementById('cocktailModal');
+            const content = document.getElementById('modalContent');
+
+            content.innerHTML = `
+                <div class="modal-image">
+                    ${cocktail.image ? `<img src="${cocktail.image}" alt="${cocktail.name}">` : '🍸'}
+                </div>
+                <div class="modal-body">
+                    <h2 class="modal-title">${cocktail.name}</h2>
+                    <div class="cocktail-tags">
+                        <span class="tag category">${cocktail.category}</span>
+                        <span class="tag">${cocktail.baseSpirit}</span>
+                    </div>
+
+                    <div class="ingredients-list">
+                        <h3>Ingredients</h3>
+                        ${cocktail.ingredients.map(ing => {
+                            const available = barInventory.some(item => 
+                                item.name.toLowerCase().includes(ing.name.toLowerCase()) ||
+                                ing.name.toLowerCase().includes(item.name.toLowerCase())
+                            );
+                            return `
+                                <div class="ingredient-item ${available ? 'available' : 'unavailable'}">
+                                    <span>${ing.name}</span>
+                                    <strong>${ing.amount}</strong>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <div class="steps-list">
+                        <h3>Instructions</h3>
+                        ${cocktail.steps.map((step, index) => `
+                            <div class="step-item">
+                                <span class="step-number">${index + 1}.</span>
+                                ${step}
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="source-info">
+                        <strong>Source:</strong> ${cocktail.source}
+                    </div>
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('cocktailModal').classList.remove('active');
+        }
+
+        // Switch tabs
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'cocktails') {
+                document.getElementById('cocktails-section').style.display = 'block';
+                document.getElementById('inventory-section').classList.remove('active');
+            } else {
+                document.getElementById('cocktails-section').style.display = 'none';
+                document.getElementById('inventory-section').classList.add('active');
+            }
+        }
+
+        // Add inventory item
+        function addInventoryItem() {
+            const name = document.getElementById('itemName').value.trim();
+            const category = document.getElementById('itemCategory').value;
+
+            if (!name || !category) {
+                alert('Please enter both item name and category');
+                return;
+            }
+
+            barInventory.push({ name, category });
+            localStorage.setItem('barInventory', JSON.stringify(barInventory));
+
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemCategory').value = '';
+
+            renderInventory();
+            renderCocktails(); // Update can-make badges
+        }
+
+        // Remove inventory item
+        function removeInventoryItem(index) {
+            barInventory.splice(index, 1);
+            localStorage.setItem('barInventory', JSON.stringify(barInventory));
+            renderInventory();
+            renderCocktails();
+        }
+
+        // Render inventory
+        function renderInventory() {
+            const grid = document.getElementById('inventoryGrid');
+            const count = document.getElementById('inventoryCount');
+
+            count.textContent = barInventory.length;
+
+            if (barInventory.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="empty-state-icon">🍾</div>
+                        <h3>Your bar is empty</h3>
+                        <p>Add items to see which cocktails you can make</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = barInventory.map((item, index) => `
+                <div class="inventory-item">
+                    <div class="inventory-info">
+                        <div class="inventory-name">${item.name}</div>
+                        <div class="inventory-category">${item.category}</div>
+                    </div>
+                    <button class="btn-remove" onclick="removeInventoryItem(${index})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        // Barcode scanner functionality
+        let stream = null;
+        let scanning = false;
+
+        async function toggleBarcodeScanner() {
+            const container = document.getElementById('scannerContainer');
+            const video = document.getElementById('video');
+
+            if (!scanning) {
+                container.style.display = 'block';
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { facingMode: 'environment' } 
+                    });
+                    video.srcObject = stream;
+                    scanning = true;
+                    
+                    // In a real implementation, you would use a library like QuaggaJS
+                    // or ZXing to decode barcodes from the video stream
+                    alert('Barcode scanning requires additional libraries (QuaggaJS or ZXing). ' +
+                          'This is a placeholder. In production, integrate a barcode scanning library.');
+                } catch (err) {
+                    alert('Camera access denied or not available');
+                    container.style.display = 'none';
+                }
+            } else {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                container.style.display = 'none';
+                scanning = false;
+            }
+        }
+
+        // Close modal on outside click
+        document.getElementById('cocktailModal').addEventListener('click', (e) => {
+            if (e.target.id === 'cocktailModal') {
+                closeModal();
+            }
+        });
+
+        // Initialize app
+        init();
+    </script>
+</body>
+</html>
