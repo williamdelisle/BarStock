@@ -175,10 +175,17 @@ header h1 {
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     padding: 15px;
-    border-radius: 16px;
-    margin: 12px 0;
+    border-radius: 0px 0px 16px 16px;
+    margin: 0px 16px;
     box-shadow: 0 8px 32px var(--glass-shadow);
     border: 1px solid var(--glass-border);
+}
+
+.filters.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin: 0px 0;
+    padding: 0px;
 }
 
 .filter-toggle-btn {
@@ -198,7 +205,9 @@ header h1 {
 }
 
 .filter-toggle-btn:hover {
-    transform: translateY(-2px);
+    opacity: 0.8;
+    /*background: color-mix(var(--secondary), 10%, black);*/
+    /*filter: brightness(70%); */
     box-shadow: 0 8px 24px var(--glass-shadow);
 }
 
@@ -374,7 +383,7 @@ input:checked + .slider:before {
 }
 
 /* Action Buttons with glass effect */
-.btn-add-cocktail {
+.btn-add {
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -394,12 +403,14 @@ input:checked + .slider:before {
     height: 44px;
 }
 
-.btn-add-cocktail:hover {
-    transform: translateY(-3px);
+.btn-add:hover {
     box-shadow: 0 8px 24px var(--glass-shadow);
+    transform: translateY(-1px) rotate(90deg);
+    background: rgba(0, 200, 0, 0.5);
+    color: white;
 }
 
-.btn-add-cocktail:active {
+.btn-add:active {
     transform: translateY(-1px);
 }
 
@@ -441,7 +452,7 @@ input:checked + .slider:before {
 }
 
 .cocktail-card:hover {
-    transform: translateY(-8px) scale(1.02);
+    transform: translateY(-4px) scale(1.0);
     box-shadow: 0 16px 48px var(--glass-shadow);
 }
 
@@ -721,7 +732,7 @@ input:checked + .slider:before {
 }
 
 .modal-close:hover {
-    transform: scale(1.1) rotate(90deg);
+    transform: translateX(-1px) rotate(90deg);
     background: rgba(255, 59, 48, 0.8);
     color: white;
 }
@@ -842,33 +853,6 @@ input:checked + .slider:before {
     animation: modalContentSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Add Item button - pill, + (Inventory tab) */
-.btn-add-item {
-    border-radius: 999px;
-    padding: 8px 18px;
-    background: rgba(255, 255, 255, 0.35);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    color: var(--text);
-    border: 1px solid var(--glass-border);
-    font-size: 1.25rem;
-    font-weight: 600;
-    cursor: pointer;
-    min-width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 16px var(--glass-shadow);
-}
-
-.btn-add-item:hover {
-    background: rgba(255, 255, 255, 0.5);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px var(--glass-shadow);
-}
-
 /* Min/Max filter fields side by side */
 .filter-minmax {
     display: flex;
@@ -920,24 +904,6 @@ input:checked + .slider:before {
     padding-top: 50px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     animation: modalContentSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.inventory-modal-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    color: var(--text);
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
 }
 
 /* Inventory Section */
@@ -993,8 +959,8 @@ input:checked + .slider:before {
 }
 
 /* Card color input - pill shape */
-.cocktail-color-pill {
-    width: 44px;
+.color-pick-pill {
+    width: 100px;
     height: 36px;
     border: 2px solid var(--border);
     border-radius: 999px;
@@ -1003,22 +969,22 @@ input:checked + .slider:before {
     background: var(--card-bg);
 }
 
-.cocktail-color-pill::-webkit-color-swatch-wrapper {
+.color-pick-pill::-webkit-color-swatch-wrapper {
     padding: 2px;
 }
 
-.cocktail-color-pill::-webkit-color-swatch {
+.color-pick-pill::-webkit-color-swatch {
     border: none;
     border-radius: 999px;
 }
 
-.cocktail-color-pill::-moz-color-swatch {
+.color-pick-pill::-moz-color-swatch {
     border: none;
     border-radius: 999px;
 }
 
 /* Save Cocktail button - centered text */
-.btn-save-cocktail {
+.btn-pill-center {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1249,7 +1215,7 @@ input:checked + .slider:before {
 /* Shared pill button style - darker transparent (inventory card, modals, cocktail form) */
 .btn-pill {
     border-radius: 999px;
-    padding: 6px 14px;
+    padding: 8px 16px;
     background: rgba(0, 0, 0, 0.12);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);

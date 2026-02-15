@@ -16,17 +16,17 @@
                 <div class="header-actions">
                     <!-- Cocktail buttons -->
                     <div id="cocktail-buttons" class="header-btn-group">
-                        <button class="header-btn" onclick="document.getElementById('cocktailsImportInput').click()" title="Import Cocktails from File">📥</button>
+                        <button class="header-btn" onclick="openImportFromUrlModal()" title="Import Recipe from Website">Import Online</button>
+                        <button class="header-btn" onclick="document.getElementById('cocktailsImportInput').click()" title="Import Cocktails from File">Import</button>
                         <input type="file" id="cocktailsImportInput" accept=".json" onchange="importCocktailsFromFile(event)" style="display: none;">
-                        <button class="header-btn" onclick="openImportFromUrlModal()" title="Import Recipe from Website">🌐</button>
-                        <button class="header-btn" onclick="exportCocktails()" title="Export Cocktails">💾</button>
+                        <button class="header-btn" onclick="exportCocktails()" title="Export Cocktails">Export</button>
                     </div>
                     
                     <!-- Inventory buttons -->
                     <div id="inventory-buttons" class="header-btn-group" style="display: none;">
-                        <button class="header-btn" onclick="document.getElementById('inventoryImportInput').click()" title="Import Inventory">📦</button>
+                        <button class="header-btn" onclick="document.getElementById('inventoryImportInput').click()" title="Import Inventory">Import</button>
                         <input type="file" id="inventoryImportInput" accept=".json" onchange="importInventoryFromFile(event)" style="display: none;">
-                        <button class="header-btn" onclick="exportInventory()" title="Export Inventory">💾</button>
+                        <button class="header-btn" onclick="exportInventory()" title="Export Inventory">Export</button>
                     </div>
                     
                     <!-- Theme toggle (always visible) -->
@@ -44,19 +44,21 @@
                     <input type="text" class="search-box" id="searchBox" placeholder="Search cocktails...">
                     <button class="search-clear hidden" id="searchClear" onclick="clearSearch('searchBox')">✕</button>
                 </div>
-                <button class="btn-add-cocktail" onclick="showAddCocktailForm()" style="padding: 0 15px; white-space: nowrap;">
+                <button class="btn-add" onclick="showAddCocktailForm()" style="padding: 0 15px; white-space: nowrap;">
                     +
                 </button>
             </div>
 
-            <div class="filters">
+            <div>
                 <button class="filter-toggle-btn collapsed" id="cocktailFilterBtn" onclick="toggleFilters()">
-                    <span>Filter Cocktails</span>
+                    <span>Filters</span>
                     <span class="arrow">▼</span>
                 </button>
-                
-                <div class="filter-content collapsed" id="filterContent">
-                    <div class="filter-group" style="margin-top: 15px;">
+            </div>
+
+            <div class="filters collapsed" id="filterContent">
+                <div class="filter-content">
+                    <div class="filter-group" style="margin-top: 0px;">
                         <label>Category</label>
                         <div class="filter-buttons" id="categoryFilters"></div>
                     </div>
@@ -79,7 +81,7 @@
             <div class="cocktail-grid" id="cocktailGrid"></div>
         </div>
 
-        <!-- Add Cocktail Modal (opened by + on Cocktails tab; no form at bottom of tab) -->
+        <!-- Add Cocktail Modal (opened by + on Cocktails tab) -->
         <div class="add-cocktail-modal" id="addCocktailModal">
             <div class="add-cocktail-modal-content">
                 <div id="add-cocktail-section" class="add-item-form">
@@ -88,12 +90,16 @@
                         <button class="modal-close" onclick="cancelCocktailEdit()" style="position: static; margin: 0;">×</button>
                     </div>
                 
-                <div class="filter-group" style="margin-bottom: 10px;">
+                <div class="filter-group" style="margin-bottom: 8px;">
                     <label>Import Recipe from URL</label>
                     <div class="form-row">
                         <input type="text" class="form-input" id="importUrl" placeholder="Paste recipe URL to auto-fill (optional)" style="flex: 1;">
-                        <button class="btn btn-pill" onclick="importRecipe()">Import</button>
+                        <button class="btn btn-pill btn-pill-center" onclick="importRecipe()">Import</button>
                     </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Fill Recipe</label>
                 </div>
 
                 <div class="form-row">
@@ -127,10 +133,9 @@
                 </div>
                 <div class="form-row">
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <label style="font-weight: 600; color: var(--text); white-space: nowrap;">Card Color:</label>
-                        <input type="color" id="cocktailColor" class="cocktail-color-pill">
-                        <button class="btn btn-pill" onclick="useSpiritColor()" style="padding: 8px 16px; white-space: nowrap;">Use Spirit Color</button>
-                        <button class="btn btn-pill" onclick="randomizeColor()" style="padding: 8px 16px;">Random</button>
+                        <input type="color" id="cocktailColor" class="color-pick-pill">
+                        <button class="btn btn-pill" onclick="useSpiritColor()">Match Spirit</button>
+                        <button class="btn btn-pill" onclick="randomizeColor()">Random</button>
                     </div>
                 </div>
 
@@ -171,7 +176,7 @@
                 </div>
 
                 <div class="form-row" style="margin-top: 20px; gap: 10px;">
-                    <button class="btn btn-pill btn-save-cocktail" onclick="saveCocktail()" style="flex: 1;">Save Cocktail</button>
+                    <button class="btn btn-pill btn-pill-center" onclick="saveCocktail()" style="flex: 1;">Save Cocktail</button>
                 </div>
                 </div>
             </div>
@@ -187,23 +192,21 @@
                     </div>
                 </div>
                 <div>
-                    <button class="btn-add-item" onclick="openAddInventoryModal()" title="Add Item">+</button>
+                    <button class="btn-add" onclick="openAddInventoryModal()" title="Add Item">+</button>
                 </div>
             </div>
 
-            <div class="inventory-list">
-                <h2>Your Bar Inventory (<span id="inventoryCount">0</span> items)</h2>
+            <div>
+                <button class="filter-toggle-btn collapsed" id="inventoryFilterBtn" onclick="toggleInventoryFilters()">
+                    <span>Filters</span>
+                    <span class="arrow">▼</span>
+                </button>
                 
                 <!-- Inventory Filters -->
-                <div class="filters" style="margin-top: 8px;">
-                    <button class="filter-toggle-btn collapsed" id="inventoryFilterBtn" onclick="toggleInventoryFilters()">
-                        <span>Filter Inventory</span>
-                        <span class="arrow">▼</span>
-                    </button>
+                <div class="filters collapsed" style="margin-top: 0px;" id="inventoryFilterContent">
                     
-                    <div class="filter-content collapsed" id="inventoryFilterContent">
+                    <div class="filter-content">
                         
-
                         <div class="filter-group">
                             <label>Category</label>
                             <div class="filter-buttons" id="inventoryCategoryFilters"></div>
@@ -247,7 +250,10 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="inventory-list" style="margin-top: 8px;">
+                <h2>Bar Inventory (<span id="inventoryCount">0</span> items)</h2>
                 <div class="inventory-grid" id="inventoryGrid"></div>
             </div>
         </div>
@@ -269,13 +275,13 @@
     <!-- Add Inventory Modal -->
     <div class="inventory-modal" id="addInventoryModal">
         <div class="inventory-modal-content">
-            <button class="inventory-modal-close" onclick="closeAddInventoryModal()">×</button>
+            <button class="modal-close" onclick="closeAddInventoryModal()">×</button>
             <h2 style="margin-top: 0;">Add item</h2>
             
             <div id="barcodeResult" style="display: none;"></div>
             
             <div style="margin-bottom: 15px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text);">Scan or Enter Item</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text);">Scan Item Barcode</label>
                 <div style="display:flex; gap:8px; align-items:center;">
                     <div class="search-container" style="flex:1;">
                         <input type="text" class="search-box" id="barcodeInput" placeholder="Scan barcode or enter item name..." autofocus>
@@ -297,6 +303,7 @@
             </div>
 
             <div class="form-row">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text);">Enter Item Details</label>
                 <input type="text" class="form-input" id="itemName" placeholder="Item name" style="flex: 2;">
                 <select class="form-select" id="itemCategory">
                     <option value="">Category</option>
@@ -320,24 +327,21 @@
                 <input type="text" class="form-input" id="itemBrand" placeholder="Brand (optional)">
                 <input type="text" class="form-input" id="itemModel" placeholder="Model/Variant (optional)">
                 <input type="number" class="form-input" id="itemYear" placeholder="Year" min="1900" max="2030" style="max-width: 120px;">
+                <input type="number" class="form-input" id="itemVolume" placeholder="Volume (ml)" min="0" step="0.1" style="max-width: 150px;">
+                <input type="number" class="form-input" id="itemABV" placeholder="ABV %" min="0" max="100" step="0.1" style="max-width: 150px;">
+                <input type="number" class="form-input" id="itemSugar" placeholder="Sugar (g/L)" min="0" step="0.1" style="max-width: 150px;">
             </div>
             <div class="form-row" id="itemImageRow" style="display: flex; gap: 8px; align-items:center; flex-wrap: wrap;">
                 <label style="width: 100%; font-weight: 600; color: var(--text); margin-bottom: 6px;">Image</label>
                 <input type="file" class="form-input" id="itemImageFile" accept="image/*" capture="environment" style="display: none;" onchange="previewItemImage()">
-                <button type="button" class="btn btn-pill" onclick="document.getElementById('itemImageFile').click()" style="white-space: nowrap;">📷 Camera/File</button>
+                <button type="button" class="btn btn-pill" onclick="document.getElementById('itemImageFile').click()" style="white-space: nowrap;">Camera/File</button>
                 <input type="text" class="form-input" id="itemImage" placeholder="Or enter image URL (optional)" style="flex: 1; min-width: 200px;">
                 <button class="btn btn-pill" onclick="previewItemImage()">Preview</button>
             </div>
             <img id="itemImagePreview" src="" alt="" style="display:none; max-width: 120px; margin: 8px 0; border-radius:8px;">
 
-            <div class="form-row">
-                <input type="number" class="form-input" id="itemVolume" placeholder="Volume (ml)" min="0" step="0.1" style="max-width: 150px;">
-                <input type="number" class="form-input" id="itemABV" placeholder="ABV %" min="0" max="100" step="0.1" style="max-width: 150px;">
-                <input type="number" class="form-input" id="itemSugar" placeholder="Sugar (g/L)" min="0" step="0.1" style="max-width: 150px;">
-            </div>
-
             <div class="form-row" style="margin-top: 20px; gap: 10px;">
-                <button class="btn btn-pill" id="addInventorySubmitBtn" onclick="addInventoryItem()" style="flex: 1;">Add Item</button>
+                <button class="btn btn-pill btn-pill-center" id="addInventorySubmitBtn" onclick="addInventoryItem()" style="flex: 1;">Add Item</button>
             </div>
         </div>
     </div>
@@ -345,11 +349,15 @@
     <!-- Modal -->
     <div class="modal" id="cocktailModal">
         <div class="modal-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; position: absolute; top: 10px; right: 10px; gap: 10px;">
+            <div style="position: absolute; top: 10px; left: 10px;">
                 <button class="btn-edit" id="modalEditBtn" style="display: none;" onclick="editCocktailFromModal()">
                     <img src="https://cdn-icons-png.flaticon.com/128/3917/3917376.png" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0) invert(1);" alt="Edit">
                     Edit
                 </button>
+            </div>
+
+            <!--<div style="display: flex; justify-content: space-between; align-items: center; position: absolute; top: 10px; right: 10px; gap: 10px;"></div>-->
+            <div style="position: absolute; top: 2px; right: 2px;">
                 <button class="modal-close" onclick="closeModal()">×</button>
             </div>
             <div id="modalContent"></div>
