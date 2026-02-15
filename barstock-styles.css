@@ -1358,7 +1358,7 @@ input:checked + .slider:before {
     box-shadow: 0 -8px 32px var(--glass-shadow);
     border-top: 1px solid var(--glass-border);
     z-index: 99;
-    padding: 8px 0;
+    padding: 16px 0;
 }
 
 .nav-tab {
@@ -1395,7 +1395,7 @@ input:checked + .slider:before {
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-top: 1px solid var(--glass-border);
-    padding: 8px 0;
+    padding: 08px 0;
     box-shadow: 0 -8px 32px var(--glass-shadow);
     z-index: 99;
 }

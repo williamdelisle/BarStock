@@ -349,10 +349,13 @@
     <!-- Modal -->
     <div class="modal" id="cocktailModal">
         <div class="modal-content">
-            <div style="position: absolute; top: 10px; left: 10px;">
+            <div style="position: absolute; top: 10px; left: 10px; display: flex; gap: 8px;">
                 <button class="btn-edit" id="modalEditBtn" style="display: none;" onclick="editCocktailFromModal()">
                     <img src="https://cdn-icons-png.flaticon.com/128/3917/3917376.png" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0) invert(1);" alt="Edit">
                     Edit
+                </button>
+                <button class="btn-edit" id="modalDeleteBtn" style="display: none; background-color: rgba(220, 38, 38, 0.2); color: #dc2626;" onclick="deleteCocktailFromModal()">
+                    <img src="https://cdn-icons-png.flaticon.com/128/3917/3917242.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="Delete"> Delete
                 </button>
             </div>
 
@@ -391,6 +394,22 @@
                 </button>
                 <button class="btn btn-pill" onclick="closeImportUrlModal()" style="flex: 1; background-color: var(--bg-secondary);">
                     Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteConfirmModal">
+        <div class="modal-content" style="max-width: 400px; padding: 8px">
+            <h2 style="margin-top: 0; color: var(--text);">Delete Cocktail?</h2>
+            <p style="color: var(--text); margin: 15px 0;">Are you sure you want to delete this cocktail? <br> This action cannot be undone.</p>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn btn-pill" onclick="closeDeleteConfirmModal()" style="background-color: var(--glass-bg); border: 1px solid var(--glass-border);">
+                    Cancel
+                </button>
+                <button class="btn btn-pill" id="confirmDeleteBtn" onclick="confirmDelete()" style="background-color: rgba(220, 38, 38, 0.8); color: white; border: 1px solid rgba(220, 38, 38, 0.9);">
+                    Delete
                 </button>
             </div>
         </div>
@@ -812,15 +831,43 @@
 
             modal.classList.add('active');
             
-            // Show edit button and store current cocktail id
+            // Show edit and delete buttons and store current cocktail id
             document.getElementById('modalEditBtn').style.display = 'flex';
+            document.getElementById('modalDeleteBtn').style.display = 'flex';
             document.getElementById('modalEditBtn').onclick = () => editCocktailFromModal(cocktailId);
+            document.getElementById('modalDeleteBtn').onclick = () => deleteCocktailFromModal(cocktailId);
         }
 
         // Edit cocktail from modal
         function editCocktailFromModal(cocktailId) {
             closeModal();
             editCocktail(cocktailId);
+        }
+
+        // Delete cocktail from modal
+        function deleteCocktailFromModal(cocktailId) {
+            window.pendingDeleteCocktailId = cocktailId;
+            document.getElementById('deleteConfirmModal').classList.add('active');
+        }
+
+        // Confirm delete
+        function confirmDelete() {
+            const cocktailId = window.pendingDeleteCocktailId;
+            if (cocktailId !== null && cocktailId !== undefined) {
+                cocktails = cocktails.filter(c => c.id !== cocktailId);
+                localStorage.setItem('cocktails', JSON.stringify(cocktails));
+                closeDeleteConfirmModal();
+                closeModal();
+                renderFilters();
+                renderCocktails();
+                showErrorNotification('Cocktail deleted successfully!', 'success');
+            }
+        }
+
+        // Close delete confirmation modal
+        function closeDeleteConfirmModal() {
+            document.getElementById('deleteConfirmModal').classList.remove('active');
+            window.pendingDeleteCocktailId = null;
         }
 
         // Close modal
