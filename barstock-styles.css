@@ -1,0 +1,1519 @@
+/* BarStock Styles with iOS Liquid Glass Effect */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #2d3748;
+    --secondary: #4a5568;
+    --accent: #718096;
+    --background: #f7fafc;
+    --card-bg: #ffffff;
+    --text: #1a202c;
+    --text-light: #718096;
+    --border: #e2e8f0;
+    --success: #48bb78;
+    --hover: #edf2f7;
+    
+    /* Glass effect variables */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --glass-shadow: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+    --primary: #1a202c;
+    --secondary: #2d3748;
+    --accent: #a0aec0;
+    --background: #0f1419;
+    --card-bg: #1a202c;
+    --text: #f7fafc;
+    --text-light: #a0aec0;
+    --border: #2d3748;
+    --success: #68d391;
+    --hover: #2d3748;
+    
+    /* Glass effect variables for dark mode */
+    --glass-bg: rgba(26, 32, 44, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: rgba(0, 0, 0, 0.3);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s;
+    padding-bottom: 60px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+/* Header with glass effect */
+header {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    padding: 15px 0;
+    box-shadow: 0 8px 32px var(--glass-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    margin: 0;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-btn-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-btn {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    padding: 8px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px var(--glass-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+}
+
+.header-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px var(--glass-shadow);
+}
+
+.header-btn:active {
+    transform: scale(0.95);
+}
+
+.theme-toggle {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px var(--glass-shadow);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px var(--glass-shadow);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Tab content animations */
+.tab-content {
+    animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Filter Section with glass effect */
+.filters {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    padding: 15px;
+    border-radius: 16px;
+    margin: 12px 0;
+    box-shadow: 0 8px 32px var(--glass-shadow);
+    border: 1px solid var(--glass-border);
+}
+
+.filter-toggle-btn {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--glass-shadow);
+}
+
+.filter-toggle-btn:active {
+    transform: translateY(0);
+}
+
+.filter-toggle-btn .arrow {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-toggle-btn.collapsed .arrow {
+    transform: rotate(-90deg);
+}
+
+.filter-content {
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+    opacity: 1;
+}
+
+.filter-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+.filter-group {
+    margin-bottom: 12px;
+}
+
+.filter-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 6px 12px;
+    border: 2px solid var(--border);
+    background: var(--background);
+    color: var(--text);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-btn:hover {
+    border-color: var(--secondary);
+    background: var(--hover);
+    transform: translateY(-2px);
+}
+
+.filter-btn.active {
+    background: var(--secondary);
+    color: white;
+    border-color: var(--secondary);
+    box-shadow: 0 4px 12px rgba(74, 85, 104, 0.3);
+}
+
+/* Search */
+.search-container {
+    position: relative;
+    flex: 1;
+}
+
+.search-box {
+    width: 100%;
+    padding: 10px 35px 10px 12px;
+    border: 2px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.95rem;
+    background: var(--card-bg);
+    color: var(--text);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-box:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 4px 16px var(--glass-shadow);
+    transform: translateY(-1px);
+}
+
+.search-clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.search-clear:hover {
+    background: var(--secondary);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.search-clear.hidden {
+    display: none;
+}
+
+/* Toggle Switch */
+.filter-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--border);
+    transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input:checked + .slider {
+    background-color: var(--success);
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* Action Buttons with glass effect */
+.btn-add-cocktail {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text);
+    border: 1px solid var(--glass-border);
+    padding: 10px 15px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px var(--glass-shadow);
+    min-width: 44px;
+    height: 44px;
+}
+
+.btn-add-cocktail:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px var(--glass-shadow);
+}
+
+.btn-add-cocktail:active {
+    transform: translateY(-1px);
+}
+
+/* Cocktail Grid */
+.cocktail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+/* Cocktail Card with glass effect */
+.cocktail-card {
+    position: relative;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px var(--glass-shadow);
+    border: 1px solid var(--glass-border);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: cardFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cocktail-card-image-wrap {
+    position: relative;
+}
+
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.cocktail-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 16px 48px var(--glass-shadow);
+}
+
+.cocktail-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2.5rem;
+    transition: opacity 0.3s;
+    cursor: pointer;
+}
+
+.cocktail-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cocktail-content {
+    padding: 15px;
+    cursor: pointer;
+}
+
+.cocktail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 8px;
+    gap: 8px;
+}
+
+.cocktail-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+}
+
+.cocktail-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Modal Edit button - same pill style */
+.btn-edit {
+    background: rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--text);
+    border: 1px solid var(--glass-border);
+    padding: 6px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+[data-theme="dark"] .btn-edit {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-edit:hover {
+    background: rgba(0, 0, 0, 0.18);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Edit button on cocktail card - same pill style, darker transparent */
+.btn-edit-card {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    border-radius: 999px;
+    padding: 6px 14px;
+    background: rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    font-size: 0.8rem;
+}
+
+[data-theme="dark"] .btn-edit-card {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-edit-card:hover {
+    background: rgba(0, 0, 0, 0.28);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.can-make-badge {
+    background: var(--success);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    animation: pulse 2s infinite;
+    white-space: nowrap;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.cocktail-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.tag {
+    background: var(--hover);
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    transition: all 0.3s;
+}
+
+.tag.category {
+    background: var(--secondary);
+    color: white;
+}
+
+.cocktail-preview {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.4;
+}
+
+/* Top notification - slides from top, red error / green success */
+.error-notification {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    padding: 14px 20px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    animation: slideInTop 0.35s ease-out forwards;
+}
+
+.error-notification.error {
+    background: #c53030;
+}
+
+.error-notification.success {
+    background: #2f855a;
+}
+
+@keyframes slideInTop {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutTop {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+}
+
+/* Modal with glass effect */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+    animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--glass-bg);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: modalContentSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalContentSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-close:hover {
+    transform: scale(1.1) rotate(90deg);
+    background: rgba(255, 59, 48, 0.8);
+    color: white;
+}
+
+.modal-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 4rem;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-title {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    color: var(--text);
+}
+
+.ingredients-list,
+.steps-list {
+    margin: 15px 0;
+}
+
+.ingredients-list h3,
+.steps-list h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: var(--text);
+}
+
+.ingredient-item,
+.step-item {
+    padding: 10px;
+    margin-bottom: 8px;
+    background: var(--hover);
+    border-radius: 10px;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.ingredient-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ingredient-item.available {
+    background: rgba(72, 187, 120, 0.15);
+    border-left: 4px solid var(--success);
+}
+
+.ingredient-item.unavailable {
+    background: rgba(245, 101, 101, 0.15);
+    border-left: 4px solid #f56565;
+}
+
+.step-item {
+    border-left: 4px solid var(--secondary);
+}
+
+.step-number {
+    font-weight: 700;
+    color: var(--secondary);
+    margin-right: 8px;
+}
+
+.source-info {
+    margin-top: 15px;
+    padding: 12px;
+    background: var(--hover);
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+/* Add Cocktail Modal (no form at bottom of Cocktails tab) */
+.add-cocktail-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1001;
+    overflow-y: auto;
+    padding: 20px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.add-cocktail-modal.active {
+    display: flex;
+}
+
+.add-cocktail-modal-content {
+    background: var(--glass-bg);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: modalContentSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Add Item button - pill, + (Inventory tab) */
+.btn-add-item {
+    border-radius: 999px;
+    padding: 8px 18px;
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--text);
+    border: 1px solid var(--glass-border);
+    font-size: 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px var(--glass-shadow);
+}
+
+.btn-add-item:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--glass-shadow);
+}
+
+/* Min/Max filter fields side by side */
+.filter-minmax {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-minmax .form-input {
+    flex: 1;
+    min-width: 80px;
+    max-width: 140px;
+}
+
+/* Inventory modal (Add to your bar - opened by Add Item button) */
+.inventory-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1001;
+    overflow-y: auto;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.inventory-modal.active {
+    display: flex;
+}
+
+.inventory-modal-content {
+    background: var(--glass-bg);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 20px;
+    padding-top: 50px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: modalContentSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.inventory-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+/* Inventory Section */
+.inventory-section {
+    display: none;
+    animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.inventory-section.active {
+    display: block;
+}
+
+.add-item-form {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    padding: 15px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+    box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+.add-item-form h2,
+.add-item-form h3 {
+    color: var(--text);
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+/* Section header: title and + button on same line */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.section-header h3 {
+    margin-bottom: 0;
+}
+
+.btn-section-add {
+    min-width: 36px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Card color input - pill shape */
+.cocktail-color-pill {
+    width: 44px;
+    height: 36px;
+    border: 2px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    padding: 2px;
+    background: var(--card-bg);
+}
+
+.cocktail-color-pill::-webkit-color-swatch-wrapper {
+    padding: 2px;
+}
+
+.cocktail-color-pill::-webkit-color-swatch {
+    border: none;
+    border-radius: 999px;
+}
+
+.cocktail-color-pill::-moz-color-swatch {
+    border: none;
+    border-radius: 999px;
+}
+
+/* Save Cocktail button - centered text */
+.btn-save-cocktail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.form-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+/* Ingredient row - name, qty, unit, remove inline */
+.form-row.ingredient-row {
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.form-row.ingredient-row .form-input:first-of-type,
+.form-row.ingredient-row input[data-ingredient-name] {
+    flex: 1;
+    min-width: 0;
+}
+
+.form-row.ingredient-row .form-input:nth-child(2),
+.form-row.ingredient-row input[data-ingredient-amount] {
+    flex: 0 0 70px;
+    max-width: 70px;
+}
+
+.form-row.ingredient-row .form-select,
+.form-row.ingredient-row select.ingredient-unit {
+    flex: 0 0 90px;
+    max-width: 90px;
+}
+
+.form-row.ingredient-row > button {
+    flex-shrink: 0;
+}
+
+/* Step row - step text and remove inline */
+.form-row.step-row {
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.form-row.step-row .form-input,
+.form-row.step-row input[data-step] {
+    flex: 1;
+    min-width: 0;
+}
+
+.form-row.step-row > button {
+    flex-shrink: 0;
+}
+
+.form-input {
+    flex: 1;
+    min-width: 150px;
+    padding: 10px;
+    border: 2px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 4px 16px var(--glass-shadow);
+    transform: translateY(-1px);
+}
+
+.form-select {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px;
+    border: 2px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 4px 16px var(--glass-shadow);
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary {
+    background: var(--secondary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--glass-shadow);
+}
+
+.btn-secondary {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: var(--secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--glass-shadow);
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(72, 187, 120, 0.3);
+}
+
+.barcode-scanner {
+    margin-top: 12px;
+    padding: 15px;
+    background: var(--hover);
+    border-radius: 10px;
+    text-align: center;
+}
+
+#video {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.inventory-list {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    padding: 15px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+.inventory-list h2 {
+    margin-bottom: 12px;
+    color: var(--text);
+    font-size: 1.2rem;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.inventory-item {
+    padding: 0;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: cardFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+.inventory-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px var(--glass-shadow);
+}
+
+.inventory-item-image {
+    width: 100%;
+    height: 120px;
+    background: var(--hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.inventory-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.inventory-item-no-image {
+    font-size: 2.5rem;
+    color: var(--text-light);
+}
+
+.inventory-info {
+    flex: 1;
+    padding: 12px 12px 8px;
+    min-width: 0;
+}
+
+.inventory-item-actions {
+    display: flex;
+    gap: 8px;
+    padding: 8px 12px 12px;
+    flex-wrap: wrap;
+}
+
+/* Shared pill button style - darker transparent (inventory card, modals, cocktail form) */
+.btn-pill {
+    border-radius: 999px;
+    padding: 6px 14px;
+    background: rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--text);
+    border: 1px solid var(--glass-border);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] .btn-pill {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--text);
+}
+
+.btn-pill:hover {
+    background: rgba(0, 0, 0, 0.18);
+    border-color: var(--glass-border);
+}
+
+[data-theme="dark"] .btn-pill:hover {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.btn-pill img {
+    flex-shrink: 0;
+}
+
+/* Inventory card buttons - same pill style, darker (+10–20%) */
+.btn-inventory-card {
+    border-radius: 999px;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--text);
+    border: 1px solid var(--glass-border);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] .btn-inventory-card {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn-inventory-card:hover {
+    background: rgba(0, 0, 0, 0.25);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .btn-inventory-card:hover {
+    background: rgba(255, 255, 255, 0.28);
+}
+
+.btn-inventory-card img {
+    flex-shrink: 0;
+}
+
+.btn-inventory-remove:hover {
+    background: rgba(245, 101, 101, 0.3);
+    border-color: rgba(245, 101, 101, 0.5);
+}
+
+.inventory-name {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+    font-size: 0.95rem;
+}
+
+.inventory-category {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.btn-remove {
+    background: #718096;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-remove:hover {
+    background: #4a5568;
+    transform: scale(1.05);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--text-light);
+}
+
+.empty-state-icon {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+    display: flex;
+    gap: 0;
+    flex-wrap: nowrap;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 -8px 32px var(--glass-shadow);
+    border-top: 1px solid var(--glass-border);
+    z-index: 99;
+    padding: 8px 0;
+}
+
+.nav-tab {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    padding: 12px;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex: 1;
+    text-align: center;
+    border-top: 3px solid transparent;
+}
+
+.nav-tab:hover {
+    background: var(--hover);
+}
+
+.nav-tab.active {
+    background: var(--hover);
+    border-top-color: var(--accent);
+}
+
+/* Bottom Navigation with glass effect */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-top: 1px solid var(--glass-border);
+    padding: 8px 0;
+    box-shadow: 0 -8px 32px var(--glass-shadow);
+    z-index: 99;
+}
+
+.bottom-nav-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--text-light);
+    background: transparent;
+    border: none;
+    font-size: 0.75rem;
+}
+
+.nav-item:hover {
+    background: var(--hover);
+}
+
+.nav-item.active {
+    color: var(--accent);
+    background: var(--hover);
+}
+
+.nav-item-icon {
+    font-size: 1.3rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 8px;
+    }
+
+    header h1 {
+        font-size: 1.3rem;
+    }
+
+    .cocktail-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .modal-content {
+        margin: 10px;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+    }
+
+    .form-row:not(.ingredient-row):not(.step-row) {
+        flex-direction: column;
+    }
+
+    .form-input,
+    .form-select {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .inventory-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 769px) {
+    .bottom-nav {
+        display: none;
+    }
+}
