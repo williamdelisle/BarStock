@@ -2851,7 +2851,7 @@ Return ONLY the JSON object, no other text.`
             // Draw the colored liquid on main canvas
             const liquidImage = new Image();
             liquidImage.onload = function() {
-                ctx.drawImage(liquidImage, 75, 0, 150, 200);
+                ctx.drawImage(liquidImage, 0, 0, 200, 200);
             };
             liquidImage.src = tempCanvas.toDataURL('image/png');
         }
@@ -2926,7 +2926,7 @@ Return ONLY the JSON object, no other text.`
                     const iceImg = await loadComponentImage(iceImageSrc, () => generateIceImage(imageEditorState.ice));
                     
                     if (iceImg) {
-                        ctx.drawImage(iceImg, 75, 0, 200, 200);
+                        ctx.drawImage(iceImg, 0, 0, 200, 200);
                     }
                 }
                 
