@@ -104,7 +104,11 @@
 
                 <div class="form-row">
                     <input type="text" class="form-input" id="cocktailName" placeholder="Cocktail name" style="flex: 2;">
+                </div>
+
+                <div class="form-row">
                     <input type="text" class="form-input" id="cocktailImage" placeholder="Image URL (optional)">
+                    <button class="btn btn-pill" onclick="openImageEditor()" title="Build custom image" style="white-space: nowrap;">Build</button>
                 </div>
                 <div class="form-row">
                     <select class="form-select" id="cocktailCategory">
@@ -410,6 +414,100 @@
                 </button>
                 <button class="btn btn-pill" id="confirmDeleteBtn" onclick="confirmDelete()" style="background-color: rgba(220, 38, 38, 0.8); color: white; border: 1px solid rgba(220, 38, 38, 0.9);">
                     Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cocktail Image Editor Modal -->
+    <div class="modal" id="cocktailImageEditorModal">
+        <div class="modal-content" style="max-width: 800px; padding: 8px;">
+            <button class="modal-close" onclick="closeImageEditor()">×</button>
+            <h2 style="margin-top: 0; color: var(--text);">Cocktail Image</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <!-- Canvas Area -->
+                <div>
+                    <canvas id="cocktailCanvas" width="300" height="400" style="border: 2px solid var(--border); border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: block; margin: 0 auto;"></canvas>
+                    <button class="btn btn-pill" onclick="downloadCocktailImage()" style="width: 100%; margin-top: 10px;">
+                        Download
+                    </button>
+                </div>
+
+                <!-- Element Selector -->
+                <div>
+                    <div style="max-height: 450px; overflow-y: auto;">
+                        <!-- Glassware -->
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Glass Type</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <button class="btn btn-pill" onclick="selectGlass('rocks')" style="font-size: 0.8rem;">Rocks</button>
+                                <button class="btn btn-pill" onclick="selectGlass('collins')" style="font-size: 0.8rem;">Collins</button>
+                                <button class="btn btn-pill" onclick="selectGlass('highball')" style="font-size: 0.8rem;">Highball</button>
+                                <button class="btn btn-pill" onclick="selectGlass('coupe')" style="font-size: 0.8rem;">Coupe</button>
+                                <button class="btn btn-pill" onclick="selectGlass('martini')" style="font-size: 0.8rem;">Martini</button>
+                                <button class="btn btn-pill" onclick="selectGlass('margarita')" style="font-size: 0.8rem;">Margarita</button>
+                                <button class="btn btn-pill" onclick="selectGlass('mule')" style="font-size: 0.8rem;">Copper Mule</button>
+                            </div>
+                        </div>
+
+                        <!-- Drink Color -->
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Drink Color</label>
+                            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;">
+                                <button class="btn btn-pill" onclick="setDrinkColor('#ffffff8c')" style="background-color: #ffffff8c; border: 2px solid transparent; width: 100%; height: 40px;" title="Daiquiri"></button>
+                                <button class="btn btn-pill" onclick="setDrinkColor('#DC143C8c')" style="background-color: #DC143C8c; border: 2px solid transparent; width: 100%; height: 40px;" title="Cosmopolitan"></button>
+                                <button class="btn btn-pill" onclick="setDrinkColor('#fff6a18c')" style="background-color: #fff6a18c; border: 2px solid transparent; width: 100%; height: 40px;" title="Mojito"></button>
+                                <button class="btn btn-pill" onclick="setDrinkColor('#8B45138c')" style="background-color: #8B45138c; border: 2px solid transparent; width: 100%; height: 40px;" title="Old Fashioned"></button>
+                                <button class="btn btn-pill" onclick="setDrinkColor('#FFD7008c')" style="background-color: #FFD7008c; border: 2px solid transparent; width: 100%; height: 40px;" title="Margarita"></button>
+                                <button class="btn btn-pill" onclick="setDrinkColor('#f0bf808c')" style="background-color: #f0bf808c; border: 2px solid transparent; width: 100%; height: 40px;" title="Sex on Beach"></button>
+                                <button class="btn btn-pill" onclick="setDrinkColor('#6F4E378c')" style="background-color: #6F4E378c; border: 2px solid transparent; width: 100%; height: 40px;" title="Espresso Martini"></button>
+                                <button class="btn btn-pill" onclick="setDrinkColor('#00CED18c')" style="background-color: #00CED18c; border: 2px solid transparent; width: 100%; height: 40px;" title="Blue Lagoon"></button>
+                                <button class="btn btn-pill" onclick="setDrinkColor('#FFB6C18c')" style="background-color: #FFB6C18c; border: 2px solid transparent; width: 100%; height: 40px;" title="Pina Colada"></button>
+                                <button class="btn btn-pill" onclick="setDrinkColor('#CCCCCC8c')" style="background-color: #CCCCCC8c; border: 2px solid transparent; width: 100%; height: 40px;" title="Clear"></button>
+                            </div>
+                            <div style="margin-top: 8px; display: flex; gap: 8px;">
+                                <label style="font-weight: 600; color: var(--text); font-size: 0.85rem;">Custom</label>
+                                <input class="color-pick-pill" type="color" id="drinkColorPicker" value="#ffffff8c" onchange="setDrinkColor(this.value)">
+                            </div>
+                        </div>
+
+                        <!-- Ice -->
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Ice</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <button class="btn btn-pill" onclick="selectIce('none')" style="font-size: 0.8rem;">None</button>
+                                <button class="btn btn-pill" onclick="selectIce('cubes')" style="font-size: 0.8rem;">Cubes</button>
+                                <button class="btn btn-pill" onclick="selectIce('crushed')" style="font-size: 0.8rem;">Crushed</button>
+                            </div>
+                        </div>
+
+                        <!-- Garnish -->
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Garnish</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <button class="btn btn-pill" onclick="selectGarnish('none')" style="font-size: 0.8rem;">None</button>
+                                <button class="btn btn-pill" onclick="selectGarnish('lime')" style="font-size: 0.8rem;">Lime</button>
+                                <button class="btn btn-pill" onclick="selectGarnish('lemon')" style="font-size: 0.8rem;">Lemon</button>
+                                <button class="btn btn-pill" onclick="selectGarnish('orange')" style="font-size: 0.8rem;">Orange</button>
+                                <button class="btn btn-pill" onclick="selectGarnish('cherry')" style="font-size: 0.8rem;">Cherry</button>
+                                <button class="btn btn-pill" onclick="selectGarnish('mint')" style="font-size: 0.8rem;">Mint</button>
+                                <button class="btn btn-pill" onclick="selectGarnish('foam')" style="font-size: 0.8rem;">Foam</button>
+                                <button class="btn btn-pill" onclick="selectGarnish('coffee')" style="font-size: 0.8rem;">Coffee Beans</button>
+                                <button class="btn btn-pill" onclick="selectGarnish('olive')" style="font-size: 0.8rem;">Olive</button>
+                                <button class="btn btn-pill" onclick="selectGarnish('cucumber')" style="font-size: 0.8rem;">Cucumber</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                <button class="btn btn-pill" onclick="closeImageEditor()" style="background-color: var(--glass-bg); border: 1px solid var(--glass-border);">
+                    Cancel
+                </button>
+                <button class="btn btn-pill" onclick="applyGeneratedImage()" style="background-color: rgba(72, 187, 120, 0.8); color: white; border: 1px solid rgba(72, 187, 120, 0.9);">
+                    ✓ Apply Image
                 </button>
             </div>
         </div>
@@ -2449,6 +2547,303 @@ Return ONLY the JSON object, no other text.`
 
         function getRandomCocktailColor() {
             return cocktailColors[Math.floor(Math.random() * cocktailColors.length)];
+        }
+
+        // Cocktail Image Editor Variables
+        let imageEditorState = {
+            glass: 'rocks',
+            drinkColor: '#E8D5C4',
+            ice: 'cubes',
+            garnish: 'lime',
+            backgroundColor: '#2d3748'
+        };
+
+        // Open image editor
+        function openImageEditor() {
+            // Get the cocktail color from the form or use default
+            const cocktailColor = document.getElementById('cocktailColor').value || '#2d3748';
+            
+            imageEditorState = {
+                glass: 'rocks',
+                drinkColor: '#E8D5C4',
+                ice: 'cubes',
+                garnish: 'lime',
+                backgroundColor: cocktailColor
+            };
+            document.getElementById('cocktailImageEditorModal').classList.add('active');
+            drawCocktail();
+        }
+
+        // Close image editor
+        function closeImageEditor() {
+            document.getElementById('cocktailImageEditorModal').classList.remove('active');
+        }
+
+        // Select glass type
+        function selectGlass(type) {
+            imageEditorState.glass = type;
+            drawCocktail();
+        }
+
+        // Set drink color
+        function setDrinkColor(color) {
+            imageEditorState.drinkColor = color;
+            drawCocktail();
+        }
+
+        // Select ice type
+        function selectIce(type) {
+            imageEditorState.ice = type;
+            drawCocktail();
+        }
+
+        // Select garnish
+        function selectGarnish(type) {
+            imageEditorState.garnish = type;
+            drawCocktail();
+        }
+
+        // Select straw
+        // Draw cocktail on canvas
+        function drawCocktail() {
+            const canvas = document.getElementById('cocktailCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw background using cocktail color
+            const bgColor = imageEditorState.backgroundColor || '#2d3748';
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw glass based on type
+            drawGlass(ctx, imageEditorState.glass);
+            
+            // Draw drink
+            drawDrink(ctx, imageEditorState.glass, imageEditorState.drinkColor);
+            
+            // Draw ice
+            if (imageEditorState.ice !== 'none') {
+                drawIce(ctx, imageEditorState.glass, imageEditorState.ice);
+            }
+            
+            // Draw garnish
+            if (imageEditorState.garnish !== 'none') {
+                drawGarnish(ctx, imageEditorState.glass, imageEditorState.garnish);
+            }
+        }
+
+        // Draw glass outline
+        function drawGlass(ctx, type) {
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.lineWidth = 3;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            
+            const centerX = ctx.canvas.width / 2;
+            const centerY = ctx.canvas.height / 2;
+            
+            switch(type) {
+                case 'rocks':
+                    // Square glass
+                    const rockSize = 80;
+                    ctx.fillRect(centerX - rockSize, centerY, rockSize * 2, 100);
+                    ctx.strokeRect(centerX - rockSize, centerY, rockSize * 2, 100);
+                    break;
+                case 'collins':
+                    // Tall cylindrical glass
+                    ctx.fillRect(centerX - 50, centerY - 40, 100, 140);
+                    ctx.strokeRect(centerX - 50, centerY - 40, 100, 140);
+                    break;
+                case 'highball':
+                    // Tall thin glass
+                    ctx.fillRect(centerX - 45, centerY - 50, 90, 140);
+                    ctx.strokeRect(centerX - 45, centerY - 50, 90, 140);
+                    break;
+                case 'coupe':
+                    // Coupe glass
+                    ctx.beginPath();
+                    ctx.ellipse(centerX, centerY - 50, 70, 30, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 70, centerY - 50);
+                    ctx.lineTo(centerX - 50, centerY + 50);
+                    ctx.moveTo(centerX + 70, centerY - 50);
+                    ctx.lineTo(centerX + 50, centerY + 50);
+                    ctx.stroke();
+                    break;
+                case 'martini':
+                    // Martini glass
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 60, centerY - 60);
+                    ctx.lineTo(centerX + 60, centerY - 60);
+                    ctx.lineTo(centerX + 20, centerY + 50);
+                    ctx.lineTo(centerX - 20, centerY + 50);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+                    break;
+                case 'margarita':
+                    // Margarita glass (wide coupe)
+                    ctx.beginPath();
+                    ctx.ellipse(centerX, centerY - 60, 80, 35, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 80, centerY - 60);
+                    ctx.lineTo(centerX - 40, centerY + 50);
+                    ctx.moveTo(centerX + 80, centerY - 60);
+                    ctx.lineTo(centerX + 40, centerY + 50);
+                    ctx.stroke();
+                    break;
+                case 'mule':
+                    // Copper mule glass (cylindrical mug)
+                    ctx.fillStyle = 'rgba(184, 134, 11, 0.15)';
+                    ctx.strokeStyle = 'rgba(184, 134, 11, 0.9)';
+                    ctx.lineWidth = 3;
+                    ctx.fillRect(centerX - 55, centerY - 40, 110, 120);
+                    ctx.strokeRect(centerX - 55, centerY - 40, 110, 120);
+                    // Add handle
+                    ctx.beginPath();
+                    ctx.arc(centerX + 65, centerY + 20, 30, Math.PI * 0.3, Math.PI * 1.7, false);
+                    ctx.stroke();
+                    break;
+            }
+        }
+
+        // Draw drink liquid
+        function drawDrink(ctx, glassType, color) {
+            ctx.fillStyle = color;
+            ctx.globalAlpha = 0.8;
+            
+            const centerX = ctx.canvas.width / 2;
+            const centerY = ctx.canvas.height / 2;
+            
+            switch(glassType) {
+                case 'rocks':
+                    ctx.fillRect(centerX - 80, centerY + 20, 160, 70);
+                    break;
+                case 'collins':
+                    ctx.fillRect(centerX - 50, centerY + 20, 100, 90);
+                    break;
+                case 'highball':
+                    ctx.fillRect(centerX - 45, centerY - 20, 90, 110);
+                    break;
+                case 'coupe':
+                    ctx.beginPath();
+                    ctx.ellipse(centerX, centerY, 60, 25, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    break;
+                case 'martini':
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 50, centerY - 30);
+                    ctx.lineTo(centerX + 50, centerY - 30);
+                    ctx.lineTo(centerX + 10, centerY + 30);
+                    ctx.lineTo(centerX - 10, centerY + 30);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+                case 'margarita':
+                    ctx.beginPath();
+                    ctx.ellipse(centerX, centerY - 20, 70, 30, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    break;
+                case 'mule':
+                    ctx.fillRect(centerX - 55, centerY + 20, 110, 60);
+                    break;
+            }
+            ctx.globalAlpha = 1;
+        }
+
+        // Draw ice
+        function drawIce(ctx, glassType, iceType) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            const centerX = ctx.canvas.width / 2;
+            const centerY = ctx.canvas.height / 2;
+            
+            if (iceType === 'cubes') {
+                // Draw ice cubes
+                for (let i = 0; i < 4; i++) {
+                    const x = centerX - 40 + (i % 2) * 40;
+                    const y = centerY + 30 + Math.floor(i / 2) * 30;
+                    ctx.fillRect(x, y, 25, 25);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                    ctx.strokeRect(x, y, 25, 25);
+                }
+            } else if (iceType === 'crushed') {
+                // Draw crushed ice
+                for (let i = 0; i < 12; i++) {
+                    const x = centerX - 60 + Math.random() * 120;
+                    const y = centerY + 20 + Math.random() * 50;
+                    const size = 8 + Math.random() * 8;
+                    ctx.fillRect(x, y, size, size);
+                }
+            }
+        }
+
+        // Draw straw
+        // Draw garnish
+        function drawGarnish(ctx, glassType, garnishType) {
+            const centerX = ctx.canvas.width / 2;
+            const centerY = ctx.canvas.height / 2;
+            
+            ctx.font = '40px Arial';
+            
+            let emoji = '🍋';
+            let x = centerX + 60;
+            let y = centerY - 20;
+            
+            switch(garnishType) {
+                case 'lime':
+                    emoji = '🍋';
+                    break;
+                case 'lemon':
+                    emoji = '🍋';
+                    break;
+                case 'orange':
+                    emoji = '🍊';
+                    break;
+                case 'cherry':
+                    emoji = '🍒';
+                    break;
+                case 'mint':
+                    emoji = '🌿';
+                    break;
+                case 'foam':
+                    emoji = '🫧';
+                    y = centerY - 50;
+                    break;
+                case 'coffee':
+                    emoji = '☕';
+                    break;
+                case 'olive':
+                    emoji = '🫒';
+                    break;
+                case 'cucumber':
+                    emoji = '🥒';
+                    break;
+            }
+            
+            ctx.fillText(emoji, x, y);
+        }
+
+        // Download cocktail image
+        function downloadCocktailImage() {
+            const canvas = document.getElementById('cocktailCanvas');
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'cocktail-' + Date.now() + '.png';
+            link.click();
+        }
+
+        // Apply generated image
+        function applyGeneratedImage() {
+            const canvas = document.getElementById('cocktailCanvas');
+            const imageUrl = canvas.toDataURL('image/png');
+            document.getElementById('cocktailImage').value = imageUrl;
+            closeImageEditor();
+            showErrorNotification('Image applied!', 'success');
         }
 
         // Close URL import modal on outside click
