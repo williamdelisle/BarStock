@@ -428,20 +428,20 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                 <!-- Canvas Area -->
                 <div>
-                    <canvas id="cocktailCanvas" width="300" height="400" style="border: 2px solid var(--border); border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: block; margin: 0 auto;"></canvas>
+                    <canvas id="cocktailCanvas" width="400" height="400" style="border: 2px solid var(--border); border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: block; margin: 0 auto;"></canvas>
                     <div style="display: flex; gap: 8px; margin-top: 10px;">
                         <button class="btn btn-pill" onclick="downloadCocktailImage()" style="flex: 1;">
-                            ⬇️ Download
+                            Download Image
                         </button>
                         <button class="btn btn-pill" onclick="exportComponentImages()" style="flex: 1;">
-                            📦 Export Components
+                            Export Components
                         </button>
                     </div>
                 </div>
 
                 <!-- Element Selector -->
                 <div>
-                    <div style="max-height: 450px; overflow-y: auto;">
+                    <div style="max-height: 500px; overflow-y: auto;">
                         <!-- Glassware -->
                         <div style="margin-bottom: 15px;">
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Glass Type</label>
@@ -482,6 +482,7 @@
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Ice</label>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                                 <button class="btn btn-pill" onclick="selectIce('none')" style="font-size: 0.8rem;">None</button>
+                                <button class="btn btn-pill" onclick="selectIce('cube')" style="font-size: 0.8rem;">Cube</button>
                                 <button class="btn btn-pill" onclick="selectIce('cubes')" style="font-size: 0.8rem;">Cubes</button>
                                 <button class="btn btn-pill" onclick="selectIce('crushed')" style="font-size: 0.8rem;">Crushed</button>
                             </div>
@@ -2620,15 +2621,23 @@ Return ONLY the JSON object, no other text.`
             // Naming convention: {glassType}_glass.png, {glassType}_ice-{iceType}.png
             
             const glassTypes = ['rocks', 'collins', 'highball', 'coupe', 'martini', 'margarita', 'mule'];
-            const iceTypes = ['cubes', 'crushed'];
-            const garnishTypes = ['lime', 'lemon', 'orange', 'cherry', 'mint', 'foam', 'coffee', 'olive', 'cucumber'];
+            const iceTypes = ['cube', 'cubes', 'crushed'];
+            const garnishTypes = ['lime-wedge', 'lemon-wedge', 'orange-wedge', 'lemon-swirl', 'orange-swirl', 'cherry', 'mint', 'foam', 'coffee', 'olives', 'cucumber-slice', 'pineapple'];
             
             // Try loading glass images from Resources folder
             glassTypes.forEach(glass => {
                 const resourcePath = `Resources/${glass}_glass.png`;
                 componentImages[glass] = resourcePath; // Store path for later loading
             });
-            
+
+            // Try loading ice images from Resources folder
+            garnishTypes.forEach(garnishType => {
+                // Ice images are named as cocktail_garnish_lemon-swirl.png, rocks_ice-crushed.png, etc.
+                const resourcePath = `Resources/cocktail_garnish_${garnishType}.png`;
+                componentImages[`cocktail_garnish_${garnishType}`] = resourcePath; // Store path for later loading
+            });
+
+
             // Try loading ice images from Resources folder
             iceTypes.forEach(ice => {
                 // Ice images are named as rocks_ice-cubes.png, rocks_ice-crushed.png, etc.

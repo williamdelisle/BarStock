@@ -1233,6 +1233,8 @@ input:checked + .slider:before {
     align-items: center;
     gap: 4px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    justify-content: center;
+    text-align: center;
 }
 
 [data-theme="dark"] .btn-pill {
