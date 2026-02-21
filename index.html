@@ -421,29 +421,24 @@
 
     <!-- Cocktail Image Editor Modal -->
     <div class="modal" id="cocktailImageEditorModal">
-        <div class="modal-content" style="max-width: 800px; padding: 8px;">
-            <button class="modal-close" onclick="closeImageEditor()">×</button>
-            <h2 style="margin-top: 0; color: var(--text);">Cocktail Image</h2>
+        <div class="modal-content" style="width: 95%; padding: 8px;">
+            <div style="display: inline;">
+                <h2 style="margin-top: 0; color: var(--text);">Cocktail Image</h2>
+                <button class="modal-close" onclick="closeImageEditor()">×</button>
+            </div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <!-- Canvas and elements selection area -->
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                 <!-- Canvas Area -->
                 <div>
-                    <canvas id="cocktailCanvas" width="400" height="400" style="border: 2px solid var(--border); border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: block; margin: 0 auto;"></canvas>
-                    <div style="display: flex; gap: 8px; margin-top: 10px;">
-                        <button class="btn btn-pill" onclick="downloadCocktailImage()" style="flex: 1;">
-                            Download Image
-                        </button>
-                        <button class="btn btn-pill" onclick="exportComponentImages()" style="flex: 1;">
-                            Export Components
-                        </button>
-                    </div>
+                    <canvas id="cocktailCanvas" width="400" height="400" style="border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
                 </div>
 
                 <!-- Element Selector -->
                 <div>
-                    <div style="max-height: 500px; overflow-y: auto;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 15px;">
                         <!-- Glassware -->
-                        <div style="margin-bottom: 15px;">
+                        <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Glass Type</label>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                                 <button class="btn btn-pill" onclick="selectGlass('rocks')" style="font-size: 0.8rem;">Rocks</button>
@@ -503,10 +498,20 @@
                                 <button class="btn btn-pill" onclick="selectGarnish('olive')" style="font-size: 0.8rem;">Olive</button>
                                 <button class="btn btn-pill" onclick="selectGarnish('cucumber')" style="font-size: 0.8rem;">Cucumber</button>
                             </div>
-                        </div>
+                        </div>    
                     </div>
                 </div>
+
+                <!-- Download buttons -->
+                <div>
+                    <div style="display: flex; gap: 8px; margin-top: 10px;">
+                        <button class="btn btn-pill" onclick="downloadCocktailImage()" title="Download the cocktail image" style="flex: 1;">Download</button>
+                        <button class="btn btn-pill" onclick="exportComponentImages()" title="Download the component image individually" style="flex: 1;">Download Components</button>
+                    </div>
+                </div>
+
             </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;"></div>
 
             <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                 <button class="btn btn-pill" onclick="closeImageEditor()" style="background-color: var(--glass-bg); border: 1px solid var(--glass-border);">
@@ -2564,6 +2569,9 @@ Return ONLY the JSON object, no other text.`
             backgroundColor: '#2d3748'
         };
 
+        const canvasSize = 400; // Size of the cocktail image canvas
+        // const canvasSize = 400; // Size of the cocktail image canvas
+
         // Open image editor
         function openImageEditor() {
             // Generate component images first
@@ -2630,32 +2638,33 @@ Return ONLY the JSON object, no other text.`
                 componentImages[glass] = resourcePath; // Store path for later loading
             });
 
+            // Try loading glass liquid images from Resources folder
+            glassTypes.forEach(glass => {
+                const resourcePath = `Resources/${glass}_liquid.png`;
+                componentImages[`${glass}_liquid`] = resourcePath; // Store path for later loading
+            });
+
             // Try loading ice images from Resources folder
             garnishTypes.forEach(garnishType => {
                 // Ice images are named as cocktail_garnish_lemon-swirl.png, rocks_ice-crushed.png, etc.
                 const resourcePath = `Resources/cocktail_garnish_${garnishType}.png`;
-                componentImages[`cocktail_garnish_${garnishType}`] = resourcePath; // Store path for later loading
+                componentImages[`garnish_${garnishType}`] = resourcePath; // Store path for later loading
             });
 
 
             // Try loading ice images from Resources folder
             iceTypes.forEach(ice => {
                 // Ice images are named as rocks_ice-cubes.png, rocks_ice-crushed.png, etc.
-                const resourcePath = `Resources/rocks_${ice}.png`;
+                const resourcePath = `Resources/cocktail_ice_${ice}.png`;
                 componentImages[`ice_${ice}`] = resourcePath; // Store path for later loading
-            });
-            
-            // Generate liquid images (these are dynamic based on color, so always generate)
-            glassTypes.forEach(glass => {
-                componentImages[`${glass}_liquid`] = generateLiquidImage(glass);
             });
         }
 
-        // Generate glass image
+        // Generate glass image (fallback)
         function generateGlassImage(type) {
             const canvas = document.createElement('canvas');
-            canvas.width = 200;
-            canvas.height = 200;
+            canvas.width = canvasSize;
+            canvas.height = canvasSize;
             const ctx = canvas.getContext('2d');
             
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
@@ -2728,60 +2737,11 @@ Return ONLY the JSON object, no other text.`
             return canvas.toDataURL('image/png');
         }
 
-        // Generate liquid image
-        function generateLiquidImage(type) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 150;
-            canvas.height = 200;
-            const ctx = canvas.getContext('2d');
-            
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            
-            ctx.fillStyle = 'rgba(232, 213, 196, 0.8)'; // Default daiquiri color
-            
-            switch(type) {
-                case 'rocks':
-                    ctx.fillRect(centerX - 50, centerY + 20, 100, 50);
-                    break;
-                case 'collins':
-                    ctx.fillRect(centerX - 35, centerY + 20, 70, 70);
-                    break;
-                case 'highball':
-                    ctx.fillRect(centerX - 30, centerY - 10, 60, 90);
-                    break;
-                case 'coupe':
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY, 45, 20, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-                case 'martini':
-                    ctx.beginPath();
-                    ctx.moveTo(centerX - 38, centerY - 20);
-                    ctx.lineTo(centerX + 38, centerY - 20);
-                    ctx.lineTo(centerX + 8, centerY + 25);
-                    ctx.lineTo(centerX - 8, centerY + 25);
-                    ctx.closePath();
-                    ctx.fill();
-                    break;
-                case 'margarita':
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY - 15, 50, 24, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-                case 'mule':
-                    ctx.fillRect(centerX - 40, centerY + 20, 80, 45);
-                    break;
-            }
-            
-            return canvas.toDataURL('image/png');
-        }
-
-        // Generate ice image
+        // Generate ice image (fallback)
         function generateIceImage(type) {
             const canvas = document.createElement('canvas');
-            canvas.width = 150;
-            canvas.height = 150;
+            canvas.width = canvasSize;
+            canvas.height = canvasSize;
             const ctx = canvas.getContext('2d');
             
             ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
@@ -2813,13 +2773,13 @@ Return ONLY the JSON object, no other text.`
         function drawLiquidWithColor(ctx, glassType, color) {
             // Create a temporary canvas with the colored liquid
             const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = 150;
-            tempCanvas.height = 200;
+            tempCanvas.width = canvasSize;
+            tempCanvas.height = canvasSize;
             const tempCtx = tempCanvas.getContext('2d');
             
             tempCtx.fillStyle = color;
             tempCtx.globalAlpha = 0.8;
-            
+
             const centerX = tempCanvas.width / 2;
             const centerY = tempCanvas.height / 2;
             
@@ -2860,7 +2820,7 @@ Return ONLY the JSON object, no other text.`
             // Draw the colored liquid on main canvas
             const liquidImage = new Image();
             liquidImage.onload = function() {
-                ctx.drawImage(liquidImage, 0, 0, 200, 200);
+                ctx.drawImage(liquidImage, 0, 0, canvasSize, canvasSize);
             };
             liquidImage.src = tempCanvas.toDataURL('image/png');
         }
@@ -2923,199 +2883,66 @@ Return ONLY the JSON object, no other text.`
                 const glassImg = await loadComponentImage(glassImageSrc, () => generateGlassImage(imageEditorState.glass));
                 
                 if (glassImg) {
-                    ctx.drawImage(glassImg, 0, 0, 200, 200);
+                    ctx.drawImage(glassImg, 0, 0, canvasSize, canvasSize);
                 }
-                
+
+                // Load glass liquid image (with fallback to generation)
+                const glassLiquidImageSrc = componentImages[imageEditorState.glass+"_liquid"];
+                const glassLiquidImg = await loadComponentImage(glassLiquidImageSrc, () => drawLiquidWithColor(ctx, imageEditorState.glass, imageEditorState.drinkColor));
+
+                if (glassLiquidImg) {
+                    
+                    const drinkColor = imageEditorState.drinkColor;
+                    const buffer = document.createElement('canvas');
+                    buffer.width = glassLiquidImg.width;
+                    buffer.height = glassLiquidImg.height;
+                    const btx = buffer.getContext('2d');
+
+                    // 1. Draw the tint color onto the buffer canvas
+                    btx.fillStyle = drinkColor;
+                    btx.fillRect(0, 0, buffer.width, buffer.height);
+
+                    // 2. Use 'destination-atop' to apply the image's alpha channel to the color
+                    btx.globalCompositeOperation = 'destination-atop';
+                    btx.drawImage(glassLiquidImg, 0, 0);
+
+                    ctx.drawImage(buffer, 0, 0, canvasSize, canvasSize);
+
+                    // Optional: You can adjust the final tint opacity by using globalAlpha
+                    // ctx.globalAlpha = 0.5;
+                    // ctx.drawImage(buffer, 0, 0);
+                }
+
+                /* skip this as we are sampling the image
                 // Draw drink liquid with color
                 drawLiquidWithColor(ctx, imageEditorState.glass, imageEditorState.drinkColor);
-                
+                */
+
+                /*
                 // Draw ice if selected
                 if (imageEditorState.ice !== 'none') {
                     const iceImageSrc = componentImages['ice_' + imageEditorState.ice];
                     const iceImg = await loadComponentImage(iceImageSrc, () => generateIceImage(imageEditorState.ice));
                     
                     if (iceImg) {
-                        ctx.drawImage(iceImg, 0, 0, 200, 200);
+                        ctx.drawImage(iceImg, 0, 0, canvasSize, canvasSize);
                     }
                 }
                 
                 // Draw garnish if selected
                 if (imageEditorState.garnish !== 'none') {
+                    const garnishImageSrc = componentImages['garnish_' + imageEditorState.garnish];
+                    const garnishImg = await loadComponentImage(garnishImageSrc, () => generateGarnishImage(imageEditorState.garnish));
+
+                    if (garnishImg) {
+                        ctx.drawImage(garnishImg, 0,  0, canvasSize, canvasSize);
+                    }
                     drawGarnish(ctx, imageEditorState.glass, imageEditorState.garnish);
                 }
+                */
             });
         }
 
-        // Draw glass outline
-        function drawGlass(ctx, type) {
-            
-            // Draw drink
-            drawDrink(ctx, imageEditorState.glass, imageEditorState.drinkColor);
-            
-            // Draw ice
-            if (imageEditorState.ice !== 'none') {
-                drawIce(ctx, imageEditorState.glass, imageEditorState.ice);
-            }
-            
-            // Draw garnish
-            if (imageEditorState.garnish !== 'none') {
-                drawGarnish(ctx, imageEditorState.glass, imageEditorState.garnish);
-            }
-        }
-
-        // Draw glass outline
-        function drawGlass(ctx, type) {
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-            ctx.lineWidth = 3;
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-            
-            const centerX = ctx.canvas.width / 2;
-            const centerY = ctx.canvas.height / 2;
-            
-            switch(type) {
-                case 'rocks':
-                    // Square glass
-                    const rockSize = 80;
-                    ctx.fillRect(centerX - rockSize, centerY, rockSize * 2, 100);
-                    ctx.strokeRect(centerX - rockSize, centerY, rockSize * 2, 100);
-                    break;
-                case 'collins':
-                    // Tall cylindrical glass
-                    ctx.fillRect(centerX - 50, centerY - 40, 100, 140);
-                    ctx.strokeRect(centerX - 50, centerY - 40, 100, 140);
-                    break;
-                case 'highball':
-                    // Tall thin glass
-                    ctx.fillRect(centerX - 45, centerY - 50, 90, 140);
-                    ctx.strokeRect(centerX - 45, centerY - 50, 90, 140);
-                    break;
-                case 'coupe':
-                    // Coupe glass
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY - 50, 70, 30, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(centerX - 70, centerY - 50);
-                    ctx.lineTo(centerX - 50, centerY + 50);
-                    ctx.moveTo(centerX + 70, centerY - 50);
-                    ctx.lineTo(centerX + 50, centerY + 50);
-                    ctx.stroke();
-                    break;
-                case 'martini':
-                    // Martini glass
-                    ctx.beginPath();
-                    ctx.moveTo(centerX - 60, centerY - 60);
-                    ctx.lineTo(centerX + 60, centerY - 60);
-                    ctx.lineTo(centerX + 20, centerY + 50);
-                    ctx.lineTo(centerX - 20, centerY + 50);
-                    ctx.closePath();
-                    ctx.fill();
-                    ctx.stroke();
-                    break;
-                case 'margarita':
-                    // Margarita glass (wide coupe)
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY - 60, 80, 35, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(centerX - 80, centerY - 60);
-                    ctx.lineTo(centerX - 40, centerY + 50);
-                    ctx.moveTo(centerX + 80, centerY - 60);
-                    ctx.lineTo(centerX + 40, centerY + 50);
-                    ctx.stroke();
-                    break;
-                case 'mule':
-                    // Copper mule glass (cylindrical mug)
-                    ctx.fillStyle = 'rgba(184, 134, 11, 0.15)';
-                    ctx.strokeStyle = 'rgba(184, 134, 11, 0.9)';
-                    ctx.lineWidth = 3;
-                    ctx.fillRect(centerX - 55, centerY - 40, 110, 120);
-                    ctx.strokeRect(centerX - 55, centerY - 40, 110, 120);
-                    // Add handle
-                    ctx.beginPath();
-                    ctx.arc(centerX + 65, centerY + 20, 30, Math.PI * 0.3, Math.PI * 1.7, false);
-                    ctx.stroke();
-                    break;
-            }
-        }
-
-        // Draw drink liquid
-        function drawDrink(ctx, glassType, color) {
-            ctx.fillStyle = color;
-            ctx.globalAlpha = 0.8;
-            
-            const centerX = ctx.canvas.width / 2;
-            const centerY = ctx.canvas.height / 2;
-            
-            var glassImg = new Image();
-
-            switch(glassType) {
-                case 'rocks':
-                    glassImg.src = 'Resources/rocks_glass.png';
-                    
-                    break;
-                case 'collins':
-                    ctx.fillRect(centerX - 50, centerY + 20, 100, 90);
-                    break;
-                case 'highball':
-                    ctx.fillRect(centerX - 45, centerY - 20, 90, 110);
-                    break;
-                case 'coupe':
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY, 60, 25, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-                case 'martini':
-                    ctx.beginPath();
-                    ctx.moveTo(centerX - 50, centerY - 30);
-                    ctx.lineTo(centerX + 50, centerY - 30);
-                    ctx.lineTo(centerX + 10, centerY + 30);
-                    ctx.lineTo(centerX - 10, centerY + 30);
-                    ctx.closePath();
-                    ctx.fill();
-                    break;
-                case 'margarita':
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY - 20, 70, 30, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-                case 'mule':
-                    ctx.fillRect(centerX - 55, centerY + 20, 110, 60);
-                    break;
-            }
-            ctx.drawImage(glassImg, 0, 0);
-            ctx.globalAlpha = 1;
-        }
-
-        // Draw ice
-        function drawIce(ctx, glassType, iceType) {
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-            const centerX = ctx.canvas.width / 2;
-            const centerY = ctx.canvas.height / 2;
-            
-            if (iceType === 'cubes') {
-                // Draw ice cubes
-                for (let i = 0; i < 4; i++) {
-                    const x = centerX - 40 + (i % 2) * 40;
-                    const y = centerY + 30 + Math.floor(i / 2) * 30;
-                    ctx.fillRect(x, y, 25, 25);
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-                    ctx.strokeRect(x, y, 25, 25);
-                }
-            } else if (iceType === 'crushed') {
-                // Draw crushed ice
-                for (let i = 0; i < 12; i++) {
-                    const x = centerX - 60 + Math.random() * 120;
-                    const y = centerY + 20 + Math.random() * 50;
-                    const size = 8 + Math.random() * 8;
-                    ctx.fillRect(x, y, size, size);
-                }
-            }
-        }
-
-        // Draw straw
         // Draw garnish
         function drawGarnish(ctx, glassType, garnishType) {
             const centerX = ctx.canvas.width / 2;
