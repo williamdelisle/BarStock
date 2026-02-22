@@ -741,6 +741,33 @@ input:checked + .slider:before {
     color: white;
 }
 
+.modal-accept {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-accept:hover {
+    transform: translateX(-1px) rotate(360deg);
+    background: rgba(18, 214, 0, 0.8);
+    color: white;
+}
+
 .modal-image {
     width: 100%;
     height: 250px;

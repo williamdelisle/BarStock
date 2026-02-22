@@ -9,6 +9,9 @@
     <script src="api.js"></script>
 </head>
 <body>
+    <meta name="viewport" 
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    
     <header>
         <div class="container">
             <div class="header-content">
@@ -373,7 +376,7 @@
 
     <!-- Import from URL Modal -->
     <div class="modal" id="importUrlModal">
-        <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-content" style="max-width: 90%; vertical-align: middle; padding: 8px;">
             <button class="modal-close" onclick="closeImportUrlModal()">×</button>
             <h2 style="margin-top: 0;">Import Recipe from Website</h2>
             
@@ -394,10 +397,7 @@
 
             <div style="display: flex; gap: 10px;">
                 <button class="btn btn-pill" onclick="importRecipeFromUrl()" style="flex: 1;">
-                    🔗 Fetch Recipe
-                </button>
-                <button class="btn btn-pill" onclick="closeImportUrlModal()" style="flex: 1; background-color: var(--bg-secondary);">
-                    Cancel
+                    Fetch Recipe
                 </button>
             </div>
         </div>
@@ -422,16 +422,19 @@
     <!-- Cocktail Image Editor Modal -->
     <div class="modal" id="cocktailImageEditorModal">
         <div class="modal-content" style="width: 95%; padding: 8px;">
-            <div style="display: inline;">
+            <div>
                 <h2 style="margin-top: 0; color: var(--text);">Cocktail Image</h2>
-                <button class="modal-close" onclick="closeImageEditor()">×</button>
+                <div style="align-items: left;">
+                    <button class="modal-close" onclick="closeImageEditor()">×</button>
+                    <button class="modal-accept" onclick="applyGeneratedImage()">✓</button>
+                </div>
             </div>
             
             <!-- Canvas and elements selection area -->
             <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                 <!-- Canvas Area -->
                 <div>
-                    <canvas id="cocktailCanvas" width="400" height="400" style="border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
+                    <canvas id="cocktailCanvas" width="95%" height="95%" style="border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
                 </div>
 
                 <!-- Element Selector -->
@@ -514,12 +517,6 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;"></div>
 
             <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
-                <button class="btn btn-pill" onclick="closeImageEditor()" style="background-color: var(--glass-bg); border: 1px solid var(--glass-border);">
-                    Cancel
-                </button>
-                <button class="btn btn-pill" onclick="applyGeneratedImage()" style="background-color: rgba(72, 187, 120, 0.8); color: white; border: 1px solid rgba(72, 187, 120, 0.9);">
-                    ✓ Apply Image
-                </button>
             </div>
         </div>
     </div>
