@@ -2,16 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>BarStock</title>
     <link rel="icon" href="barstock-icon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="barstock-styles.css">
     <script src="api.js"></script>
 </head>
 <body>
-    <meta name="viewport" 
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-    
     <header>
         <div class="container">
             <div class="header-content">
@@ -19,17 +16,23 @@
                 <div class="header-actions">
                     <!-- Cocktail buttons -->
                     <div id="cocktail-buttons" class="header-btn-group">
-                        <button class="header-btn" onclick="openImportFromUrlModal()" title="Import Recipe from Website">Import Online</button>
-                        <button class="header-btn" onclick="document.getElementById('cocktailsImportInput').click()" title="Import Cocktails from File">Import</button>
-                        <input type="file" id="cocktailsImportInput" accept=".json" onchange="importCocktailsFromFile(event)" style="display: none;">
-                        <button class="header-btn" onclick="exportCocktails()" title="Export Cocktails">Export</button>
+                        <button class="header-btn" onclick="openImportFromUrlModal()" title="Import Recipe from Website or Json file.">
+                            <img src="Resources/iconpack_import.png" class="tinted-image" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0);" alt="Import">                            
+                            Import</button>
+                        <button class="header-btn" onclick="exportCocktails()" title="Export Cocktails">
+                            <img src="Resources/iconpack_export.png" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0);" alt="Export">
+                            Export</button>
                     </div>
                     
                     <!-- Inventory buttons -->
                     <div id="inventory-buttons" class="header-btn-group" style="display: none;">
-                        <button class="header-btn" onclick="document.getElementById('inventoryImportInput').click()" title="Import Inventory">Import</button>
+                        <button class="header-btn" onclick="document.getElementById('inventoryImportInput').click()" title="Import Inventory">
+                            <img src="Resources/iconpack_import.png" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0);" alt="Import">
+                            Import</button>
                         <input type="file" id="inventoryImportInput" accept=".json" onchange="importInventoryFromFile(event)" style="display: none;">
-                        <button class="header-btn" onclick="exportInventory()" title="Export Inventory">Export</button>
+                        <button class="header-btn" onclick="exportInventory()" title="Export Inventory">
+                            <img src="Resources/iconpack_export.png" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0);" alt="Export">
+                            Export</button>
                     </div>
                     
                     <!-- Theme toggle (always visible) -->
@@ -84,15 +87,20 @@
             <div class="cocktail-grid" id="cocktailGrid"></div>
         </div>
 
-        <!-- Add Cocktail Modal (opened by + on Cocktails tab) -->
+        <!-- Add Cocktail Modal (opened by + on Cocktails tab or edit cocktail) -->
         <div class="add-cocktail-modal" id="addCocktailModal">
-            <div class="add-cocktail-modal-content">
-                <div id="add-cocktail-section" class="add-item-form">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h2>Create New Cocktail</h2>
-                        <button class="modal-close" onclick="cancelCocktailEdit()" style="position: static; margin: 0;">×</button>
+            <div id="add-cocktail-section" class="add-cocktail-modal-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2>Create New Cocktail</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="modal-close" onclick="deleteCocktailFromModal()" title="Delete Cocktail" style="position: static; margin: 0;">
+                            <img src="https://cdn-icons-png.flaticon.com/128/3917/3917242.png" style="width: 14px; height: 14px; filter: brightness(0);" alt="Delete">
+                        </button>
+                        <button class="modal-close" onclick="cancelCocktailEdit()" title="Cancel Edit" style="position: static; margin: 0;">×</button>
+                        <button class="modal-accept" onclick="saveCocktail()" title="Save Cocktail" style="position: static; margin: 0;">✓</button>
                     </div>
-                
+                </div>
+
                 <div class="filter-group" style="margin-bottom: 8px;">
                     <label>Import Recipe from URL</label>
                     <div class="form-row">
@@ -104,6 +112,12 @@
                 <div class="filter-group">
                     <label>Fill Recipe</label>
                 </div>
+
+                <!-- attempt to include the image
+                <div class="form-row">
+                    <canvas id="cocktailCanvas" width="100vw" height="100vw" style="min-width: 200px; min-height: 200px; flex: 1; border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
+                </div>
+                -->
 
                 <div class="form-row">
                     <input type="text" class="form-input" id="cocktailName" placeholder="Cocktail name" style="flex: 2;">
@@ -139,7 +153,7 @@
                     <input type="text" class="form-input" id="cocktailSource" placeholder="Source (optional)">
                 </div>
                 <div class="form-row">
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <div style="display: flex; width: 100%; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <input type="color" id="cocktailColor" class="color-pick-pill">
                         <button class="btn btn-pill" onclick="useSpiritColor()">Match Spirit</button>
                         <button class="btn btn-pill" onclick="randomizeColor()">Random</button>
@@ -152,8 +166,7 @@
                 </div>
                 <div id="ingredientsContainer">
                     <div class="form-row ingredient-row">
-                        <input type="text" class="form-input" placeholder="Ingredient name" data-ingredient-name>
-                        <input type="number" class="form-input" placeholder="Qty" data-ingredient-amount style="max-width: 80px;">
+                        <input type="number" class="form-input" placeholder="Qty" data-ingredient-amount style="max-width: 40px;">
                         <select class="form-select ingredient-unit" data-ingredient-unit>
                             <option value="">Unit</option>
                             <option value="oz">oz</option>
@@ -166,25 +179,22 @@
                             <option value="tbsp">tbsp</option>
                             <option value="wedge">wedge</option>
                             <option value="piece">piece</option>
+                            <option value="squeeze">squeeze</option>
+                            <option value="rim">rim</option>
                         </select>
+                        <input type="text" class="form-input" placeholder="Ingredient name" data-ingredient-name>
                         <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
                     </div>
                 </div>
 
-                <div class="section-header">
-                    <h3>Instructions</h3>
-                    <button class="btn btn-pill btn-section-add" onclick="addStepRow()" title="Add Step">+</button>
-                </div>
-                <div id="stepsContainer">
-                    <div class="form-row step-row">
-                        <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;">
-                        <button class="btn btn-pill" onclick="removeStepRow(this)">✕</button>
-                    </div>
-                </div>
-
-                <div class="form-row" style="margin-top: 20px; gap: 10px;">
-                    <button class="btn btn-pill btn-pill-center" onclick="saveCocktail()" style="flex: 1;">Save Cocktail</button>
-                </div>
+            <div class="section-header">
+                <h3>Instructions</h3>
+                <button class="btn btn-pill btn-section-add" onclick="addStepRow()" title="Add Step">+</button>
+            </div>
+            <div id="stepsContainer">
+                <div class="form-row step-row">
+                    <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;">
+                    <button class="btn btn-pill" onclick="removeStepRow(this)">✕</button>
                 </div>
             </div>
         </div>
@@ -361,8 +371,9 @@
                     <img src="https://cdn-icons-png.flaticon.com/128/3917/3917376.png" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0) invert(1);" alt="Edit">
                     Edit
                 </button>
-                <button class="btn-edit" id="modalDeleteBtn" style="display: none; background-color: rgba(220, 38, 38, 0.2); color: #dc2626;" onclick="deleteCocktailFromModal()">
-                    <img src="https://cdn-icons-png.flaticon.com/128/3917/3917242.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="Delete"> Delete
+                <button class="btn-edit" id="modalDeleteBtn" style="display: flex; gap: 8px; background-color: rgba(220, 38, 38, 0.2); color: #dc2626;" onclick="deleteCocktailFromModal()">
+                    <img src="https://cdn-icons-png.flaticon.com/128/3917/3917242.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="Delete">
+                    Delete
                 </button>
             </div>
 
@@ -378,14 +389,14 @@
     <div class="modal" id="importUrlModal">
         <div class="modal-content" style="max-width: 90%; vertical-align: middle; padding: 8px;">
             <button class="modal-close" onclick="closeImportUrlModal()">×</button>
-            <h2 style="margin-top: 0;">Import Recipe from Website</h2>
+            <h2 style="margin-top: 0;">Import Cocktail Recipe</h2>
             
             <div style="margin-bottom: 20px;">
                 <label for="recipeUrl" style="display: block; margin-bottom: 8px; font-weight: 500;">Recipe Website URL</label>
                 <input type="text" id="recipeUrl" placeholder="https://example.com/recipe/mojito" 
                     style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                 <small style="display: block; margin-top: 5px; color: var(--text-secondary);">
-                    Paste the full URL of a cocktail recipe website
+                    Paste the full URL of a cocktail recipe website.
                 </small>
             </div>
 
@@ -396,9 +407,22 @@
             </div>
 
             <div style="display: flex; gap: 10px;">
-                <button class="btn btn-pill" onclick="importRecipeFromUrl()" style="flex: 1;">
+                <button class="btn btn-pill" onclick="importRecipeFromUrl()" style="flex: 1;"  title="Import Cocktails from URL">
                     Fetch Recipe
                 </button>
+            </div>
+
+            <div style="margin-top: 20px; margin-bottom: 20px;">
+                <label for="recipeUrl" style="display: block; margin-bottom: 8px; font-weight: 500;">Recipe Json file</label>
+                <small style="display: block; margin-top: 5px; color: var(--text-secondary);">
+                    Import cocktail recipe from exported json file.
+                </small>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-pill" onclick="document.getElementById('cocktailsImportInput').click()" style="flex: 1;" title="Import Cocktails from File">
+                    Browse File</button>
+                <input type="file" id="cocktailsImportInput" accept=".json" onchange="importCocktailsFromFile(event)" style="display: none;">
             </div>
         </div>
     </div>
@@ -422,24 +446,24 @@
     <!-- Cocktail Image Editor Modal -->
     <div class="modal" id="cocktailImageEditorModal">
         <div class="modal-content" style="width: 95%; padding: 8px;">
-            <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h2 style="margin-top: 0; color: var(--text);">Cocktail Image</h2>
-                <div style="align-items: left;">
-                    <button class="modal-close" onclick="closeImageEditor()">×</button>
-                    <button class="modal-accept" onclick="applyGeneratedImage()">✓</button>
+                <div style="display: flex; gap: 10px; align-items: right;">
+                    <button class="modal-close" onclick="closeImageEditor()" title="Close image editor" style="position: static; margin: 0;">×</button>
+                    <button class="modal-accept" onclick="applyGeneratedImage()" title="Apply image changes" style="position: static; margin: 0;">✓</button>
                 </div>
             </div>
             
             <!-- Canvas and elements selection area -->
             <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                 <!-- Canvas Area -->
-                <div>
-                    <canvas id="cocktailCanvas" width="95%" height="95%" style="border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
+                <div style="display:flex; width: 100%; align-self: center;">
+                    <canvas id="cocktailCanvas" width="100vw" height="100vw" style="min-width: 200px; min-height: 200px; flex: 1; border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
                 </div>
 
                 <!-- Element Selector -->
                 <div>
-                    <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+                    <div style="display:flex; width:100%; gap:8px; align-items:flex-start;">
                         <!-- Glassware -->
                         <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Glass Type</label>
@@ -455,9 +479,9 @@
                         </div>
 
                         <!-- Drink Color -->
-                        <div style="margin-bottom: 15px;">
+                        <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Drink Color</label>
-                            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;">
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
                                 <button class="btn btn-pill" onclick="setDrinkColor('#ffffff8c')" style="background-color: #ffffff8c; border: 2px solid transparent; width: 100%; height: 40px;" title="Daiquiri"></button>
                                 <button class="btn btn-pill" onclick="setDrinkColor('#DC143C8c')" style="background-color: #DC143C8c; border: 2px solid transparent; width: 100%; height: 40px;" title="Cosmopolitan"></button>
                                 <button class="btn btn-pill" onclick="setDrinkColor('#fff6a18c')" style="background-color: #fff6a18c; border: 2px solid transparent; width: 100%; height: 40px;" title="Mojito"></button>
@@ -470,13 +494,13 @@
                                 <button class="btn btn-pill" onclick="setDrinkColor('#CCCCCC8c')" style="background-color: #CCCCCC8c; border: 2px solid transparent; width: 100%; height: 40px;" title="Clear"></button>
                             </div>
                             <div style="margin-top: 8px; display: flex; gap: 8px;">
-                                <label style="font-weight: 600; color: var(--text); font-size: 0.85rem;">Custom</label>
+                                <!--<label style="font-weight: 600; color: var(--text); font-size: 0.85rem;">Custom</label>-->
                                 <input class="color-pick-pill" type="color" id="drinkColorPicker" value="#ffffff8c" onchange="setDrinkColor(this.value)">
                             </div>
                         </div>
 
                         <!-- Ice -->
-                        <div style="margin-bottom: 15px;">
+                        <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Ice</label>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                                 <button class="btn btn-pill" onclick="selectIce('none')" style="font-size: 0.8rem;">None</button>
@@ -487,7 +511,7 @@
                         </div>
 
                         <!-- Garnish -->
-                        <div style="margin-bottom: 15px;">
+                        <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Garnish</label>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                                 <button class="btn btn-pill" onclick="selectGarnish('none')" style="font-size: 0.8rem;">None</button>
@@ -1769,6 +1793,8 @@ Return ONLY the JSON object, no other text.`
                                 <option value="tbsp">tbsp</option>
                                 <option value="wedge">wedge</option>
                                 <option value="piece">piece</option>
+                                <option value="squeeze">squeeze</option>
+                                <option value="rim">rim</option>
                             </select>
                             <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
                         `;
@@ -1882,6 +1908,8 @@ Return ONLY the JSON object, no other text.`
                         <option value="tbsp" ${ing.unit === 'tbsp' ? 'selected' : ''}>tbsp</option>
                         <option value="wedge" ${ing.unit === 'wedge' ? 'selected' : ''}>wedge</option>
                         <option value="piece" ${ing.unit === 'piece' ? 'selected' : ''}>piece</option>
+                        <option value="squeeze" ${ing.unit === 'squeeze' ? 'selected' : ''}>squeeze</option>
+                        <option value="rim" ${ing.unit === 'rim' ? 'selected' : ''}>rim</option>
                     </select>
                     <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
                 `;
@@ -1954,6 +1982,10 @@ Return ONLY the JSON object, no other text.`
             document.documentElement.setAttribute('data-theme', savedTheme);
         }
 
+        function getTheme() {
+            return document.documentElement.getAttribute('data-theme') || 'light' === 'dark' ? 1 : 0;
+        }
+
         // Add ingredient row
         function addIngredientRow() {
             const container = document.getElementById('ingredientsContainer');
@@ -1974,6 +2006,8 @@ Return ONLY the JSON object, no other text.`
                     <option value="tbsp">tbsp</option>
                     <option value="wedge">wedge</option>
                     <option value="piece">piece</option>
+                    <option value="squeeze">squeeze</option>
+                    <option value="rim">rim</option>
                 </select>
                 <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
             `;
@@ -2072,7 +2106,7 @@ Return ONLY the JSON object, no other text.`
                 const nameInput = row.querySelector('[data-ingredient-name]');
                 const amountInput = row.querySelector('[data-ingredient-amount]');
                 const unitInput = row.querySelector('[data-ingredient-unit]');
-                if (nameInput.value.trim() && amountInput.value.trim()) {
+                if (nameInput.value.trim()) {
                     ingredients.push({
                         name: nameInput.value.trim(),
                         amount: amountInput.value.trim(),
@@ -2096,10 +2130,12 @@ Return ONLY the JSON object, no other text.`
                 }
             });
 
+            /* prevent from saving if there are no steps
             if (steps.length === 0) {
                 showErrorNotification('Please add at least one instruction step');
                 return;
             }
+            */
 
             if (editingCocktailId !== null) {
                 // Edit existing cocktail
@@ -2566,13 +2602,13 @@ Return ONLY the JSON object, no other text.`
             backgroundColor: '#2d3748'
         };
 
-        const canvasSize = 400; // Size of the cocktail image canvas
+        const canvasSize = 100; // Size of the cocktail image canvas
         // const canvasSize = 400; // Size of the cocktail image canvas
 
         // Open image editor
         function openImageEditor() {
-            // Generate component images first
-            generateComponentImages();
+            // Load component images
+            loadComponentImages();
             
             // Get the cocktail color from the form or use default
             const cocktailColor = document.getElementById('cocktailColor').value || '#2d3748';
@@ -2621,7 +2657,7 @@ Return ONLY the JSON object, no other text.`
         let componentImages = {};
 
         // Generate all component images
-        function generateComponentImages() {
+        function loadComponentImages() {
             // Define resource paths - try to load images from Resources folder
             // Naming convention: {glassType}_glass.png, {glassType}_ice-{iceType}.png
             
@@ -2629,27 +2665,35 @@ Return ONLY the JSON object, no other text.`
             const iceTypes = ['cube', 'cubes', 'crushed'];
             const garnishTypes = ['lime-wedge', 'lemon-wedge', 'orange-wedge', 'lemon-swirl', 'orange-swirl', 'cherry', 'mint', 'foam', 'coffee', 'olives', 'cucumber-slice', 'pineapple'];
             
-            // Try loading glass images from Resources folder
+            // Try loading glass and liquid images from Resources folder
             glassTypes.forEach(glass => {
                 const resourcePath = `Resources/${glass}_glass.png`;
                 componentImages[glass] = resourcePath; // Store path for later loading
+
+                componentImages[`${glass}_liquid`] = `Resources/${glass}_liquid.png`;; // Store path for later loading
+
+                // Try loading glass specific ice images from Resources folder
+                iceTypes.forEach(ice => {
+                    // Ice images are named as rocks_ice-cubes.png, rocks_ice-crushed.png, etc.
+                    componentImages[`${glass}_ice_${ice}`] = `Resources/${glass}_ice_${ice}.png`; // Store path for later loading
+                });
+
+                // Try loading glass specific garnish images from Resources folder
+                garnishTypes.forEach(garnishType => {
+                    // Garnish images are named as cocktail_garnish_lemon-swirl.png, rocks_ice-crushed.png, etc.
+                    componentImages[`${glass}_garnish_${garnishType}`] = `Resources/${glass}_garnish_${garnishType}.png`; // Store path for later loading
+                });
             });
 
-            // Try loading glass liquid images from Resources folder
-            glassTypes.forEach(glass => {
-                const resourcePath = `Resources/${glass}_liquid.png`;
-                componentImages[`${glass}_liquid`] = resourcePath; // Store path for later loading
-            });
-
-            // Try loading ice images from Resources folder
+            // Try loading generic garnish images from Resources folder
             garnishTypes.forEach(garnishType => {
-                // Ice images are named as cocktail_garnish_lemon-swirl.png, rocks_ice-crushed.png, etc.
+                // Garnish images are named as cocktail_garnish_lemon-swirl.png, rocks_ice-crushed.png, etc.
                 const resourcePath = `Resources/cocktail_garnish_${garnishType}.png`;
                 componentImages[`garnish_${garnishType}`] = resourcePath; // Store path for later loading
             });
 
 
-            // Try loading ice images from Resources folder
+            // Try loading generic ice images from Resources folder
             iceTypes.forEach(ice => {
                 // Ice images are named as rocks_ice-cubes.png, rocks_ice-crushed.png, etc.
                 const resourcePath = `Resources/cocktail_ice_${ice}.png`;
@@ -2767,7 +2811,7 @@ Return ONLY the JSON object, no other text.`
         }
 
         // Draw liquid on canvas using image
-        function drawLiquidWithColor(ctx, glassType, color) {
+        function generateColoredLiquidImage(ctx, glassType, color) {
             // Create a temporary canvas with the colored liquid
             const tempCanvas = document.createElement('canvas');
             tempCanvas.width = canvasSize;
@@ -2885,10 +2929,9 @@ Return ONLY the JSON object, no other text.`
 
                 // Load glass liquid image (with fallback to generation)
                 const glassLiquidImageSrc = componentImages[imageEditorState.glass+"_liquid"];
-                const glassLiquidImg = await loadComponentImage(glassLiquidImageSrc, () => drawLiquidWithColor(ctx, imageEditorState.glass, imageEditorState.drinkColor));
+                const glassLiquidImg = await loadComponentImage(glassLiquidImageSrc, () => generateColoredLiquidImage(ctx, imageEditorState.glass, imageEditorState.drinkColor));
 
                 if (glassLiquidImg) {
-                    
                     const drinkColor = imageEditorState.drinkColor;
                     const buffer = document.createElement('canvas');
                     buffer.width = glassLiquidImg.width;
@@ -2912,13 +2955,17 @@ Return ONLY the JSON object, no other text.`
 
                 /* skip this as we are sampling the image
                 // Draw drink liquid with color
-                drawLiquidWithColor(ctx, imageEditorState.glass, imageEditorState.drinkColor);
+                generateColoredLiquidImage(ctx, imageEditorState.glass, imageEditorState.drinkColor);
                 */
 
-                /*
+                
                 // Draw ice if selected
                 if (imageEditorState.ice !== 'none') {
-                    const iceImageSrc = componentImages['ice_' + imageEditorState.ice];
+                    //Get ice image specific to the glass type first, if not found then get generic ice image
+                    const iceImageSrc = componentImages[imageEditorState.glass + '_ice_' + imageEditorState.ice];
+                    if(iceImageSrc === null) {
+                        const iceImageSrc = componentImages['ice_' + imageEditorState.ice];
+                    }
                     const iceImg = await loadComponentImage(iceImageSrc, () => generateIceImage(imageEditorState.ice));
                     
                     if (iceImg) {
@@ -2928,7 +2975,11 @@ Return ONLY the JSON object, no other text.`
                 
                 // Draw garnish if selected
                 if (imageEditorState.garnish !== 'none') {
-                    const garnishImageSrc = componentImages['garnish_' + imageEditorState.garnish];
+                    // Get garnish image specific to the glass type first, if not found then get generic garnish image
+                    const garnishImageSrc = componentImages[imageEditorState.glass + '_garnish_' + imageEditorState.garnish];
+                    if(garnishImageSrc === null) {
+                         garnishImageSrc = componentImages['garnish_' + imageEditorState.garnish];
+                    }
                     const garnishImg = await loadComponentImage(garnishImageSrc, () => generateGarnishImage(imageEditorState.garnish));
 
                     if (garnishImg) {
@@ -2936,7 +2987,7 @@ Return ONLY the JSON object, no other text.`
                     }
                     drawGarnish(ctx, imageEditorState.glass, imageEditorState.garnish);
                 }
-                */
+                
             });
         }
 
@@ -3005,7 +3056,7 @@ Return ONLY the JSON object, no other text.`
 
         // Export all component images
         function exportComponentImages() {
-            generateComponentImages();
+            loadComponentImages();
             
             const components = {
                 glasses: ['rocks', 'collins', 'highball', 'coupe', 'martini', 'margarita', 'mule'],
