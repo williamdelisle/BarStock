@@ -45,44 +45,47 @@
     <div class="container">
         <!-- Cocktails Section -->
         <div id="cocktails-section" class="tab-content">
-            <div style="margin: 8px 0; display: flex; gap: 8px; align-items: center;">
-                <div class="search-container">
-                    <input type="text" class="search-box" id="searchBox" placeholder="Search cocktails...">
-                    <button class="search-clear hidden" id="searchClear" onclick="clearSearch('searchBox')">✕</button>
+            <div style="display:block;"> <!-- wrapper to prevent search bar and filters to scroll-->
+                <div style="margin: 8px 0; display: flex; gap: 8px; align-items: center;">
+                    <div class="search-container">
+                        <input type="text" class="search-box" id="searchBox" placeholder="Search cocktails...">
+                        <button class="search-clear hidden" id="searchClear" onclick="clearSearch('searchBox')">✕</button>
+                    </div>
+                    <button class="btn-add" onclick="showAddCocktailForm()" style="padding: 0 15px; white-space: nowrap;">
+                        +
+                    </button>
                 </div>
-                <button class="btn-add" onclick="showAddCocktailForm()" style="padding: 0 15px; white-space: nowrap;">
-                    +
-                </button>
-            </div>
 
-            <div>
-                <button class="filter-toggle-btn collapsed" id="cocktailFilterBtn" onclick="toggleFilters()">
-                    <span>Filters</span>
-                    <span class="arrow">▼</span>
-                </button>
-            </div>
+                <div>
+                    <button class="filter-toggle-btn collapsed" id="cocktailFilterBtn" onclick="toggleFilters()">
+                        <span>Filters</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                </div>
 
-            <div class="filters collapsed" id="filterContent">
-                <div class="filter-content">
-                    <div class="filter-group" style="margin-top: 0px;">
-                        <label>Category</label>
-                        <div class="filter-buttons" id="categoryFilters"></div>
-                    </div>
+                <div class="filters collapsed" id="filterContent">
+                    <div class="filter-content">
+                        <div class="filter-group" style="margin-top: 0px;">
+                            <label>Category</label>
+                            <div class="filter-buttons" id="categoryFilters"></div>
+                        </div>
 
-                    <div class="filter-group">
-                        <label>Base Spirit</label>
-                        <div class="filter-buttons" id="spiritFilters"></div>
-                    </div>
+                        <div class="filter-group">
+                            <label>Base Spirit</label>
+                            <div class="filter-buttons" id="spiritFilters"></div>
+                        </div>
 
-                    <div class="filter-toggle">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="canMakeToggle">
-                            <span class="slider"></span>
-                        </label>
-                        <label for="canMakeToggle" style="margin: 0; font-weight: normal; font-size: 0.9rem;">Show only cocktails I can make</label>
+                        <div class="filter-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="canMakeToggle">
+                                <span class="slider"></span>
+                            </label>
+                            <label for="canMakeToggle" style="margin: 0; font-weight: normal; font-size: 0.9rem;">Show only cocktails I can make</label>
+                        </div>
                     </div>
                 </div>
             </div>
+            
 
             <div class="cocktail-grid" id="cocktailGrid"></div>
         </div>

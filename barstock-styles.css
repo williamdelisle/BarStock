@@ -1392,13 +1392,17 @@ input:checked + .slider:before {
     bottom: 0;
     left: 0;
     right: 0;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    height: 80px;
+    /* background: var(--glass-bg); */
+    background: transparent;
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
     box-shadow: 0 -8px 32px var(--glass-shadow);
     border-top: 1px solid var(--glass-border);
     z-index: 99;
+    gap: 8px;
     padding-bottom: 16px;
+    padding-top: 4px;
 }
 
 .nav-tab {
@@ -1417,13 +1421,27 @@ input:checked + .slider:before {
 }
 
 .nav-tab:hover {
-    background: var(--hover);
+    background-color: rgba(255, 255, 255, 0.3); /* Translucent background */
+    backdrop-filter: blur(10px); /* The essential blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for definition */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
 }
 
 .nav-tab.active {
-    background: var(--hover);
-    /* border-top-color: var(--accent); */
+    background-color: rgba(255, 255, 255, 0.1); /* Translucent background */
+    backdrop-filter: blur(10px); /* The essential blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for definition */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
 }
+
+/*
+.nav-tab.active {
+    background: var(--hover);
+    border-top-color: var(--accent);
+}
+*/
 
 /* Bottom Navigation with glass effect */
 .bottom-nav {
