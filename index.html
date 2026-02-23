@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>BarStock</title>
     <link rel="icon" href="barstock-icon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="barstock-styles.css">
@@ -16,17 +16,23 @@
                 <div class="header-actions">
                     <!-- Cocktail buttons -->
                     <div id="cocktail-buttons" class="header-btn-group">
-                        <button class="header-btn" onclick="openImportFromUrlModal()" title="Import Recipe from Website">Import Online</button>
-                        <button class="header-btn" onclick="document.getElementById('cocktailsImportInput').click()" title="Import Cocktails from File">Import</button>
-                        <input type="file" id="cocktailsImportInput" accept=".json" onchange="importCocktailsFromFile(event)" style="display: none;">
-                        <button class="header-btn" onclick="exportCocktails()" title="Export Cocktails">Export</button>
+                        <button class="header-btn" onclick="openImportFromUrlModal()" title="Import Recipe from Website or Json file.">
+                            <img src="Resources/iconpack_import.png" class="tinted-image" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0);" alt="Import">                            
+                            Import</button>
+                        <button class="header-btn" onclick="exportCocktails()" title="Export Cocktails">
+                            <img src="Resources/iconpack_export.png" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0);" alt="Export">
+                            Export</button>
                     </div>
                     
                     <!-- Inventory buttons -->
                     <div id="inventory-buttons" class="header-btn-group" style="display: none;">
-                        <button class="header-btn" onclick="document.getElementById('inventoryImportInput').click()" title="Import Inventory">Import</button>
+                        <button class="header-btn" onclick="document.getElementById('inventoryImportInput').click()" title="Import Inventory">
+                            <img src="Resources/iconpack_import.png" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0);" alt="Import">
+                            Import</button>
                         <input type="file" id="inventoryImportInput" accept=".json" onchange="importInventoryFromFile(event)" style="display: none;">
-                        <button class="header-btn" onclick="exportInventory()" title="Export Inventory">Export</button>
+                        <button class="header-btn" onclick="exportInventory()" title="Export Inventory">
+                            <img src="Resources/iconpack_export.png" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0);" alt="Export">
+                            Export</button>
                     </div>
                     
                     <!-- Theme toggle (always visible) -->
@@ -39,57 +45,65 @@
     <div class="container">
         <!-- Cocktails Section -->
         <div id="cocktails-section" class="tab-content">
-            <div style="margin: 8px 0; display: flex; gap: 8px; align-items: center;">
-                <div class="search-container">
-                    <input type="text" class="search-box" id="searchBox" placeholder="Search cocktails...">
-                    <button class="search-clear hidden" id="searchClear" onclick="clearSearch('searchBox')">✕</button>
+            <div style="display:block;"> <!-- wrapper to prevent search bar and filters to scroll-->
+                <div style="margin: 8px 0; display: flex; gap: 8px; align-items: center;">
+                    <div class="search-container">
+                        <input type="text" class="search-box" id="searchBox" placeholder="Search cocktails...">
+                        <button class="search-clear hidden" id="searchClear" onclick="clearSearch('searchBox')">✕</button>
+                    </div>
+                    <button class="btn-add" onclick="showAddCocktailForm()" style="padding: 0 15px; white-space: nowrap;">
+                        +
+                    </button>
                 </div>
-                <button class="btn-add" onclick="showAddCocktailForm()" style="padding: 0 15px; white-space: nowrap;">
-                    +
-                </button>
-            </div>
 
-            <div>
-                <button class="filter-toggle-btn collapsed" id="cocktailFilterBtn" onclick="toggleFilters()">
-                    <span>Filters</span>
-                    <span class="arrow">▼</span>
-                </button>
-            </div>
+                <div>
+                    <button class="filter-toggle-btn collapsed" id="cocktailFilterBtn" onclick="toggleFilters()">
+                        <span>Filters</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                </div>
 
-            <div class="filters collapsed" id="filterContent">
-                <div class="filter-content">
-                    <div class="filter-group" style="margin-top: 0px;">
-                        <label>Category</label>
-                        <div class="filter-buttons" id="categoryFilters"></div>
-                    </div>
+                <div class="filters collapsed" id="filterContent">
+                    <div class="filter-content">
+                        <div class="filter-group" style="margin-top: 0px;">
+                            <label>Category</label>
+                            <div class="filter-buttons" id="categoryFilters"></div>
+                        </div>
 
-                    <div class="filter-group">
-                        <label>Base Spirit</label>
-                        <div class="filter-buttons" id="spiritFilters"></div>
-                    </div>
+                        <div class="filter-group">
+                            <label>Base Spirit</label>
+                            <div class="filter-buttons" id="spiritFilters"></div>
+                        </div>
 
-                    <div class="filter-toggle">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="canMakeToggle">
-                            <span class="slider"></span>
-                        </label>
-                        <label for="canMakeToggle" style="margin: 0; font-weight: normal; font-size: 0.9rem;">Show only cocktails I can make</label>
+                        <div class="filter-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="canMakeToggle">
+                                <span class="slider"></span>
+                            </label>
+                            <label for="canMakeToggle" style="margin: 0; font-weight: normal; font-size: 0.9rem;">Show only cocktails I can make</label>
+                        </div>
                     </div>
                 </div>
             </div>
+            
 
             <div class="cocktail-grid" id="cocktailGrid"></div>
         </div>
 
-        <!-- Add Cocktail Modal (opened by + on Cocktails tab) -->
+        <!-- Add Cocktail Modal (opened by + on Cocktails tab or edit cocktail) -->
         <div class="add-cocktail-modal" id="addCocktailModal">
-            <div class="add-cocktail-modal-content">
-                <div id="add-cocktail-section" class="add-item-form">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h2>Create New Cocktail</h2>
-                        <button class="modal-close" onclick="cancelCocktailEdit()" style="position: static; margin: 0;">×</button>
+            <div id="add-cocktail-section" class="add-cocktail-modal-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2>Create New Cocktail</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="modal-close" onclick="deleteCocktailFromModal()" title="Delete Cocktail" style="position: static; margin: 0;">
+                            <img src="https://cdn-icons-png.flaticon.com/128/3917/3917242.png" style="width: 14px; height: 14px; filter: brightness(0);" alt="Delete">
+                        </button>
+                        <button class="modal-close" onclick="cancelCocktailEdit()" title="Cancel Edit" style="position: static; margin: 0;">×</button>
+                        <button class="modal-accept" onclick="saveCocktail()" title="Save Cocktail" style="position: static; margin: 0;">✓</button>
                     </div>
-                
+                </div>
+
                 <div class="filter-group" style="margin-bottom: 8px;">
                     <label>Import Recipe from URL</label>
                     <div class="form-row">
@@ -101,6 +115,12 @@
                 <div class="filter-group">
                     <label>Fill Recipe</label>
                 </div>
+
+                <!-- attempt to include the image
+                <div class="form-row">
+                    <canvas id="cocktailCanvas" width="100vw" height="100vw" style="min-width: 200px; min-height: 200px; flex: 1; border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
+                </div>
+                -->
 
                 <div class="form-row">
                     <input type="text" class="form-input" id="cocktailName" placeholder="Cocktail name" style="flex: 2;">
@@ -136,7 +156,7 @@
                     <input type="text" class="form-input" id="cocktailSource" placeholder="Source (optional)">
                 </div>
                 <div class="form-row">
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <div style="display: flex; width: 100%; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <input type="color" id="cocktailColor" class="color-pick-pill">
                         <button class="btn btn-pill" onclick="useSpiritColor()">Match Spirit</button>
                         <button class="btn btn-pill" onclick="randomizeColor()">Random</button>
@@ -149,8 +169,7 @@
                 </div>
                 <div id="ingredientsContainer">
                     <div class="form-row ingredient-row">
-                        <input type="text" class="form-input" placeholder="Ingredient name" data-ingredient-name>
-                        <input type="number" class="form-input" placeholder="Qty" data-ingredient-amount style="max-width: 80px;">
+                        <input type="number" class="form-input" placeholder="Qty" data-ingredient-amount style="max-width: 40px;">
                         <select class="form-select ingredient-unit" data-ingredient-unit>
                             <option value="">Unit</option>
                             <option value="oz">oz</option>
@@ -163,25 +182,22 @@
                             <option value="tbsp">tbsp</option>
                             <option value="wedge">wedge</option>
                             <option value="piece">piece</option>
+                            <option value="squeeze">squeeze</option>
+                            <option value="rim">rim</option>
                         </select>
+                        <input type="text" class="form-input" placeholder="Ingredient name" data-ingredient-name>
                         <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
                     </div>
                 </div>
 
-                <div class="section-header">
-                    <h3>Instructions</h3>
-                    <button class="btn btn-pill btn-section-add" onclick="addStepRow()" title="Add Step">+</button>
-                </div>
-                <div id="stepsContainer">
-                    <div class="form-row step-row">
-                        <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;">
-                        <button class="btn btn-pill" onclick="removeStepRow(this)">✕</button>
-                    </div>
-                </div>
-
-                <div class="form-row" style="margin-top: 20px; gap: 10px;">
-                    <button class="btn btn-pill btn-pill-center" onclick="saveCocktail()" style="flex: 1;">Save Cocktail</button>
-                </div>
+            <div class="section-header">
+                <h3>Instructions</h3>
+                <button class="btn btn-pill btn-section-add" onclick="addStepRow()" title="Add Step">+</button>
+            </div>
+            <div id="stepsContainer">
+                <div class="form-row step-row">
+                    <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;">
+                    <button class="btn btn-pill" onclick="removeStepRow(this)">✕</button>
                 </div>
             </div>
         </div>
@@ -358,8 +374,9 @@
                     <img src="https://cdn-icons-png.flaticon.com/128/3917/3917376.png" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; filter: brightness(0) invert(1);" alt="Edit">
                     Edit
                 </button>
-                <button class="btn-edit" id="modalDeleteBtn" style="display: none; background-color: rgba(220, 38, 38, 0.2); color: #dc2626;" onclick="deleteCocktailFromModal()">
-                    <img src="https://cdn-icons-png.flaticon.com/128/3917/3917242.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="Delete"> Delete
+                <button class="btn-edit" id="modalDeleteBtn" style="display: flex; gap: 8px; background-color: rgba(220, 38, 38, 0.2); color: #dc2626;" onclick="deleteCocktailFromModal()">
+                    <img src="https://cdn-icons-png.flaticon.com/128/3917/3917242.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="Delete">
+                    Delete
                 </button>
             </div>
 
@@ -373,16 +390,16 @@
 
     <!-- Import from URL Modal -->
     <div class="modal" id="importUrlModal">
-        <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-content" style="max-width: 90%; vertical-align: middle; padding: 8px;">
             <button class="modal-close" onclick="closeImportUrlModal()">×</button>
-            <h2 style="margin-top: 0;">Import Recipe from Website</h2>
+            <h2 style="margin-top: 0;">Import Cocktail Recipe</h2>
             
             <div style="margin-bottom: 20px;">
                 <label for="recipeUrl" style="display: block; margin-bottom: 8px; font-weight: 500;">Recipe Website URL</label>
                 <input type="text" id="recipeUrl" placeholder="https://example.com/recipe/mojito" 
                     style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                 <small style="display: block; margin-top: 5px; color: var(--text-secondary);">
-                    Paste the full URL of a cocktail recipe website
+                    Paste the full URL of a cocktail recipe website.
                 </small>
             </div>
 
@@ -393,12 +410,22 @@
             </div>
 
             <div style="display: flex; gap: 10px;">
-                <button class="btn btn-pill" onclick="importRecipeFromUrl()" style="flex: 1;">
-                    🔗 Fetch Recipe
+                <button class="btn btn-pill" onclick="importRecipeFromUrl()" style="flex: 1;"  title="Import Cocktails from URL">
+                    Fetch Recipe
                 </button>
-                <button class="btn btn-pill" onclick="closeImportUrlModal()" style="flex: 1; background-color: var(--bg-secondary);">
-                    Cancel
-                </button>
+            </div>
+
+            <div style="margin-top: 20px; margin-bottom: 20px;">
+                <label for="recipeUrl" style="display: block; margin-bottom: 8px; font-weight: 500;">Recipe Json file</label>
+                <small style="display: block; margin-top: 5px; color: var(--text-secondary);">
+                    Import cocktail recipe from exported json file.
+                </small>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-pill" onclick="document.getElementById('cocktailsImportInput').click()" style="flex: 1;" title="Import Cocktails from File">
+                    Browse File</button>
+                <input type="file" id="cocktailsImportInput" accept=".json" onchange="importCocktailsFromFile(event)" style="display: none;">
             </div>
         </div>
     </div>
@@ -421,29 +448,27 @@
 
     <!-- Cocktail Image Editor Modal -->
     <div class="modal" id="cocktailImageEditorModal">
-        <div class="modal-content" style="max-width: 800px; padding: 8px;">
-            <button class="modal-close" onclick="closeImageEditor()">×</button>
-            <h2 style="margin-top: 0; color: var(--text);">Cocktail Image</h2>
+        <div class="modal-content" style="width: 95%; padding: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-top: 0; color: var(--text);">Cocktail Image</h2>
+                <div style="display: flex; gap: 10px; align-items: right;">
+                    <button class="modal-close" onclick="closeImageEditor()" title="Close image editor" style="position: static; margin: 0;">×</button>
+                    <button class="modal-accept" onclick="applyGeneratedImage()" title="Apply image changes" style="position: static; margin: 0;">✓</button>
+                </div>
+            </div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <!-- Canvas and elements selection area -->
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                 <!-- Canvas Area -->
-                <div>
-                    <canvas id="cocktailCanvas" width="400" height="400" style="border: 2px solid var(--border); border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: block; margin: 0 auto;"></canvas>
-                    <div style="display: flex; gap: 8px; margin-top: 10px;">
-                        <button class="btn btn-pill" onclick="downloadCocktailImage()" style="flex: 1;">
-                            Download Image
-                        </button>
-                        <button class="btn btn-pill" onclick="exportComponentImages()" style="flex: 1;">
-                            Export Components
-                        </button>
-                    </div>
+                <div style="display:flex; width: 100%; align-self: center;">
+                    <canvas id="cocktailCanvas" width="100vw" height="100vw" style="min-width: 200px; min-height: 200px; flex: 1; border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
                 </div>
 
                 <!-- Element Selector -->
                 <div>
-                    <div style="max-height: 500px; overflow-y: auto;">
+                    <div style="display:flex; width:100%; gap:8px; align-items:flex-start;">
                         <!-- Glassware -->
-                        <div style="margin-bottom: 15px;">
+                        <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Glass Type</label>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                                 <button class="btn btn-pill" onclick="selectGlass('rocks')" style="font-size: 0.8rem;">Rocks</button>
@@ -457,9 +482,9 @@
                         </div>
 
                         <!-- Drink Color -->
-                        <div style="margin-bottom: 15px;">
+                        <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Drink Color</label>
-                            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;">
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
                                 <button class="btn btn-pill" onclick="setDrinkColor('#ffffff8c')" style="background-color: #ffffff8c; border: 2px solid transparent; width: 100%; height: 40px;" title="Daiquiri"></button>
                                 <button class="btn btn-pill" onclick="setDrinkColor('#DC143C8c')" style="background-color: #DC143C8c; border: 2px solid transparent; width: 100%; height: 40px;" title="Cosmopolitan"></button>
                                 <button class="btn btn-pill" onclick="setDrinkColor('#fff6a18c')" style="background-color: #fff6a18c; border: 2px solid transparent; width: 100%; height: 40px;" title="Mojito"></button>
@@ -472,13 +497,13 @@
                                 <button class="btn btn-pill" onclick="setDrinkColor('#CCCCCC8c')" style="background-color: #CCCCCC8c; border: 2px solid transparent; width: 100%; height: 40px;" title="Clear"></button>
                             </div>
                             <div style="margin-top: 8px; display: flex; gap: 8px;">
-                                <label style="font-weight: 600; color: var(--text); font-size: 0.85rem;">Custom</label>
+                                <!--<label style="font-weight: 600; color: var(--text); font-size: 0.85rem;">Custom</label>-->
                                 <input class="color-pick-pill" type="color" id="drinkColorPicker" value="#ffffff8c" onchange="setDrinkColor(this.value)">
                             </div>
                         </div>
 
                         <!-- Ice -->
-                        <div style="margin-bottom: 15px;">
+                        <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Ice</label>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                                 <button class="btn btn-pill" onclick="selectIce('none')" style="font-size: 0.8rem;">None</button>
@@ -489,7 +514,7 @@
                         </div>
 
                         <!-- Garnish -->
-                        <div style="margin-bottom: 15px;">
+                        <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Garnish</label>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                                 <button class="btn btn-pill" onclick="selectGarnish('none')" style="font-size: 0.8rem;">None</button>
@@ -503,18 +528,22 @@
                                 <button class="btn btn-pill" onclick="selectGarnish('olive')" style="font-size: 0.8rem;">Olive</button>
                                 <button class="btn btn-pill" onclick="selectGarnish('cucumber')" style="font-size: 0.8rem;">Cucumber</button>
                             </div>
-                        </div>
+                        </div>    
                     </div>
                 </div>
+
+                <!-- Download buttons -->
+                <div>
+                    <div style="display: flex; gap: 8px; margin-top: 10px;">
+                        <button class="btn btn-pill" onclick="downloadCocktailImage()" title="Download the cocktail image" style="flex: 1;">Download</button>
+                        <button class="btn btn-pill" onclick="exportComponentImages()" title="Download the component image individually" style="flex: 1;">Download Components</button>
+                    </div>
+                </div>
+
             </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;"></div>
 
             <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
-                <button class="btn btn-pill" onclick="closeImageEditor()" style="background-color: var(--glass-bg); border: 1px solid var(--glass-border);">
-                    Cancel
-                </button>
-                <button class="btn btn-pill" onclick="applyGeneratedImage()" style="background-color: rgba(72, 187, 120, 0.8); color: white; border: 1px solid rgba(72, 187, 120, 0.9);">
-                    ✓ Apply Image
-                </button>
             </div>
         </div>
     </div>
@@ -1767,6 +1796,8 @@ Return ONLY the JSON object, no other text.`
                                 <option value="tbsp">tbsp</option>
                                 <option value="wedge">wedge</option>
                                 <option value="piece">piece</option>
+                                <option value="squeeze">squeeze</option>
+                                <option value="rim">rim</option>
                             </select>
                             <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
                         `;
@@ -1880,6 +1911,8 @@ Return ONLY the JSON object, no other text.`
                         <option value="tbsp" ${ing.unit === 'tbsp' ? 'selected' : ''}>tbsp</option>
                         <option value="wedge" ${ing.unit === 'wedge' ? 'selected' : ''}>wedge</option>
                         <option value="piece" ${ing.unit === 'piece' ? 'selected' : ''}>piece</option>
+                        <option value="squeeze" ${ing.unit === 'squeeze' ? 'selected' : ''}>squeeze</option>
+                        <option value="rim" ${ing.unit === 'rim' ? 'selected' : ''}>rim</option>
                     </select>
                     <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
                 `;
@@ -1952,6 +1985,10 @@ Return ONLY the JSON object, no other text.`
             document.documentElement.setAttribute('data-theme', savedTheme);
         }
 
+        function getTheme() {
+            return document.documentElement.getAttribute('data-theme') || 'light' === 'dark' ? 1 : 0;
+        }
+
         // Add ingredient row
         function addIngredientRow() {
             const container = document.getElementById('ingredientsContainer');
@@ -1972,6 +2009,8 @@ Return ONLY the JSON object, no other text.`
                     <option value="tbsp">tbsp</option>
                     <option value="wedge">wedge</option>
                     <option value="piece">piece</option>
+                    <option value="squeeze">squeeze</option>
+                    <option value="rim">rim</option>
                 </select>
                 <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
             `;
@@ -2070,7 +2109,7 @@ Return ONLY the JSON object, no other text.`
                 const nameInput = row.querySelector('[data-ingredient-name]');
                 const amountInput = row.querySelector('[data-ingredient-amount]');
                 const unitInput = row.querySelector('[data-ingredient-unit]');
-                if (nameInput.value.trim() && amountInput.value.trim()) {
+                if (nameInput.value.trim()) {
                     ingredients.push({
                         name: nameInput.value.trim(),
                         amount: amountInput.value.trim(),
@@ -2094,10 +2133,12 @@ Return ONLY the JSON object, no other text.`
                 }
             });
 
+            /* prevent from saving if there are no steps
             if (steps.length === 0) {
                 showErrorNotification('Please add at least one instruction step');
                 return;
             }
+            */
 
             if (editingCocktailId !== null) {
                 // Edit existing cocktail
@@ -2564,10 +2605,13 @@ Return ONLY the JSON object, no other text.`
             backgroundColor: '#2d3748'
         };
 
+        const canvasSize = 100; // Size of the cocktail image canvas
+        // const canvasSize = 400; // Size of the cocktail image canvas
+
         // Open image editor
         function openImageEditor() {
-            // Generate component images first
-            generateComponentImages();
+            // Load component images
+            loadComponentImages();
             
             // Get the cocktail color from the form or use default
             const cocktailColor = document.getElementById('cocktailColor').value || '#2d3748';
@@ -2616,7 +2660,7 @@ Return ONLY the JSON object, no other text.`
         let componentImages = {};
 
         // Generate all component images
-        function generateComponentImages() {
+        function loadComponentImages() {
             // Define resource paths - try to load images from Resources folder
             // Naming convention: {glassType}_glass.png, {glassType}_ice-{iceType}.png
             
@@ -2624,38 +2668,47 @@ Return ONLY the JSON object, no other text.`
             const iceTypes = ['cube', 'cubes', 'crushed'];
             const garnishTypes = ['lime-wedge', 'lemon-wedge', 'orange-wedge', 'lemon-swirl', 'orange-swirl', 'cherry', 'mint', 'foam', 'coffee', 'olives', 'cucumber-slice', 'pineapple'];
             
-            // Try loading glass images from Resources folder
+            // Try loading glass and liquid images from Resources folder
             glassTypes.forEach(glass => {
                 const resourcePath = `Resources/${glass}_glass.png`;
                 componentImages[glass] = resourcePath; // Store path for later loading
+
+                componentImages[`${glass}_liquid`] = `Resources/${glass}_liquid.png`;; // Store path for later loading
+
+                // Try loading glass specific ice images from Resources folder
+                iceTypes.forEach(ice => {
+                    // Ice images are named as rocks_ice-cubes.png, rocks_ice-crushed.png, etc.
+                    componentImages[`${glass}_ice_${ice}`] = `Resources/${glass}_ice_${ice}.png`; // Store path for later loading
+                });
+
+                // Try loading glass specific garnish images from Resources folder
+                garnishTypes.forEach(garnishType => {
+                    // Garnish images are named as cocktail_garnish_lemon-swirl.png, rocks_ice-crushed.png, etc.
+                    componentImages[`${glass}_garnish_${garnishType}`] = `Resources/${glass}_garnish_${garnishType}.png`; // Store path for later loading
+                });
             });
 
-            // Try loading ice images from Resources folder
+            // Try loading generic garnish images from Resources folder
             garnishTypes.forEach(garnishType => {
-                // Ice images are named as cocktail_garnish_lemon-swirl.png, rocks_ice-crushed.png, etc.
+                // Garnish images are named as cocktail_garnish_lemon-swirl.png, rocks_ice-crushed.png, etc.
                 const resourcePath = `Resources/cocktail_garnish_${garnishType}.png`;
-                componentImages[`cocktail_garnish_${garnishType}`] = resourcePath; // Store path for later loading
+                componentImages[`garnish_${garnishType}`] = resourcePath; // Store path for later loading
             });
 
 
-            // Try loading ice images from Resources folder
+            // Try loading generic ice images from Resources folder
             iceTypes.forEach(ice => {
                 // Ice images are named as rocks_ice-cubes.png, rocks_ice-crushed.png, etc.
-                const resourcePath = `Resources/rocks_${ice}.png`;
+                const resourcePath = `Resources/cocktail_ice_${ice}.png`;
                 componentImages[`ice_${ice}`] = resourcePath; // Store path for later loading
-            });
-            
-            // Generate liquid images (these are dynamic based on color, so always generate)
-            glassTypes.forEach(glass => {
-                componentImages[`${glass}_liquid`] = generateLiquidImage(glass);
             });
         }
 
-        // Generate glass image
+        // Generate glass image (fallback)
         function generateGlassImage(type) {
             const canvas = document.createElement('canvas');
-            canvas.width = 200;
-            canvas.height = 200;
+            canvas.width = canvasSize;
+            canvas.height = canvasSize;
             const ctx = canvas.getContext('2d');
             
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
@@ -2728,60 +2781,11 @@ Return ONLY the JSON object, no other text.`
             return canvas.toDataURL('image/png');
         }
 
-        // Generate liquid image
-        function generateLiquidImage(type) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 150;
-            canvas.height = 200;
-            const ctx = canvas.getContext('2d');
-            
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            
-            ctx.fillStyle = 'rgba(232, 213, 196, 0.8)'; // Default daiquiri color
-            
-            switch(type) {
-                case 'rocks':
-                    ctx.fillRect(centerX - 50, centerY + 20, 100, 50);
-                    break;
-                case 'collins':
-                    ctx.fillRect(centerX - 35, centerY + 20, 70, 70);
-                    break;
-                case 'highball':
-                    ctx.fillRect(centerX - 30, centerY - 10, 60, 90);
-                    break;
-                case 'coupe':
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY, 45, 20, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-                case 'martini':
-                    ctx.beginPath();
-                    ctx.moveTo(centerX - 38, centerY - 20);
-                    ctx.lineTo(centerX + 38, centerY - 20);
-                    ctx.lineTo(centerX + 8, centerY + 25);
-                    ctx.lineTo(centerX - 8, centerY + 25);
-                    ctx.closePath();
-                    ctx.fill();
-                    break;
-                case 'margarita':
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY - 15, 50, 24, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-                case 'mule':
-                    ctx.fillRect(centerX - 40, centerY + 20, 80, 45);
-                    break;
-            }
-            
-            return canvas.toDataURL('image/png');
-        }
-
-        // Generate ice image
+        // Generate ice image (fallback)
         function generateIceImage(type) {
             const canvas = document.createElement('canvas');
-            canvas.width = 150;
-            canvas.height = 150;
+            canvas.width = canvasSize;
+            canvas.height = canvasSize;
             const ctx = canvas.getContext('2d');
             
             ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
@@ -2810,16 +2814,16 @@ Return ONLY the JSON object, no other text.`
         }
 
         // Draw liquid on canvas using image
-        function drawLiquidWithColor(ctx, glassType, color) {
+        function generateColoredLiquidImage(ctx, glassType, color) {
             // Create a temporary canvas with the colored liquid
             const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = 150;
-            tempCanvas.height = 200;
+            tempCanvas.width = canvasSize;
+            tempCanvas.height = canvasSize;
             const tempCtx = tempCanvas.getContext('2d');
             
             tempCtx.fillStyle = color;
             tempCtx.globalAlpha = 0.8;
-            
+
             const centerX = tempCanvas.width / 2;
             const centerY = tempCanvas.height / 2;
             
@@ -2860,7 +2864,7 @@ Return ONLY the JSON object, no other text.`
             // Draw the colored liquid on main canvas
             const liquidImage = new Image();
             liquidImage.onload = function() {
-                ctx.drawImage(liquidImage, 0, 0, 200, 200);
+                ctx.drawImage(liquidImage, 0, 0, canvasSize, canvasSize);
             };
             liquidImage.src = tempCanvas.toDataURL('image/png');
         }
@@ -2923,199 +2927,73 @@ Return ONLY the JSON object, no other text.`
                 const glassImg = await loadComponentImage(glassImageSrc, () => generateGlassImage(imageEditorState.glass));
                 
                 if (glassImg) {
-                    ctx.drawImage(glassImg, 0, 0, 200, 200);
+                    ctx.drawImage(glassImg, 0, 0, canvasSize, canvasSize);
                 }
-                
+
+                // Load glass liquid image (with fallback to generation)
+                const glassLiquidImageSrc = componentImages[imageEditorState.glass+"_liquid"];
+                const glassLiquidImg = await loadComponentImage(glassLiquidImageSrc, () => generateColoredLiquidImage(ctx, imageEditorState.glass, imageEditorState.drinkColor));
+
+                if (glassLiquidImg) {
+                    const drinkColor = imageEditorState.drinkColor;
+                    const buffer = document.createElement('canvas');
+                    buffer.width = glassLiquidImg.width;
+                    buffer.height = glassLiquidImg.height;
+                    const btx = buffer.getContext('2d');
+
+                    // 1. Draw the tint color onto the buffer canvas
+                    btx.fillStyle = drinkColor;
+                    btx.fillRect(0, 0, buffer.width, buffer.height);
+
+                    // 2. Use 'destination-atop' to apply the image's alpha channel to the color
+                    btx.globalCompositeOperation = 'destination-atop';
+                    btx.drawImage(glassLiquidImg, 0, 0);
+
+                    ctx.drawImage(buffer, 0, 0, canvasSize, canvasSize);
+
+                    // Optional: You can adjust the final tint opacity by using globalAlpha
+                    // ctx.globalAlpha = 0.5;
+                    // ctx.drawImage(buffer, 0, 0);
+                }
+
+                /* skip this as we are sampling the image
                 // Draw drink liquid with color
-                drawLiquidWithColor(ctx, imageEditorState.glass, imageEditorState.drinkColor);
+                generateColoredLiquidImage(ctx, imageEditorState.glass, imageEditorState.drinkColor);
+                */
+
                 
                 // Draw ice if selected
                 if (imageEditorState.ice !== 'none') {
-                    const iceImageSrc = componentImages['ice_' + imageEditorState.ice];
+                    //Get ice image specific to the glass type first, if not found then get generic ice image
+                    const iceImageSrc = componentImages[imageEditorState.glass + '_ice_' + imageEditorState.ice];
+                    if(iceImageSrc === null) {
+                        const iceImageSrc = componentImages['ice_' + imageEditorState.ice];
+                    }
                     const iceImg = await loadComponentImage(iceImageSrc, () => generateIceImage(imageEditorState.ice));
                     
                     if (iceImg) {
-                        ctx.drawImage(iceImg, 0, 0, 200, 200);
+                        ctx.drawImage(iceImg, 0, 0, canvasSize, canvasSize);
                     }
                 }
                 
                 // Draw garnish if selected
                 if (imageEditorState.garnish !== 'none') {
+                    // Get garnish image specific to the glass type first, if not found then get generic garnish image
+                    const garnishImageSrc = componentImages[imageEditorState.glass + '_garnish_' + imageEditorState.garnish];
+                    if(garnishImageSrc === null) {
+                         garnishImageSrc = componentImages['garnish_' + imageEditorState.garnish];
+                    }
+                    const garnishImg = await loadComponentImage(garnishImageSrc, () => generateGarnishImage(imageEditorState.garnish));
+
+                    if (garnishImg) {
+                        ctx.drawImage(garnishImg, 0,  0, canvasSize, canvasSize);
+                    }
                     drawGarnish(ctx, imageEditorState.glass, imageEditorState.garnish);
                 }
+                
             });
         }
 
-        // Draw glass outline
-        function drawGlass(ctx, type) {
-            
-            // Draw drink
-            drawDrink(ctx, imageEditorState.glass, imageEditorState.drinkColor);
-            
-            // Draw ice
-            if (imageEditorState.ice !== 'none') {
-                drawIce(ctx, imageEditorState.glass, imageEditorState.ice);
-            }
-            
-            // Draw garnish
-            if (imageEditorState.garnish !== 'none') {
-                drawGarnish(ctx, imageEditorState.glass, imageEditorState.garnish);
-            }
-        }
-
-        // Draw glass outline
-        function drawGlass(ctx, type) {
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-            ctx.lineWidth = 3;
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-            
-            const centerX = ctx.canvas.width / 2;
-            const centerY = ctx.canvas.height / 2;
-            
-            switch(type) {
-                case 'rocks':
-                    // Square glass
-                    const rockSize = 80;
-                    ctx.fillRect(centerX - rockSize, centerY, rockSize * 2, 100);
-                    ctx.strokeRect(centerX - rockSize, centerY, rockSize * 2, 100);
-                    break;
-                case 'collins':
-                    // Tall cylindrical glass
-                    ctx.fillRect(centerX - 50, centerY - 40, 100, 140);
-                    ctx.strokeRect(centerX - 50, centerY - 40, 100, 140);
-                    break;
-                case 'highball':
-                    // Tall thin glass
-                    ctx.fillRect(centerX - 45, centerY - 50, 90, 140);
-                    ctx.strokeRect(centerX - 45, centerY - 50, 90, 140);
-                    break;
-                case 'coupe':
-                    // Coupe glass
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY - 50, 70, 30, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(centerX - 70, centerY - 50);
-                    ctx.lineTo(centerX - 50, centerY + 50);
-                    ctx.moveTo(centerX + 70, centerY - 50);
-                    ctx.lineTo(centerX + 50, centerY + 50);
-                    ctx.stroke();
-                    break;
-                case 'martini':
-                    // Martini glass
-                    ctx.beginPath();
-                    ctx.moveTo(centerX - 60, centerY - 60);
-                    ctx.lineTo(centerX + 60, centerY - 60);
-                    ctx.lineTo(centerX + 20, centerY + 50);
-                    ctx.lineTo(centerX - 20, centerY + 50);
-                    ctx.closePath();
-                    ctx.fill();
-                    ctx.stroke();
-                    break;
-                case 'margarita':
-                    // Margarita glass (wide coupe)
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY - 60, 80, 35, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(centerX - 80, centerY - 60);
-                    ctx.lineTo(centerX - 40, centerY + 50);
-                    ctx.moveTo(centerX + 80, centerY - 60);
-                    ctx.lineTo(centerX + 40, centerY + 50);
-                    ctx.stroke();
-                    break;
-                case 'mule':
-                    // Copper mule glass (cylindrical mug)
-                    ctx.fillStyle = 'rgba(184, 134, 11, 0.15)';
-                    ctx.strokeStyle = 'rgba(184, 134, 11, 0.9)';
-                    ctx.lineWidth = 3;
-                    ctx.fillRect(centerX - 55, centerY - 40, 110, 120);
-                    ctx.strokeRect(centerX - 55, centerY - 40, 110, 120);
-                    // Add handle
-                    ctx.beginPath();
-                    ctx.arc(centerX + 65, centerY + 20, 30, Math.PI * 0.3, Math.PI * 1.7, false);
-                    ctx.stroke();
-                    break;
-            }
-        }
-
-        // Draw drink liquid
-        function drawDrink(ctx, glassType, color) {
-            ctx.fillStyle = color;
-            ctx.globalAlpha = 0.8;
-            
-            const centerX = ctx.canvas.width / 2;
-            const centerY = ctx.canvas.height / 2;
-            
-            var glassImg = new Image();
-
-            switch(glassType) {
-                case 'rocks':
-                    glassImg.src = 'Resources/rocks_glass.png';
-                    
-                    break;
-                case 'collins':
-                    ctx.fillRect(centerX - 50, centerY + 20, 100, 90);
-                    break;
-                case 'highball':
-                    ctx.fillRect(centerX - 45, centerY - 20, 90, 110);
-                    break;
-                case 'coupe':
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY, 60, 25, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-                case 'martini':
-                    ctx.beginPath();
-                    ctx.moveTo(centerX - 50, centerY - 30);
-                    ctx.lineTo(centerX + 50, centerY - 30);
-                    ctx.lineTo(centerX + 10, centerY + 30);
-                    ctx.lineTo(centerX - 10, centerY + 30);
-                    ctx.closePath();
-                    ctx.fill();
-                    break;
-                case 'margarita':
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY - 20, 70, 30, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-                case 'mule':
-                    ctx.fillRect(centerX - 55, centerY + 20, 110, 60);
-                    break;
-            }
-            ctx.drawImage(glassImg, 0, 0);
-            ctx.globalAlpha = 1;
-        }
-
-        // Draw ice
-        function drawIce(ctx, glassType, iceType) {
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-            const centerX = ctx.canvas.width / 2;
-            const centerY = ctx.canvas.height / 2;
-            
-            if (iceType === 'cubes') {
-                // Draw ice cubes
-                for (let i = 0; i < 4; i++) {
-                    const x = centerX - 40 + (i % 2) * 40;
-                    const y = centerY + 30 + Math.floor(i / 2) * 30;
-                    ctx.fillRect(x, y, 25, 25);
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-                    ctx.strokeRect(x, y, 25, 25);
-                }
-            } else if (iceType === 'crushed') {
-                // Draw crushed ice
-                for (let i = 0; i < 12; i++) {
-                    const x = centerX - 60 + Math.random() * 120;
-                    const y = centerY + 20 + Math.random() * 50;
-                    const size = 8 + Math.random() * 8;
-                    ctx.fillRect(x, y, size, size);
-                }
-            }
-        }
-
-        // Draw straw
         // Draw garnish
         function drawGarnish(ctx, glassType, garnishType) {
             const centerX = ctx.canvas.width / 2;
@@ -3181,7 +3059,7 @@ Return ONLY the JSON object, no other text.`
 
         // Export all component images
         function exportComponentImages() {
-            generateComponentImages();
+            loadComponentImages();
             
             const components = {
                 glasses: ['rocks', 'collins', 'highball', 'coupe', 'martini', 'margarita', 'mule'],

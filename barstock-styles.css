@@ -42,6 +42,22 @@
     --glass-shadow: rgba(0, 0, 0, 0.3);
 }
 
+[data-theme="light"] img {
+  filter: invert(1);
+}
+
+[data-theme="dark"] img {
+  filter: invert(0);
+}
+
+
+.tinted-image {
+  /* Example for a sepia tint, adjust values for custom colors */
+  filter: invert(1);
+  /* You can use tools like the Codepen linked in the search results to find specific filter values */
+}
+
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background: var(--background);
@@ -458,7 +474,7 @@ input:checked + .slider:before {
 
 .cocktail-image {
     width: 100%;
-    height: 180px;
+    height: 200px;
     object-fit: cover;
     display: flex;
     align-items: center;
@@ -732,12 +748,39 @@ input:checked + .slider:before {
     align-items: center;
     justify-content: center;
     z-index: 1;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal-close:hover {
-    transform: translateX(-1px) rotate(90deg);
+    transform: translateX(-1px) rotate(360deg);
     background: rgba(255, 59, 48, 0.8);
+    color: white;
+}
+
+.modal-accept {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-accept:hover {
+    transform: translateX(-1px) rotate(360deg);
+    background: rgba(18, 214, 0, 0.8);
     color: white;
 }
 
@@ -843,8 +886,8 @@ input:checked + .slider:before {
 
 .add-cocktail-modal-content {
     background: var(--glass-bg);
-    backdrop-filter: blur(40px) saturate(180%);
-    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid var(--glass-border);
     border-radius: 20px;
     max-width: 700px;
@@ -855,6 +898,13 @@ input:checked + .slider:before {
     padding: 20px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     animation: modalContentSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.add-cocktail-modal-content h2,
+.add-cocktail-modal-content h3 {
+    color: var(--text);
+    font-size: 1.2rem;
+    margin-bottom: 12px;
 }
 
 /* Min/Max filter fields side by side */
@@ -920,24 +970,6 @@ input:checked + .slider:before {
     display: block;
 }
 
-.add-item-form {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid var(--glass-border);
-    padding: 15px;
-    border-radius: 16px;
-    margin-bottom: 15px;
-    box-shadow: 0 8px 32px var(--glass-shadow);
-}
-
-.add-item-form h2,
-.add-item-form h3 {
-    color: var(--text);
-    font-size: 1.2rem;
-    margin-bottom: 12px;
-}
-
 /* Section header: title and + button on same line */
 .section-header {
     display: flex;
@@ -965,6 +997,7 @@ input:checked + .slider:before {
 /* Card color input - pill shape */
 .color-pick-pill {
     flex: 1;
+    /* min-width: 50%; */
     width: 100px;
     height: 36px;
     border: 0px solid var(--border);
@@ -1359,20 +1392,24 @@ input:checked + .slider:before {
     bottom: 0;
     left: 0;
     right: 0;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    height: 80px;
+    /* background: var(--glass-bg); */
+    background: transparent;
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
     box-shadow: 0 -8px 32px var(--glass-shadow);
     border-top: 1px solid var(--glass-border);
     z-index: 99;
-    padding: 16px 0;
+    gap: 8px;
+    padding-bottom: 16px;
+    padding-top: 4px;
 }
 
 .nav-tab {
     background: transparent;
     border: none;
     color: var(--text);
-    padding: 12px;
+    padding: 16px;
     border-radius: 0;
     cursor: pointer;
     font-size: 0.95rem;
@@ -1384,13 +1421,27 @@ input:checked + .slider:before {
 }
 
 .nav-tab:hover {
-    background: var(--hover);
+    background-color: rgba(255, 255, 255, 0.3); /* Translucent background */
+    backdrop-filter: blur(10px); /* The essential blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for definition */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
 }
 
+.nav-tab.active {
+    background-color: rgba(255, 255, 255, 0.1); /* Translucent background */
+    backdrop-filter: blur(10px); /* The essential blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for definition */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
+}
+
+/*
 .nav-tab.active {
     background: var(--hover);
     border-top-color: var(--accent);
 }
+*/
 
 /* Bottom Navigation with glass effect */
 .bottom-nav {
