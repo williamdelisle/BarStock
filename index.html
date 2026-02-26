@@ -45,7 +45,7 @@
     <div class="container">
         <!-- Cocktails Section -->
         <div id="cocktails-section" class="tab-content">
-            <div style="display:block;"> <!-- wrapper to prevent search bar and filters to scroll-->
+            <div style="display:block; position: sticky; top: 0;"> <!-- wrapper to prevent search bar and filters to scroll-->
                 <div style="margin: 8px 0; display: flex; gap: 8px; align-items: center;">
                     <div class="search-container">
                         <input type="text" class="search-box" id="searchBox" placeholder="Search cocktails...">
@@ -461,29 +461,45 @@
             <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                 <!-- Canvas Area -->
                 <div style="display:flex; width: 100%; align-self: center;">
-                    <canvas id="cocktailCanvas" width="100vw" height="100vw" style="min-width: 200px; min-height: 200px; flex: 1; border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
+                    <canvas id="cocktailCanvas" width="400vw" height="400vw" style="min-width: 200px; min-height: 200px; flex: 1; border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
                 </div>
+            </div>
 
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                 <!-- Element Selector -->
                 <div>
-                    <div style="display:flex; width:100%; gap:8px; align-items:flex-start;">
+                    <div style="display:list-item; width:100%; gap:8px; align-items:flex-start;">
                         <!-- Glassware -->
                         <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Glass Type</label>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                                <button class="btn btn-pill" onclick="selectGlass('rocks')" style="font-size: 0.8rem;">Rocks</button>
-                                <button class="btn btn-pill" onclick="selectGlass('collins')" style="font-size: 0.8rem;">Collins</button>
-                                <button class="btn btn-pill" onclick="selectGlass('highball')" style="font-size: 0.8rem;">Highball</button>
-                                <button class="btn btn-pill" onclick="selectGlass('coupe')" style="font-size: 0.8rem;">Coupe</button>
-                                <button class="btn btn-pill" onclick="selectGlass('martini')" style="font-size: 0.8rem;">Martini</button>
-                                <button class="btn btn-pill" onclick="selectGlass('margarita')" style="font-size: 0.8rem;">Margarita</button>
-                                <button class="btn btn-pill" onclick="selectGlass('mule')" style="font-size: 0.8rem;">Copper Mule</button>
+                            <div style="display: inline-flex; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <button class="btn btn-image-item" onclick="selectGlass('rocks')" style="font-size: 0.8rem;">
+                                    <img src="Resources/rocks_glass.png" style="width: 64px; height: 64px;" alt="Rocks Glass" title="Rocks Glass">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGlass('collins')" style="font-size: 0.8rem;">
+                                    <img src="Resources/collins_glass.png" style="width: 64px; height: 64px;" alt="Collins Glass" title="Collins Glass">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGlass('highball')" style="font-size: 0.8rem;">
+                                    <img src="Resources/highball_glass.png" style="width: 64px; height: 64px;" alt="Highball Glass" title="Highball Glass">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGlass('coupe')" style="font-size: 0.8rem;">
+                                    <img src="Resources/coupe_glass.png" style="width: 64px; height: 64px;" alt="Coupe Glass" title="Coupe Glass">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGlass('martini')" style="font-size: 0.8rem;">
+                                    <img src="Resources/martini_glass.png" style="width: 64px; height: 64px;" alt="Martini Glass" title="Martini Glass">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGlass('margarita')" style="font-size: 0.8rem;">
+                                    <img src="Resources/margarita_glass.png" style="width: 64px; height: 64px;" alt="Margarita Glass" title="Margarita Glass">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGlass('mule')" style="font-size: 0.8rem;">
+                                    <img src="Resources/mule_glass.png" style="width: 64px; height: 64px;" alt="Copper Mule Glass" title="Copper Mule Glass">
+                                </button>
                             </div>
                         </div>
 
                         <!-- Drink Color -->
                         <div>
-                            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Drink Color</label>
+                            <label style="display: flexbox; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Drink Color</label>
                             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
                                 <button class="btn btn-pill" onclick="setDrinkColor('#ffffff8c')" style="background-color: #ffffff8c; border: 2px solid transparent; width: 100%; height: 40px;" title="Daiquiri"></button>
                                 <button class="btn btn-pill" onclick="setDrinkColor('#DC143C8c')" style="background-color: #DC143C8c; border: 2px solid transparent; width: 100%; height: 40px;" title="Cosmopolitan"></button>
@@ -506,10 +522,16 @@
                         <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Ice</label>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                                <button class="btn btn-pill" onclick="selectIce('none')" style="font-size: 0.8rem;">None</button>
-                                <button class="btn btn-pill" onclick="selectIce('cube')" style="font-size: 0.8rem;">Cube</button>
-                                <button class="btn btn-pill" onclick="selectIce('cubes')" style="font-size: 0.8rem;">Cubes</button>
-                                <button class="btn btn-pill" onclick="selectIce('crushed')" style="font-size: 0.8rem;">Crushed</button>
+                                <button class="btn btn-image-item" onclick="selectIce('none')" style="font-size: 0.8rem;">None</button>
+                                <button class="btn btn-image-item" onclick="selectIce('cube')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_ice_cube.png" style="width: 64px; height: 64px;" alt="Ice Cube" title="Ice Cube">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectIce('cubes')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_ice_cubes.png" style="width: 64px; height: 64px;" alt="Ice Cubes" title="Ice Cubes">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectIce('crushed')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_ice_crushed.png" style="width: 64px; height: 64px;" alt="Crushed Ice" title="Crushed Ice">
+                                </button>
                             </div>
                         </div>
 
@@ -517,16 +539,43 @@
                         <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Garnish</label>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                                <button class="btn btn-pill" onclick="selectGarnish('none')" style="font-size: 0.8rem;">None</button>
-                                <button class="btn btn-pill" onclick="selectGarnish('lime')" style="font-size: 0.8rem;">Lime</button>
-                                <button class="btn btn-pill" onclick="selectGarnish('lemon')" style="font-size: 0.8rem;">Lemon</button>
-                                <button class="btn btn-pill" onclick="selectGarnish('orange')" style="font-size: 0.8rem;">Orange</button>
-                                <button class="btn btn-pill" onclick="selectGarnish('cherry')" style="font-size: 0.8rem;">Cherry</button>
-                                <button class="btn btn-pill" onclick="selectGarnish('mint')" style="font-size: 0.8rem;">Mint</button>
-                                <button class="btn btn-pill" onclick="selectGarnish('foam')" style="font-size: 0.8rem;">Foam</button>
-                                <button class="btn btn-pill" onclick="selectGarnish('coffee')" style="font-size: 0.8rem;">Coffee Beans</button>
-                                <button class="btn btn-pill" onclick="selectGarnish('olive')" style="font-size: 0.8rem;">Olive</button>
-                                <button class="btn btn-pill" onclick="selectGarnish('cucumber')" style="font-size: 0.8rem;">Cucumber</button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('none')" style="font-size: 0.8rem;">None</button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('lime')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_garnish_lime-wedge.png" style="width: 64px; height: 64px;" alt="Lime Wedge" title="Lime Wedge">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('lemon')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_garnish_lemon-wedge.png" style="width: 64px; height: 64px;" alt="Lemon Wedge" title="Lemon Wedge">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('orange')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_garnish_orange-wedge.png" style="width: 64px; height: 64px;" alt="Orange Wedge" title="Orange Wedge">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('lime-swirl')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_garnish_lime-swirl.png" style="width: 64px; height: 64px;" alt="Lime Swirl" title="Lime Swirl">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('lemon-swirl')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_garnish_lemon-swirl.png" style="width: 64px; height: 64px;" alt="Lemon Swirl" title="Lemon Swirl">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('orange-swirl')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_garnish_orange-swirl.png" style="width: 64px; height: 64px;" alt="Orange Swirl" title="Orange Swirl">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('cherry')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_garnish_cherry.png" style="width: 64px; height: 64px;" alt="Cherry" title="Cherry">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('mint')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_garnish_mint.png" style="width: 64px; height: 64px;" alt="Mint" title="Mint">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('foam')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_garnish_foam.png" style="width: 64px; height: 64px;" alt="Foam" title="Foam">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('coffee')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_garnish_coffee.png" style="width: 64px; height: 64px;" alt="Coffee Beans" title="Coffee Beans">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('olive')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_garnish_olives.png" style="width: 64px; height: 64px;" alt="Olives" title="Olives">
+                                </button>
+                                <button class="btn btn-image-item" onclick="selectGarnish('cucumber')" style="font-size: 0.8rem;">
+                                    <img src="Resources/cocktail_garnish_cucumber.png" style="width: 64px; height: 64px;" alt="Cucumber" title="Cucumber">
+                                </button>
                             </div>
                         </div>    
                     </div>
@@ -2602,6 +2651,7 @@ Return ONLY the JSON object, no other text.`
             drinkColor: '#E8D5C4',
             ice: 'cubes',
             garnish: 'lime',
+            garnishes: ['none'], // Allow multiple garnishes
             backgroundColor: '#2d3748'
         };
 
@@ -2621,6 +2671,7 @@ Return ONLY the JSON object, no other text.`
                 drinkColor: '#E8D5C4',
                 ice: 'cubes',
                 garnish: 'lime',
+                garnishes: ['none'],
                 backgroundColor: cocktailColor
             };
             document.getElementById('cocktailImageEditorModal').classList.add('active');
@@ -2653,6 +2704,13 @@ Return ONLY the JSON object, no other text.`
         // Select garnish
         function selectGarnish(type) {
             imageEditorState.garnish = type;
+            // Also include in garnishes array for layering multiple garnishes
+            const garnishes = imageEditorState.garnishes || [];
+            if (garnishes.includes(type)) {
+                imageEditorState.garnishes = garnishes.filter(g => g !== type);
+            } else {
+                imageEditorState.garnishes = [...garnishes, type];
+            }
             drawCocktail();
         }
 
@@ -2666,7 +2724,7 @@ Return ONLY the JSON object, no other text.`
             
             const glassTypes = ['rocks', 'collins', 'highball', 'coupe', 'martini', 'margarita', 'mule'];
             const iceTypes = ['cube', 'cubes', 'crushed'];
-            const garnishTypes = ['lime-wedge', 'lemon-wedge', 'orange-wedge', 'lemon-swirl', 'orange-swirl', 'cherry', 'mint', 'foam', 'coffee', 'olives', 'cucumber-slice', 'pineapple'];
+            const garnishTypes = ['lime-wedge', 'lemon-wedge', 'orange-wedge', 'lemon-swirl', 'orange-swirl', 'lime-swirl', 'cherry', 'mint', 'foam', 'coffee', 'olives', 'cucumber-slice', 'pineapple'];
             
             // Try loading glass and liquid images from Resources folder
             glassTypes.forEach(glass => {
@@ -2977,7 +3035,23 @@ Return ONLY the JSON object, no other text.`
                 }
                 
                 // Draw garnish if selected
-                if (imageEditorState.garnish !== 'none') {
+                if (Array.isArray(imageEditorState.garnishes)) {
+                    for (let garnish of imageEditorState.garnishes) {
+                        if (garnish !== 'none') {
+                            // Get garnish image specific to the glass type first, if not found then get generic garnish image
+                            let garnishImageSrc = componentImages[imageEditorState.glass + '_garnish_' + garnish];
+                            if(garnishImageSrc === null) {
+                                garnishImageSrc = componentImages['garnish_' + garnish];
+                            }
+                            const garnishImg = await loadComponentImage(garnishImageSrc, () => generateGarnishImage(garnish));
+
+                            if (garnishImg) {
+                                ctx.drawImage(garnishImg, 0,  0, canvasSize, canvasSize);
+                            }
+                            drawGarnish(ctx, imageEditorState.glass, garnish);
+                        }
+                    }
+                } else if (imageEditorState.garnish !== 'none') {
                     // Get garnish image specific to the glass type first, if not found then get generic garnish image
                     const garnishImageSrc = componentImages[imageEditorState.glass + '_garnish_' + imageEditorState.garnish];
                     if(garnishImageSrc === null) {

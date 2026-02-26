@@ -42,13 +42,7 @@
     --glass-shadow: rgba(0, 0, 0, 0.3);
 }
 
-[data-theme="light"] img {
-  filter: invert(1);
-}
 
-[data-theme="dark"] img {
-  filter: invert(0);
-}
 
 
 .tinted-image {
@@ -1287,6 +1281,26 @@ input:checked + .slider:before {
 
 .btn-pill img {
     flex-shrink: 0;
+}
+
+/* Shared pill button style - darker transparent (inventory card, modals, cocktail form) */
+.btn-image-item {
+    /*border-radius: 999px;*/
+    padding: 8px;
+    background: transparent;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    justify-content: center;
+    text-align: center;
+}
+
+.btn-image-item:hover {
+    translate: translateY(2px);
+}
+
+.btn-image-item:active {
+    background: color(srgb 255 255 255 / 0.4);
 }
 
 /* Inventory card buttons - same pill style, darker (+10–20%) */
