@@ -7,6 +7,7 @@
     <link rel="icon" href="barstock-icon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="barstock-styles.css">
     <script src="api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
 </head>
 <body>
     <header>
@@ -36,6 +37,11 @@
                     </div>
                     
                     <!-- Theme toggle (always visible) -->
+                    <button class="header-btn" onclick="connectCloud()" title="Connect to iCloud">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+                        </svg>
+                    </button>
                     <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
                 </div>
             </div>
@@ -93,7 +99,7 @@
         <!-- Add Cocktail Modal (opened by + on Cocktails tab or edit cocktail) -->
         <div class="add-cocktail-modal" id="addCocktailModal">
             <div id="add-cocktail-section" class="add-cocktail-modal-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div class="add-cocktail-modal-header">
                     <h2>Create New Cocktail</h2>
                     <div style="display: flex; gap: 10px;">
                         <button class="modal-close" onclick="deleteCocktailFromModal()" title="Delete Cocktail" style="position: static; margin: 0;">
@@ -104,100 +110,104 @@
                     </div>
                 </div>
 
-                <div class="filter-group" style="margin-bottom: 8px;">
-                    <label>Import Recipe from URL</label>
+                <div style="padding: 20px;">
+                    <div class="filter-group" style="margin-bottom: 8px;">
+                        <label>Import Recipe from URL</label>
+                        <div class="form-row">
+                            <input type="text" class="form-input" id="importUrl" placeholder="Paste recipe URL to auto-fill (optional)" style="flex: 1;">
+                            <button class="btn btn-pill btn-pill-center" onclick="importRecipe()">Import</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Fill Recipe</label>
+                    </div>
+
+                    <!-- attempt to include the image
                     <div class="form-row">
-                        <input type="text" class="form-input" id="importUrl" placeholder="Paste recipe URL to auto-fill (optional)" style="flex: 1;">
-                        <button class="btn btn-pill btn-pill-center" onclick="importRecipe()">Import</button>
+                        <canvas id="cocktailCanvas" width="100vw" height="100vw" style="min-width: 200px; min-height: 200px; flex: 1; border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
                     </div>
-                </div>
+                    -->
 
-                <div class="filter-group">
-                    <label>Fill Recipe</label>
-                </div>
-
-                <!-- attempt to include the image
-                <div class="form-row">
-                    <canvas id="cocktailCanvas" width="100vw" height="100vw" style="min-width: 200px; min-height: 200px; flex: 1; border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
-                </div>
-                -->
-
-                <div class="form-row">
-                    <input type="text" class="form-input" id="cocktailName" placeholder="Cocktail name" style="flex: 2;">
-                </div>
-
-                <div class="form-row">
-                    <input type="text" class="form-input" id="cocktailImage" placeholder="Image URL (optional)">
-                    <button class="btn btn-pill" onclick="openImageEditor()" title="Build custom image" style="white-space: nowrap;">Build</button>
-                </div>
-                <div class="form-row">
-                    <select class="form-select" id="cocktailCategory">
-                        <option value="">Select category...</option>
-                        <option value="Classic">Classic</option>
-                        <option value="Modern">Modern</option>
-                        <option value="Refreshing">Refreshing</option>
-                        <option value="Bitter">Bitter</option>
-                        <option value="Sweet">Sweet</option>
-                        <option value="Sour">Sour</option>
-                        <option value="Tropical">Tropical</option>
-                    </select>
-                    <select class="form-select" id="cocktailSpirit">
-                        <option value="">Select base spirit...</option>
-                        <option value="Vodka">Vodka</option>
-                        <option value="Gin">Gin</option>
-                        <option value="Rum">Rum</option>
-                        <option value="Tequila">Tequila</option>
-                        <option value="Whiskey">Whiskey</option>
-                        <option value="Bourbon">Bourbon</option>
-                        <option value="Brandy">Brandy</option>
-                        <option value="Mezcal">Mezcal</option>
-                        <option value="Other">Other</option>
-                    </select>
-                    <input type="text" class="form-input" id="cocktailSource" placeholder="Source (optional)">
-                </div>
-                <div class="form-row">
-                    <div style="display: flex; width: 100%; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <input type="color" id="cocktailColor" class="color-pick-pill">
-                        <button class="btn btn-pill" onclick="useSpiritColor()">Match Spirit</button>
-                        <button class="btn btn-pill" onclick="randomizeColor()">Random</button>
+                    <div class="form-row">
+                        <input type="text" class="form-input" id="cocktailName" placeholder="Cocktail name" style="flex: 2;">
                     </div>
-                </div>
 
-                <div class="section-header">
-                    <h3>Ingredients</h3>
-                    <button class="btn btn-pill btn-section-add" onclick="addIngredientRow()" title="Add Ingredient">+</button>
-                </div>
-                <div id="ingredientsContainer">
-                    <div class="form-row ingredient-row">
-                        <input type="number" class="form-input" placeholder="Qty" data-ingredient-amount style="max-width: 40px;">
-                        <select class="form-select ingredient-unit" data-ingredient-unit>
-                            <option value="">Unit</option>
-                            <option value="oz">oz</option>
-                            <option value="ml">ml</option>
-                            <option value="cl">cl</option>
-                            <option value="dash">dash</option>
-                            <option value="splash">splash</option>
-                            <option value="drop">drop</option>
-                            <option value="tsp">tsp</option>
-                            <option value="tbsp">tbsp</option>
-                            <option value="wedge">wedge</option>
-                            <option value="piece">piece</option>
-                            <option value="squeeze">squeeze</option>
-                            <option value="rim">rim</option>
+                    <div class="form-row">
+                        <input type="text" class="form-input" id="cocktailImage" placeholder="Image URL (optional)">
+                        <button class="btn btn-pill" onclick="openImageEditor()" title="Build custom image" style="white-space: nowrap;">Build</button>
+                    </div>
+                    <div class="form-row">
+                        <select class="form-select" id="cocktailCategory">
+                            <option value="">Select category...</option>
+                            <option value="Classic">Classic</option>
+                            <option value="Modern">Modern</option>
+                            <option value="Refreshing">Refreshing</option>
+                            <option value="Bitter">Bitter</option>
+                            <option value="Sweet">Sweet</option>
+                            <option value="Sour">Sour</option>
+                            <option value="Tropical">Tropical</option>
                         </select>
-                        <input type="text" class="form-input" placeholder="Ingredient name" data-ingredient-name>
-                        <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
+                        <select class="form-select" id="cocktailSpirit">
+                            <option value="">Select base spirit...</option>
+                            <option value="Vodka">Vodka</option>
+                            <option value="Gin">Gin</option>
+                            <option value="Rum">Rum</option>
+                            <option value="Tequila">Tequila</option>
+                            <option value="Whiskey">Whiskey</option>
+                            <option value="Bourbon">Bourbon</option>
+                            <option value="Brandy">Brandy</option>
+                            <option value="Mezcal">Mezcal</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" class="form-input" id="cocktailSource" placeholder="Source (optional)">
                     </div>
-                </div>
+                    <div class="form-row">
+                        <div style="display: flex; width: 100%; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <input type="color" id="cocktailColor" class="color-pick-pill">
+                            <button class="btn btn-pill" onclick="useSpiritColor()">Match Spirit</button>
+                            <button class="btn btn-pill" onclick="randomizeColor()">Random</button>
+                        </div>
+                    </div>
 
-            <div class="section-header">
-                <h3>Instructions</h3>
-                <button class="btn btn-pill btn-section-add" onclick="addStepRow()" title="Add Step">+</button>
-            </div>
-            <div id="stepsContainer">
-                <div class="form-row step-row">
-                    <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;">
-                    <button class="btn btn-pill" onclick="removeStepRow(this)">✕</button>
+                    <div class="section-header">
+                        <h3>Ingredients</h3>
+                        <button class="btn btn-add-item" onclick="addIngredientRow()" title="Add Ingredient">✕</button>
+                    </div>
+                    <div id="ingredientsContainer">
+                        <div class="form-row ingredient-row">
+                            <input type="number" class="form-input" placeholder="Qty" data-ingredient-amount style="max-width: 40px;">
+                            <select class="form-select ingredient-unit" data-ingredient-unit>
+                                <option value="">Unit</option>
+                                <option value="oz">oz</option>
+                                <option value="ml">ml</option>
+                                <option value="cl">cl</option>
+                                <option value="dash">dash</option>
+                                <option value="splash">splash</option>
+                                <option value="drop">drop</option>
+                                <option value="tsp">tsp</option>
+                                <option value="tbsp">tbsp</option>
+                                <option value="wedge">wedge</option>
+                                <option value="piece">piece</option>
+                                <option value="squeeze">squeeze</option>
+                                <option value="rim">rim</option>
+                            </select>
+                            <input type="text" class="form-input" placeholder="Ingredient name" data-ingredient-name>
+                            <button class="btn btn-remove-item" onclick="removeIngredientRow(this)">✕</button>
+                        </div>
+                    </div>
+                    
+
+                    <div class="section-header">
+                        <h3>Instructions</h3>
+                        <button class="btn btn-add-item" onclick="addStepRow()" title="Add Step">✕</button>
+                    </div>
+                    <div id="stepsContainer">
+                        <div class="form-row step-row">
+                            <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;">
+                            <button class="btn btn-remove-item" onclick="removeStepRow(this)">✕</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -295,73 +305,77 @@
     <!-- Add Inventory Modal -->
     <div class="inventory-modal" id="addInventoryModal">
         <div class="inventory-modal-content">
-            <button class="modal-close" onclick="closeAddInventoryModal()">×</button>
-            <h2 style="margin-top: 0;">Add item</h2>
+            <div class="add-cocktail-modal-header">
+                <h2>Add item</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="modal-close" onclick="closeAddInventoryModal()" title="Cancel Edit" style="position: static; margin: 0;">×</button>
+                    <button class="modal-accept" onclick="addInventoryItem()" title="Save Cocktail" style="position: static; margin: 0;">✓</button>
+                </div>
+            </div>
+            
             
             <div id="barcodeResult" style="display: none;"></div>
             
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text);">Scan Item Barcode</label>
-                <div style="display:flex; gap:8px; align-items:center;">
-                    <div class="search-container" style="flex:1;">
-                        <input type="text" class="search-box" id="barcodeInput" placeholder="Scan barcode or enter item name..." autofocus>
-                        <button class="search-clear hidden" id="barcodeClear" onclick="clearSearch('barcodeInput')">✕</button>
-                    </div>
-                    <div>
-                        <button class="btn btn-pill" id="modalScanBtn" onclick="startBarcodeScanner()">Scan</button>
+            <div style="padding: 20px;">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text);">Scan Item Barcode</label>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <div class="search-container" style="flex:1;">
+                            <input type="text" class="search-box" id="barcodeInput" placeholder="Scan barcode or enter item name..." autofocus>
+                            <button class="search-clear hidden" id="barcodeClear" onclick="clearSearch('barcodeInput')">✕</button>
+                        </div>
+                        <div>
+                            <button class="btn btn-pill" id="modalScanBtn" onclick="startBarcodeScanner()">Scan</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="scannerContainer" style="display: none; margin-bottom: 15px;">
-                <video id="video" autoplay playsinline></video>
-                <canvas id="canvas" style="display: none;"></canvas>
-                <p style="margin-top: 10px; font-size: 0.9rem; color: var(--text-light); text-align: center;">
-                    Position the barcode in the camera view
-                </p>
-                <button class="btn btn-pill" onclick="stopBarcodeScanner()" style="width: 100%; margin-top: 8px;">Stop Scanning</button>
-            </div>
+                <div id="scannerContainer" style="display: none; margin-bottom: 15px;">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="canvas" style="display: none;"></canvas>
+                    <p style="margin-top: 10px; font-size: 0.9rem; color: var(--text-light); text-align: center;">
+                        Position the barcode in the camera view
+                    </p>
+                    <button class="btn btn-pill" onclick="stopBarcodeScanner()" style="width: 100%; margin-top: 8px;">Stop Scanning</button>
+                </div>
 
-            <div class="form-row">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text);">Enter Item Details</label>
-                <input type="text" class="form-input" id="itemName" placeholder="Item name" style="flex: 2;">
-                <select class="form-select" id="itemCategory">
-                    <option value="">Category</option>
-                    <option value="Spirit">Spirit</option>
-                    <option value="Liqueur">Liqueur</option>
-                    <option value="Wine - Red">Wine - Red</option>
-                    <option value="Wine - White">Wine - White</option>
-                    <option value="Wine - Rosé">Wine - Rosé</option>
-                    <option value="Wine - Orange">Wine - Orange</option>
-                    <option value="Wine - Sparkling">Wine - Sparkling</option>
-                    <option value="Wine - Dessert">Wine - Dessert</option>
-                    <option value="Mixer">Mixer</option>
-                    <option value="Juice">Juice</option>
-                    <option value="Syrup">Syrup</option>
-                    <option value="Bitters">Bitters</option>
-                    <option value="Garnish">Garnish</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            <div class="form-row">
-                <input type="text" class="form-input" id="itemBrand" placeholder="Brand (optional)">
-                <input type="text" class="form-input" id="itemModel" placeholder="Model/Variant (optional)">
-                <input type="number" class="form-input" id="itemYear" placeholder="Year" min="1900" max="2030" style="max-width: 120px;">
-                <input type="number" class="form-input" id="itemVolume" placeholder="Volume (ml)" min="0" step="0.1" style="max-width: 150px;">
-                <input type="number" class="form-input" id="itemABV" placeholder="ABV %" min="0" max="100" step="0.1" style="max-width: 150px;">
-                <input type="number" class="form-input" id="itemSugar" placeholder="Sugar (g/L)" min="0" step="0.1" style="max-width: 150px;">
-            </div>
-            <div class="form-row" id="itemImageRow" style="display: flex; gap: 8px; align-items:center; flex-wrap: wrap;">
-                <label style="width: 100%; font-weight: 600; color: var(--text); margin-bottom: 6px;">Image</label>
-                <input type="file" class="form-input" id="itemImageFile" accept="image/*" capture="environment" style="display: none;" onchange="previewItemImage()">
-                <button type="button" class="btn btn-pill" onclick="document.getElementById('itemImageFile').click()" style="white-space: nowrap;">Camera/File</button>
-                <input type="text" class="form-input" id="itemImage" placeholder="Or enter image URL (optional)" style="flex: 1; min-width: 200px;">
-                <button class="btn btn-pill" onclick="previewItemImage()">Preview</button>
-            </div>
-            <img id="itemImagePreview" src="" alt="" style="display:none; max-width: 120px; margin: 8px 0; border-radius:8px;">
-
-            <div class="form-row" style="margin-top: 20px; gap: 10px;">
-                <button class="btn btn-pill btn-pill-center" id="addInventorySubmitBtn" onclick="addInventoryItem()" style="flex: 1;">Add Item</button>
+                <div class="form-row">
+                    <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text);">Enter Item Details</label>
+                    <input type="text" class="form-input" id="itemName" placeholder="Item name" style="flex: 2;">
+                    <select class="form-select" id="itemCategory">
+                        <option value="">Category</option>
+                        <option value="Spirit">Spirit</option>
+                        <option value="Liqueur">Liqueur</option>
+                        <option value="Wine - Red">Wine - Red</option>
+                        <option value="Wine - White">Wine - White</option>
+                        <option value="Wine - Rosé">Wine - Rosé</option>
+                        <option value="Wine - Orange">Wine - Orange</option>
+                        <option value="Wine - Sparkling">Wine - Sparkling</option>
+                        <option value="Wine - Dessert">Wine - Dessert</option>
+                        <option value="Mixer">Mixer</option>
+                        <option value="Juice">Juice</option>
+                        <option value="Syrup">Syrup</option>
+                        <option value="Bitters">Bitters</option>
+                        <option value="Garnish">Garnish</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <input type="text" class="form-input" id="itemBrand" placeholder="Brand (optional)">
+                    <input type="text" class="form-input" id="itemModel" placeholder="Model/Variant (optional)">
+                    <input type="number" class="form-input" id="itemYear" placeholder="Year" min="1900" max="2030" style="max-width: 120px;">
+                    <input type="number" class="form-input" id="itemVolume" placeholder="Volume (ml)" min="0" step="0.1" style="max-width: 150px;">
+                    <input type="number" class="form-input" id="itemABV" placeholder="ABV %" min="0" max="100" step="0.1" style="max-width: 150px;">
+                    <input type="number" class="form-input" id="itemSugar" placeholder="Sugar (g/L)" min="0" step="0.1" style="max-width: 150px;">
+                </div>
+                <div class="form-row" id="itemImageRow" style="display: flex; gap: 8px; align-items:center; flex-wrap: wrap;">
+                    <label style="width: 100%; font-weight: 600; color: var(--text); margin-bottom: 6px;">Image</label>
+                    <input type="file" class="form-input" id="itemImageFile" accept="image/*" capture="environment" style="display: none;" onchange="previewItemImage()">
+                    <button type="button" class="btn btn-pill" onclick="document.getElementById('itemImageFile').click()" style="white-space: nowrap;">Camera/File</button>
+                    <input type="text" class="form-input" id="itemImage" placeholder="Or enter image URL (optional)" style="flex: 1; min-width: 200px;">
+                    <button class="btn btn-pill" onclick="previewItemImage()">Preview</button>
+                </div>
+                <img id="itemImagePreview" src="" alt="" style="display:none; max-width: 120px; margin: 8px 0; border-radius:8px; align-self: center;">
             </div>
         </div>
     </div>
@@ -473,25 +487,25 @@
                         <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Glass Type</label>
                             <div style="display: inline-flex; grid-template-columns: 1fr 1fr; gap: 8px;">
-                                <button class="btn btn-image-item" onclick="selectGlass('rocks')" style="font-size: 0.8rem;">
+                                <button id="btn-glass-rocks" class="btn btn-image-item" onclick="selectGlass('rocks')" style="font-size: 0.8rem;">
                                     <img src="Resources/rocks_glass.png" style="width: 64px; height: 64px;" alt="Rocks Glass" title="Rocks Glass">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGlass('collins')" style="font-size: 0.8rem;">
+                                <button id="btn-glass-collins" class="btn btn-image-item" onclick="selectGlass('collins')" style="font-size: 0.8rem;">
                                     <img src="Resources/collins_glass.png" style="width: 64px; height: 64px;" alt="Collins Glass" title="Collins Glass">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGlass('highball')" style="font-size: 0.8rem;">
+                                <button id="btn-glass-highball" class="btn btn-image-item" onclick="selectGlass('highball')" style="font-size: 0.8rem;">
                                     <img src="Resources/highball_glass.png" style="width: 64px; height: 64px;" alt="Highball Glass" title="Highball Glass">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGlass('coupe')" style="font-size: 0.8rem;">
+                                <button id="btn-glass-coupe" class="btn btn-image-item" onclick="selectGlass('coupe')" style="font-size: 0.8rem;">
                                     <img src="Resources/coupe_glass.png" style="width: 64px; height: 64px;" alt="Coupe Glass" title="Coupe Glass">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGlass('martini')" style="font-size: 0.8rem;">
+                                <button id="btn-glass-martini" class="btn btn-image-item" onclick="selectGlass('martini')" style="font-size: 0.8rem;">
                                     <img src="Resources/martini_glass.png" style="width: 64px; height: 64px;" alt="Martini Glass" title="Martini Glass">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGlass('margarita')" style="font-size: 0.8rem;">
+                                <button id="btn-glass-margarita" class="btn btn-image-item" onclick="selectGlass('margarita')" style="font-size: 0.8rem;">
                                     <img src="Resources/margarita_glass.png" style="width: 64px; height: 64px;" alt="Margarita Glass" title="Margarita Glass">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGlass('mule')" style="font-size: 0.8rem;">
+                                <button id="btn-glass-mule" class="btn btn-image-item" onclick="selectGlass('mule')" style="font-size: 0.8rem;">
                                     <img src="Resources/mule_glass.png" style="width: 64px; height: 64px;" alt="Copper Mule Glass" title="Copper Mule Glass">
                                 </button>
                             </div>
@@ -522,14 +536,14 @@
                         <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Ice</label>
                             <div style="display: inline-flex; grid-template-columns: 1fr 1fr; gap: 8px;">
-                                <button class="btn btn-image-item" onclick="selectIce('none')" style="font-size: 0.8rem;">None</button>
-                                <button class="btn btn-image-item" onclick="selectIce('cube')" style="font-size: 0.8rem;">
+                                <button id="btn-ice-none" class="btn btn-image-item" onclick="selectIce('none')" style="font-size: 0.8rem;">None</button>
+                                <button id="btn-ice-cube" class="btn btn-image-item" onclick="selectIce('cube')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_ice_cube.png" style="width: 64px; height: 64px;" alt="Ice Cube" title="Ice Cube">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectIce('cubes')" style="font-size: 0.8rem;">
+                                <button id="btn-ice-cubes" class="btn btn-image-item" onclick="selectIce('cubes')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_ice_cubes.png" style="width: 64px; height: 64px;" alt="Ice Cubes" title="Ice Cubes">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectIce('crushed')" style="font-size: 0.8rem;">
+                                <button id="btn-ice-crushed" class="btn btn-image-item" onclick="selectIce('crushed')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_ice_crushed.png" style="width: 64px; height: 64px;" alt="Crushed Ice" title="Crushed Ice">
                                 </button>
                             </div>
@@ -539,41 +553,41 @@
                         <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.9rem;">Garnish</label>
                             <div style="display: inline-flex; grid-template-columns: 1fr 1fr; gap: 8px;">
-                                <button class="btn btn-image-item" onclick="selectGarnish('none')" style="font-size: 0.8rem;">None</button>
-                                <button class="btn btn-image-item" onclick="selectGarnish('lime')" style="font-size: 0.8rem;">
+                                <button id="btn-garnish-none" class="btn btn-image-item" onclick="selectGarnish('none')" style="font-size: 0.8rem;">None</button>
+                                <button id="btn-lime-wedge" class="btn btn-image-item" onclick="selectGarnish('lime')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_garnish_lime-wedge.png" style="width: 64px; height: 64px;" alt="Lime Wedge" title="Lime Wedge">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGarnish('lemon')" style="font-size: 0.8rem;">
+                                <button id="btn-garnish-lemon-wedge" class="btn btn-image-item" onclick="selectGarnish('lemon')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_garnish_lemon-wedge.png" style="width: 64px; height: 64px;" alt="Lemon Wedge" title="Lemon Wedge">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGarnish('orange')" style="font-size: 0.8rem;">
+                                <button id="btn-garnish-orange-wedge" class="btn btn-image-item" onclick="selectGarnish('orange')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_garnish_orange-wedge.png" style="width: 64px; height: 64px;" alt="Orange Wedge" title="Orange Wedge">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGarnish('lime-swirl')" style="font-size: 0.8rem;">
+                                <button id="btn-garnish-lime-swirl" class="btn btn-image-item" onclick="selectGarnish('lime-swirl')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_garnish_lime-swirl.png" style="width: 64px; height: 64px;" alt="Lime Swirl" title="Lime Swirl">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGarnish('lemon-swirl')" style="font-size: 0.8rem;">
+                                <button id="btn-garnish-lemon-swirl" class="btn btn-image-item" onclick="selectGarnish('lemon-swirl')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_garnish_lemon-swirl.png" style="width: 64px; height: 64px;" alt="Lemon Swirl" title="Lemon Swirl">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGarnish('orange-swirl')" style="font-size: 0.8rem;">
+                                <button id="btn-garnish-orange-swirl" class="btn btn-image-item" onclick="selectGarnish('orange-swirl')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_garnish_orange-swirl.png" style="width: 64px; height: 64px;" alt="Orange Swirl" title="Orange Swirl">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGarnish('cherry')" style="font-size: 0.8rem;">
+                                <button id="btn-garnish-cherry" class="btn btn-image-item" onclick="selectGarnish('cherry')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_garnish_cherry.png" style="width: 64px; height: 64px;" alt="Cherry" title="Cherry">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGarnish('mint')" style="font-size: 0.8rem;">
+                                <button id="btn-garnish-mint" class="btn btn-image-item" onclick="selectGarnish('mint')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_garnish_mint.png" style="width: 64px; height: 64px;" alt="Mint" title="Mint">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGarnish('foam')" style="font-size: 0.8rem;">
+                                <button id="btn-garnish-foam" class="btn btn-image-item" onclick="selectGarnish('foam')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_garnish_foam.png" style="width: 64px; height: 64px;" alt="Foam" title="Foam">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGarnish('coffee')" style="font-size: 0.8rem;">
+                                <button id="btn-garnish-coffee" class="btn btn-image-item" onclick="selectGarnish('coffee')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_garnish_coffee.png" style="width: 64px; height: 64px;" alt="Coffee Beans" title="Coffee Beans">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGarnish('olive')" style="font-size: 0.8rem;">
+                                <button id="btn-garnish-olive" class="btn btn-image-item" onclick="selectGarnish('olive')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_garnish_olives.png" style="width: 64px; height: 64px;" alt="Olives" title="Olives">
                                 </button>
-                                <button class="btn btn-image-item" onclick="selectGarnish('cucumber')" style="font-size: 0.8rem;">
+                                <button id="btn-garnish-cucumber" class="btn btn-image-item" onclick="selectGarnish('cucumber')" style="font-size: 0.8rem;">
                                     <img src="Resources/cocktail_garnish_cucumber.png" style="width: 64px; height: 64px;" alt="Cucumber" title="Cucumber">
                                 </button>
                             </div>
@@ -1848,7 +1862,7 @@ Return ONLY the JSON object, no other text.`
                                 <option value="squeeze">squeeze</option>
                                 <option value="rim">rim</option>
                             </select>
-                            <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
+                            <button class="btn btn-remove-item" onclick="removeIngredientRow(this)">✕</button>
                         `;
                         ingredientsContainer.appendChild(row);
                     });
@@ -1863,7 +1877,7 @@ Return ONLY the JSON object, no other text.`
                         row.className = 'form-row step-row';
                         row.innerHTML = `
                             <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;" value="${step}">
-                            <button class="btn btn-pill" onclick="removeStepRow(this)">✕</button>
+                            <button class="btn btn-remove-item" onclick="removeStepRow(this)">✕</button>
                         `;
                         stepsContainer.appendChild(row);
                     });
@@ -1963,7 +1977,7 @@ Return ONLY the JSON object, no other text.`
                         <option value="squeeze" ${ing.unit === 'squeeze' ? 'selected' : ''}>squeeze</option>
                         <option value="rim" ${ing.unit === 'rim' ? 'selected' : ''}>rim</option>
                     </select>
-                    <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
+                    <button class="btn btn-remove-item" onclick="removeIngredientRow(this)">✕</button>
                 `;
                 ingredientsContainer.appendChild(row);
             });
@@ -1976,7 +1990,7 @@ Return ONLY the JSON object, no other text.`
                 row.className = 'form-row step-row';
                 row.innerHTML = `
                     <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;" value="${step}">
-                    <button class="btn btn-pill" onclick="removeStepRow(this)">✕</button>
+                    <button class="btn btn-remove-item" onclick="removeStepRow(this)">✕</button>
                 `;
                 stepsContainer.appendChild(row);
             });
@@ -2028,6 +2042,11 @@ Return ONLY the JSON object, no other text.`
             localStorage.setItem('theme', newTheme);
         }
 
+        function connectCloud() {
+            showErrorNotification('Gmail sync would connect here. This requires OAuth implementation with Google API.');
+            
+        }
+
         // Load saved theme
         function loadTheme() {
             const savedTheme = localStorage.getItem('theme') || 'light';
@@ -2061,7 +2080,7 @@ Return ONLY the JSON object, no other text.`
                     <option value="squeeze">squeeze</option>
                     <option value="rim">rim</option>
                 </select>
-                <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
+                <button class="btn btn-remove-item" onclick="removeIngredientRow(this)">✕</button>
             `;
             container.appendChild(row);
         }
@@ -2081,7 +2100,7 @@ Return ONLY the JSON object, no other text.`
             row.className = 'form-row step-row';
             row.innerHTML = `
                 <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;">
-                <button class="btn btn-pill" onclick="removeStepRow(this)">✕</button>
+                <button class="btn btn-remove-item" onclick="removeStepRow(this)">✕</button>
             `;
             container.appendChild(row);
         }
@@ -2123,7 +2142,7 @@ Return ONLY the JSON object, no other text.`
                         <option value="wedge">wedge</option>
                         <option value="piece">piece</option>
                     </select>
-                    <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
+                    <button class="btn btn-remove-item" onclick="removeIngredientRow(this)">✕</button>
                 </div>
             `;
             
@@ -2132,7 +2151,7 @@ Return ONLY the JSON object, no other text.`
             stepsContainer.innerHTML = `
                 <div class="form-row step-row">
                     <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;">
-                    <button class="btn btn-pill" onclick="removeStepRow(this)">✕</button>
+                    <button class="btn btn-remove-item" onclick="removeStepRow(this)">✕</button>
                 </div>
             `;
         }
@@ -2420,7 +2439,7 @@ Return ONLY the JSON object, no other text.`
                             <option value="wedge" ${ing.unit === 'wedge' ? 'selected' : ''}>wedge</option>
                             <option value="piece" ${ing.unit === 'piece' ? 'selected' : ''}>piece</option>
                         </select>
-                        <button class="btn btn-pill" onclick="removeIngredientRow(this)">✕</button>
+                        <button class="btn btn-remove-item" onclick="removeIngredientRow(this)">✕</button>
                     `;
                     ingredientsContainer.appendChild(row);
                 });
@@ -2435,7 +2454,7 @@ Return ONLY the JSON object, no other text.`
                     row.className = 'form-row step-row';
                     row.innerHTML = `
                         <input type="text" class="form-input" placeholder="Step description" data-step style="flex: 1;" value="${step}">
-                        <button class="btn btn-pill" onclick="removeStepRow(this)">✕</button>
+                        <button class="btn btn-remove-item" onclick="removeStepRow(this)">✕</button>
                     `;
                     stepsContainer.appendChild(row);
                 });
@@ -2655,7 +2674,7 @@ Return ONLY the JSON object, no other text.`
             backgroundColor: '#2d3748'
         };
 
-        const canvasSize = 100; // Size of the cocktail image canvas
+        const canvasSize = 400; // Size of the cocktail image canvas
         // const canvasSize = 400; // Size of the cocktail image canvas
 
         // Open image editor
@@ -2675,6 +2694,7 @@ Return ONLY the JSON object, no other text.`
                 backgroundColor: cocktailColor
             };
             document.getElementById('cocktailImageEditorModal').classList.add('active');
+            updateCocktailButtonSelection();
             drawCocktail();
         }
 
@@ -2686,18 +2706,21 @@ Return ONLY the JSON object, no other text.`
         // Select glass type
         function selectGlass(type) {
             imageEditorState.glass = type;
+            updateCocktailButtonSelection();
             drawCocktail();
         }
 
         // Set drink color
         function setDrinkColor(color) {
             imageEditorState.drinkColor = color;
+            updateCocktailButtonSelection();
             drawCocktail();
         }
 
         // Select ice type
         function selectIce(type) {
             imageEditorState.ice = type;
+            updateCocktailButtonSelection();
             drawCocktail();
         }
 
@@ -2711,6 +2734,7 @@ Return ONLY the JSON object, no other text.`
             } else {
                 imageEditorState.garnishes = [...garnishes, type];
             }
+            updateCocktailButtonSelection();
             drawCocktail();
         }
 
@@ -2927,12 +2951,25 @@ Return ONLY the JSON object, no other text.`
             liquidImage.src = tempCanvas.toDataURL('image/png');
         }
 
+        function updateCocktailButtonSelection() {
+            if (false) {
+                // For testing error handling
+                document.getElementById('btn-glass-' + imageEditorState.glass).classList.add('active');
+                document.getElementById('btn-ice-' + imageEditorState.glass).classList.add('active');
+                for (let garnish of imageEditorState.garnishes) {
+                    document.getElementById('btn-garnish-' + garnish).classList.add('active');
+                }
+                document.getElementById('btn-garnish-' + imageEditorState.garnish).classList.add('active');
+            }
+
+        }
+
         // Select straw
         // Draw cocktail on canvas
         function drawCocktail() {
             const canvas = document.getElementById('cocktailCanvas');
             const ctx = canvas.getContext('2d');
-            
+
             // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
@@ -2988,6 +3025,20 @@ Return ONLY the JSON object, no other text.`
                     ctx.drawImage(glassImg, 0, 0, canvasSize, canvasSize);
                 }
 
+                // Draw ice if selected
+                if (imageEditorState.ice !== 'none') {
+                    //Get ice image specific to the glass type first, if not found then get generic ice image
+                    const iceImageSrc = componentImages[imageEditorState.glass + '_ice_' + imageEditorState.ice];
+                    if(iceImageSrc === null) {
+                        const iceImageSrc = componentImages['ice_' + imageEditorState.ice];
+                    }
+                    const iceImg = await loadComponentImage(iceImageSrc, () => generateIceImage(imageEditorState.ice));
+                    
+                    if (iceImg) {
+                        ctx.drawImage(iceImg, 0, 0, canvasSize, canvasSize);
+                    }
+                }
+
                 // Load glass liquid image (with fallback to generation)
                 const glassLiquidImageSrc = componentImages[imageEditorState.glass+"_liquid"];
                 const glassLiquidImg = await loadComponentImage(glassLiquidImageSrc, () => generateColoredLiquidImage(ctx, imageEditorState.glass, imageEditorState.drinkColor));
@@ -3020,19 +3071,7 @@ Return ONLY the JSON object, no other text.`
                 */
 
                 
-                // Draw ice if selected
-                if (imageEditorState.ice !== 'none') {
-                    //Get ice image specific to the glass type first, if not found then get generic ice image
-                    const iceImageSrc = componentImages[imageEditorState.glass + '_ice_' + imageEditorState.ice];
-                    if(iceImageSrc === null) {
-                        const iceImageSrc = componentImages['ice_' + imageEditorState.ice];
-                    }
-                    const iceImg = await loadComponentImage(iceImageSrc, () => generateIceImage(imageEditorState.ice));
-                    
-                    if (iceImg) {
-                        ctx.drawImage(iceImg, 0, 0, canvasSize, canvasSize);
-                    }
-                }
+
                 
                 // Draw garnish if selected
                 if (Array.isArray(imageEditorState.garnishes)) {
@@ -3048,7 +3087,6 @@ Return ONLY the JSON object, no other text.`
                             if (garnishImg) {
                                 ctx.drawImage(garnishImg, 0,  0, canvasSize, canvasSize);
                             }
-                            drawGarnish(ctx, imageEditorState.glass, garnish);
                         }
                     }
                 } else if (imageEditorState.garnish !== 'none') {
@@ -3062,7 +3100,7 @@ Return ONLY the JSON object, no other text.`
                     if (garnishImg) {
                         ctx.drawImage(garnishImg, 0,  0, canvasSize, canvasSize);
                     }
-                    drawGarnish(ctx, imageEditorState.glass, imageEditorState.garnish);
+                    drawGarnishImage(ctx, imageEditorState.glass, imageEditorState.garnish);
                 }
                 
             });
@@ -3070,6 +3108,51 @@ Return ONLY the JSON object, no other text.`
 
         // Draw garnish
         function drawGarnish(ctx, glassType, garnishType) {
+            const centerX = ctx.canvas.width / 2;
+            const centerY = ctx.canvas.height / 2;
+            
+            ctx.font = '40px Arial';
+            
+            let emoji = '🍋';
+            let x = centerX + 60;
+            let y = centerY - 20;
+            
+            switch(garnishType) {
+                case 'lime':
+                    emoji = '🍋';
+                    break;
+                case 'lemon':
+                    emoji = '🍋';
+                    break;
+                case 'orange':
+                    emoji = '🍊';
+                    break;
+                case 'cherry':
+                    emoji = '🍒';
+                    break;
+                case 'mint':
+                    emoji = '🌿';
+                    break;
+                case 'foam':
+                    emoji = '🫧';
+                    y = centerY - 50;
+                    break;
+                case 'coffee':
+                    emoji = '☕';
+                    break;
+                case 'olive':
+                    emoji = '🫒';
+                    break;
+                case 'cucumber':
+                    emoji = '🥒';
+                    break;
+            }
+            
+            ctx.fillText(emoji, x, y);
+        }
+
+        // Draw garnish image
+        function drawGarnishImage(ctx, glassType, garnishType) {
             const centerX = ctx.canvas.width / 2;
             const centerY = ctx.canvas.height / 2;
             

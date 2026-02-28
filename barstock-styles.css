@@ -424,6 +424,71 @@ input:checked + .slider:before {
     transform: translateY(-1px);
 }
 
+/* Action Buttons with glass effect */
+.btn-add-item {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text);
+    border: 1px solid var(--glass-border);
+    padding: 0px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px var(--glass-shadow);
+    width: 40px;
+    height: 40px;
+    transform: rotate(45deg);
+}
+
+.btn-add-item:hover {
+    box-shadow: 0 8px 24px var(--glass-shadow);
+    transform: translateY(-1px) rotate(225deg);
+    background: rgba(0, 200, 0, 0.5);
+    color: white;
+}
+
+.btn-add-item:active {
+    transform: translateY(-1px) rotate(45deg);
+}
+
+/* Action Buttons with glass effect */
+.btn-remove-item {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text);
+    border: 1px solid var(--glass-border);
+    padding: 0px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px var(--glass-shadow);
+    width: 40px;
+    height: 40px;
+}
+
+.btn-remove-item:hover {
+    box-shadow: 0 8px 24px var(--glass-shadow);
+    transform: rotate(90deg);
+    background: rgba(255, 59, 48, 0.8);
+    color: white;
+}
+
+.btn-remove-item:active {
+    transform: rotate(180deg) translateY(-1px);
+}
+
 /* Cocktail Grid */
 .cocktail-grid {
     display: grid;
@@ -878,6 +943,23 @@ input:checked + .slider:before {
     display: flex;
 }
 
+.add-cocktail-modal-header {
+    background: rgba(63, 63, 63, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1001;
+    border-radius: 20px 20px 0px 0px;
+    padding: 20px 20px 10px 20px;
+    width: 100%;
+    /* max-width: 700px; */
+    margin-bottom: 15px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    position: sticky; 
+    top: 0;
+}
+
 .add-cocktail-modal-content {
     background: var(--glass-bg);
     backdrop-filter: blur(20px) saturate(180%);
@@ -889,7 +971,7 @@ input:checked + .slider:before {
     max-height: 90vh;
     overflow-y: auto;
     margin: 20px auto;
-    padding: 20px;
+    /*padding: 20px; */
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     animation: modalContentSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -948,8 +1030,8 @@ input:checked + .slider:before {
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
-    padding: 20px;
-    padding-top: 50px;
+    /* padding: 20px;
+    padding-top: 50px; */
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     animation: modalContentSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1022,6 +1104,35 @@ input:checked + .slider:before {
     justify-content: center;
     text-align: center;
 }
+
+/*
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-close:hover {
+    transform: translateX(-1px) rotate(360deg);
+    background: rgba(255, 59, 48, 0.8);
+    color: white;
+}
+*/
 
 .form-row {
     display: flex;
@@ -1415,6 +1526,8 @@ input:checked + .slider:before {
     border-top: 1px solid var(--glass-border);
     z-index: 99;
     gap: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
     padding-bottom: 16px;
     padding-top: 4px;
 }
@@ -1435,17 +1548,15 @@ input:checked + .slider:before {
 }
 
 .nav-tab:hover {
-    background-color: rgba(255, 255, 255, 0.3); /* Translucent background */
-    backdrop-filter: blur(10px); /* The essential blur effect */
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for definition */
+    background-color: rgba(var(--glass-bg-rgb), 0.2); /* Translucent background */
+    backdrop-filter: blur(15px); /* The essential blur effect */
     border-radius: 15px; /* Rounded corners */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
 }
 
 .nav-tab.active {
-    background-color: rgba(255, 255, 255, 0.1); /* Translucent background */
-    backdrop-filter: blur(10px); /* The essential blur effect */
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for definition */
+    background-color: rgba(var(--glass-bg-rgb), 0.8); /* Translucent background */
+    backdrop-filter: blur(15px); /* The essential blur effect */
     border-radius: 15px; /* Rounded corners */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
 }
