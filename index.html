@@ -463,19 +463,21 @@
     <!-- Cocktail Image Editor Modal -->
     <div class="modal" id="cocktailImageEditorModal">
         <div class="modal-content" style="width: 95%; padding: 8px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h2 style="margin-top: 0; color: var(--text);">Cocktail Image</h2>
-                <div style="display: flex; gap: 10px; align-items: right;">
-                    <button class="modal-close" onclick="closeImageEditor()" title="Close image editor" style="position: static; margin: 0;">×</button>
-                    <button class="modal-accept" onclick="applyGeneratedImage()" title="Apply image changes" style="position: static; margin: 0;">✓</button>
+            <div style="position: sticky; top: 0;"> <!-- Sticky header -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2 style="margin-top: 0; color: var(--text);">Cocktail Image</h2>
+                    <div style="display: flex; gap: 10px; align-items: right;">
+                        <button class="modal-close" onclick="closeImageEditor()" title="Cancel and close image editor" style="position: static; margin: 0;">×</button>
+                        <button class="modal-accept" onclick="applyGeneratedImage()" title="Apply image changes" style="position: static; margin: 0;">✓</button>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Canvas and elements selection area -->
-            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                <!-- Canvas Area -->
-                <div style="display:flex; width: 100%; align-self: center;">
-                    <canvas id="cocktailCanvas" width="400vw" height="400vw" style="min-width: 200px; min-height: 200px; flex: 1; border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
+                
+                <!-- Canvas and elements selection area -->
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <!-- Canvas Area -->
+                    <div style="display:flex; width: 100%; align-self: center;">
+                        <canvas id="cocktailCanvas" width="400vw" height="400vw" style="min-width: 200px; min-height: 200px; flex: 1; border: 2px solid var(--border); border-radius: 8px; background: #ffffff8c; display: block; margin: 8px;"></canvas>
+                    </div>
                 </div>
             </div>
 
